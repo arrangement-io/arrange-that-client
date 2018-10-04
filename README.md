@@ -4,19 +4,14 @@
 
 ## Table of Contents
 
+For the Front-end side, we use React and Redux and uses create-react-app, Webpack, HMR, PostCSS & Express. This project also uses a boilerplate CSS theme for bootstrap known as [Material UI ](https://material-ui.com/).
+
 ### Development
 ```
 npm install
 npm start
 ```
 This will start an react app at http://localhost:3000
-
-1. Install Dependencies
-# npm install
-
-2. Run app
-# npm start
-
 
 ### PR & issues
 Pull Requests are welcome
