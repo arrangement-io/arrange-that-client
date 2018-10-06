@@ -6,4 +6,4 @@ export const base_url = () => {
   }
 }
 
-export const ARRANGEMENT = '/arrangement'
+export const ARRANGEMENT = '/arrangement/aJDUX35L6'

@@ -13,7 +13,7 @@ export class ContainerCollection extends Component {
             this.props.containers.map((container) => {
               return (
                 <Grid item xs={12} sm={4} md={3} key={container._id}>
-                  <Container container={container} snapshots={this.props.snapshots} items={this.props.items} />
+                  <Container container={container} snapshot={this.props.snapshot} items={this.props.items} />
                 </Grid>
               )
             })
@@ -25,21 +25,21 @@ export class ContainerCollection extends Component {
 }
 
 ContainerCollection.propTypes = {
-  snapshots: PropTypes.arrayOf(PropTypes.shape({
+  snapshot: PropTypes.shape({
     _id: PropTypes.string,
     name: PropTypes.string,
     snapshot: PropTypes.object
-  })).isRequired,
+  }),
   containers: PropTypes.arrayOf(PropTypes.shape({
     _id: PropTypes.string,
     name: PropTypes.string,
     size: PropTypes.number
-  })).isRequired,
+  })),
   items: PropTypes.arrayOf(PropTypes.shape({
     _id: PropTypes.string,
     name: PropTypes.string,
     size: PropTypes.number
-  })).isRequired
+  }))
 }
 
 export default ContainerCollection

@@ -29,7 +29,7 @@ ItemCollection.propTypes = {
     _id: PropTypes.string,
     name: PropTypes.string,
     size: PropTypes.number
-  })).isRequired
+  }))
 }
 
 export default ItemCollection

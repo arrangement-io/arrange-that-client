@@ -27,13 +27,14 @@ export class Arrange extends Component {
       url: ARRANGEMENT
     })
       .then(response => {
-        this.setState(response.data)
+        this.setState(response.data.arrangement)
         return Promise.resolve();
       })
       .catch(err => {
         return Promise.reject(err)
       })
-    this.setState(
+    // For test without API call  
+    /* this.setState(
       {
         "_id": "aJDUX35L6",
         "containers": [
@@ -92,7 +93,7 @@ export class Arrange extends Component {
         ],
         "timestamp": 1538582360.173882
       }
-       )
+    ) */
   }
 
   render () {
@@ -109,10 +110,16 @@ export class Arrange extends Component {
           </Typography>
         </Grid>
         <Grid item xs={12} sm={4} md={3}>
+          <Typography variant="headline" gutterBottom align="left">
+            Items
+          </Typography>
           <ItemCollection items={this.state.items} />
         </Grid>
         <Grid item xs={12} sm={8} md={9}>
-          <ContainerCollection snapshots={this.state.snapshots} containers={this.state.containers} items={this.state.items} />
+          <Typography variant="headline" gutterBottom align="left">
+            Containers
+          </Typography>
+          <ContainerCollection snapshot={this.state.snapshots[0]} containers={this.state.containers} items={this.state.items} />
         </Grid>
       </Grid>
     )

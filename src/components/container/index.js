@@ -13,27 +13,20 @@ export class Container extends Component {
 
     this.getItems = this.getItems.bind(this)
   }
-  getSnapshot (snapshots, containerId) {
-    const result = snapshots.find(item => typeof item.snapshot[containerId] !== 'undefined')
-    // console.log(result)
-    return result
-  }
 
-  getItems (snapshot, items, containerId) {
-    if (typeof snapshot !== 'undefined') {
-      let stateitems = []
-      for (var itemId in snapshot.snapshot[containerId]) {
-        const item = items.find(ele => ele._id === snapshot.snapshot[containerId][itemId])
-        stateitems.push(item)
-      }
-      this.setState({
-        items: stateitems
-      })
+  getItems (items, containerId) {
+    let stateitems = []
+    for (var itemId in this.props.snapshot.snapshot[containerId]) {
+      const item = items.find(ele => ele._id === this.props.snapshot.snapshot[containerId][itemId])
+      stateitems.push(item)
     }
+    this.setState({
+      items: stateitems
+    })
   }
 
   componentDidMount () {
-    this.getItems(this.getSnapshot(this.props.snapshots, this.props.container._id), this.props.items, this.props.container._id)
+    this.getItems(this.props.items, this.props.container._id)
   }
 
   render () {
@@ -50,11 +43,12 @@ export class Container extends Component {
               <Grid container spacing={24}>
                 {
                   this.state.items.map((item) => {
-                    return (
-                      <Grid item xs={12} key={item._id}>
-                        <Item item={item} />
-                      </Grid>
-                    )
+                    if (typeof item !== 'undefined')
+                      return (
+                        <Grid item xs={12} key={item._id}>
+                          <Item item={item} />
+                        </Grid>
+                      )
                   })
                 }
               </Grid>
@@ -67,21 +61,21 @@ export class Container extends Component {
 }
 
 Container.propTypes = {
-  snapshots: PropTypes.arrayOf(PropTypes.shape({
+  snapshot: PropTypes.shape({
     _id: PropTypes.string,
     name: PropTypes.string,
     snapshot: PropTypes.object
-  })).isRequired,
+  }),
   items: PropTypes.arrayOf(PropTypes.shape({
     _id: PropTypes.string,
     name: PropTypes.string,
     size: PropTypes.number
-  })).isRequired,
+  })),
   container: PropTypes.shape({
     _id: PropTypes.string,
     name: PropTypes.string,
     size: PropTypes.number
-  }).isRequired
+  })
 }
 
 export default Container
