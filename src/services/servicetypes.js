@@ -5,5 +5,5 @@ export const base_url = () => {
     return process.env.REACT_APP_PROD_API_HOST
   }
 }
-//test the arrangement_id a111EPQPQ
-export const ARRANGEMENT = '/arrangement/a111EPQPQ'
+
+export const ARRANGEMENT = '/arrangement/zzzzMEDEA'

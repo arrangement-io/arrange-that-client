@@ -17,7 +17,8 @@ export class Arrange extends Component {
       containers: [],
       is_deleted: false,
       timestamp: '',
-      snapshots: []
+      snapshots: [],
+      unsnapshot_items: []
     }
   }
 
@@ -27,7 +28,18 @@ export class Arrange extends Component {
       url: ARRANGEMENT
     })
       .then(response => {
-        this.setState(response.data.arrangement)
+        const snapshot = response.data.arrangement.snapshots[0]
+        let items = response.data.arrangement.items
+        for (var containerId in snapshot.snapshot) {
+          for (var itemId in snapshot.snapshot[containerId]) {
+            items = items.filter(ele => ele._id !== snapshot.snapshot[containerId][itemId])
+          }
+        }
+        const stateVal = {
+          ...response.data.arrangement,
+          unsnapshot_items: items
+        }
+        this.setState(stateVal)
         return Promise.resolve();
       })
       .catch(err => {
@@ -113,7 +125,7 @@ export class Arrange extends Component {
           <Typography variant="headline" gutterBottom align="left">
             Items
           </Typography>
-          <ItemCollection items={this.state.items} />
+          <ItemCollection items={this.state.unsnapshot_items} />
         </Grid>
         <Grid item xs={12} sm={8} md={9}>
           <Typography variant="headline" gutterBottom align="left">
