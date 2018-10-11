@@ -37,6 +37,7 @@ export class Arrange extends Component {
       url: EXPORT_ARRANGEMENT,
       data: arrangement
     })
+    //TODO change this to a safe output in the future 
       .then(response => {
         console.log(response.data)
       })
