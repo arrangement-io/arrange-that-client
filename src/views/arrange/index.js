@@ -37,7 +37,6 @@ export class Arrange extends Component {
       url: EXPORT_ARRANGEMENT,
       data: arrangement
     })
-    //TODO change this to a safe output in the future 
       .then(response => {
         console.log(response.data)
       })
@@ -69,6 +68,67 @@ export class Arrange extends Component {
       .catch(err => {
         return Promise.reject(err)
       })
+    // For test without API call  
+    /* this.setState(
+      {
+        "_id": "aJDUX35L6",
+        "containers": [
+          {
+          "_id": "cBRXCRDX0",
+          "name": "chia van",
+          "size": 8
+          },
+          {
+          "_id": "cF7X2WFXW",
+          "name": "nathan car",
+          "size": 8
+          }
+        ],
+        "is_deleted": false,
+        "items": [
+          {
+          "_id": "i9LJ1YT7H",
+          "name": "gideon",
+          "size": 1
+          },
+          {
+          "_id": "iBCMM3B14",
+          "name": "gideon luggage",
+          "size": 1
+          },
+          {
+          "_id": "iRREMT1HT",
+          "name": "jeff",
+          "size": 1
+          },
+          {
+          "_id": "iO0SQPBSV",
+          "name": "nathan",
+          "size": 1
+          },
+          {
+          "_id": "iPOWL7Z7F",
+          "name": "moses",
+          "size": 1
+          }
+        ],
+        "name": "first arrangement",
+        "snapshots": [
+          {
+            "_id": "sNC096STL",
+            "name": "only snapshot",
+            "snapshot": {
+              "cBRXCRDX0": [
+                "iO0SQPBSV",
+                "iBCMM3B14",
+                "iPOWL7Z7F"
+              ]
+            }
+          }
+        ],
+        "timestamp": 1538582360.173882
+      }
+    ) */
   }
 
   render () {

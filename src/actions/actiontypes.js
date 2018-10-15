@@ -1,0 +1,7 @@
+export const ITEM_DELETE = "ITEM_DELETE"
+export const ITEM_ADD = "ITEM_ADD"
+export const ITEM_RENAME = "ITEM_RENAME"
+
+export const CONTAINER_DELETE = "CONTAINER_DELETE"
+export const CONTAINER_ADD = "CONTAINER_ADD"
+export const CONTAINER_RENAME = "CONTAINER_RENAME"
