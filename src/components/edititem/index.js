@@ -35,6 +35,7 @@ export class EditItem extends Component {
       <div className="item">
         <Typography variant="headline" align="center">
           <TextField
+            autoFocus={true}
             onKeyPress={this.handleKeyPress}
             onChange={this.props.handleChange}
             onBlur={this.props.handleEsc}

@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { Grid, Typography, Button } from '@material-ui/core';
 
 import ItemCollection from 'containers/itemcollection'
-import ContainerCollection from 'components/containercollection'
+import ContainerCollection from 'containers/containercollection'
 
 import { get, post } from 'services/request'
 import { ARRANGEMENT } from 'services/servicetypes';
