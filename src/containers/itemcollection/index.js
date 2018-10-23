@@ -10,6 +10,8 @@ import EditItem from 'components/edititem'
 
 import { addItem } from 'actions/item'
 
+import { uuid } from 'utils'
+
 export class ItemCollection extends Component {
   constructor (props) {
     super(props)
@@ -30,20 +32,10 @@ export class ItemCollection extends Component {
   addEditItem () {
     this.setState({
       isEdit: true,
-      _id: this.uuid(),
+      _id: uuid('item'),
       name: '',
       size: 1
     })
-  }
-
-  uuid() {
-    var text = "i";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  
-    for (var i = 0; i < 8; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-  
-    return text;
   }
 
   handleEditItemChange (e) {

@@ -10,6 +10,8 @@ import EditContainer from 'components/editcontainer'
 
 import { addContainer } from 'actions/container'
 
+import { uuid } from 'utils'
+
 export class ContainerCollection extends Component {
   constructor (props) {
     super(props)
@@ -31,20 +33,10 @@ export class ContainerCollection extends Component {
   addEditContainer () {
     this.setState({
       isEdit: true,
-      _id: this.uuid(),
+      _id: uuid('container'),
       name: '',
       size: 0
     })
-  }
-
-  uuid() {
-    var text = "c";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  
-    for (var i = 0; i < 8; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-  
-    return text;
   }
 
   handleEditContainerNameChange (e) {
