@@ -91,10 +91,10 @@ export class ItemCollection extends Component {
       <div className="itemcollection">
         <Grid container spacing={24}>
           {
-            this.props.items.map((item) => {
+            this.props.unsnapshot_items.map((id) => {
               return (
-                <Grid item xs={12} key={item._id}>
-                  <Item item={item} />
+                <Grid item xs={12} key={id}>
+                  <Item item={this.props.items.find(ele => ele._id === id)} />
                 </Grid>
               )
             })
@@ -118,7 +118,8 @@ ItemCollection.propTypes = {
     _id: PropTypes.string,
     name: PropTypes.string,
     size: PropTypes.number
-  }))
+  })),
+  unsnapshot_items: PropTypes.array
 }
 
 const mapStateToProps = (state, ownProps) => {

@@ -10,8 +10,8 @@ export class EditItem extends Component {
     this.escFunction = this.escFunction.bind(this);
   }
 
-  handleKeyPress (e) {
-    if (e.key === 'Enter') {
+  handleKeyPress (event) {
+    if (event.key === 'Enter') {
       this.props.handleEnter()
     }
   }

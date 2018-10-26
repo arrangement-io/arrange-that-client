@@ -5,7 +5,7 @@ export function uuid(type) {
   else if (type === "item")
     text = "i"
   else
-    return '' // throw not handled
+    return ''
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
   for (var i = 0; i < 8; i++)

@@ -52,9 +52,12 @@ export class Arrange extends Component {
             items = items.filter(ele => ele._id !== snapshot.snapshot[containerId][itemId])
           }
         }
+        let unsnapshot_items = items.map((item) => {
+          return item._id
+        })
         const stateVal = {
           ...response.data.arrangement,
-          unsnapshot_items: items
+          unsnapshot_items: unsnapshot_items
         }
         this.props.setRealData(stateVal)
         return Promise.resolve();
@@ -149,7 +152,7 @@ export class Arrange extends Component {
           <Typography variant="headline" gutterBottom align="left">
             Items
           </Typography>
-          <ItemCollection items={this.props.real.unsnapshot_items} />
+          <ItemCollection items={this.props.real.items} unsnapshot_items={this.props.real.unsnapshot_items} />
         </Grid>
         <Grid item xs={12} sm={8} md={9}>
           <Typography variant="headline" gutterBottom align="left">
