@@ -45,19 +45,8 @@ export class Arrange extends Component {
       url: ARRANGEMENT
     })
       .then(response => {
-        const snapshot = response.data.arrangement.snapshots[0]
-        let items = response.data.arrangement.items
-        for (var containerId in snapshot.snapshot) {
-          for (var itemId in snapshot.snapshot[containerId]) {
-            items = items.filter(ele => ele._id !== snapshot.snapshot[containerId][itemId])
-          }
-        }
-        let unsnapshot_items = items.map((item) => {
-          return item._id
-        })
         const stateVal = {
-          ...response.data.arrangement,
-          unsnapshot_items: unsnapshot_items
+          ...response.data.arrangement
         }
         this.props.setRealData(stateVal)
         return Promise.resolve();
@@ -152,7 +141,7 @@ export class Arrange extends Component {
           <Typography variant="headline" gutterBottom align="left">
             Items
           </Typography>
-          <ItemCollection items={this.props.real.items} unsnapshot_items={this.props.real.unsnapshot_items} />
+          <ItemCollection items={this.props.real.items} unsnapshot_items={typeof this.props.real.snapshots[0] === "undefined" ? [] : this.props.real.snapshots[0].unassigned} />
         </Grid>
         <Grid item xs={12} sm={8} md={9}>
           <Typography variant="headline" gutterBottom align="left">

@@ -16,8 +16,7 @@ const initialState = {
   containers: [],
   is_deleted: false,
   timestamp: '',
-  snapshots: [],
-  unsnapshot_items: []
+  snapshots: []
 }
 
 const realReducer = (state = initialState, action) => {
@@ -27,17 +26,22 @@ const realReducer = (state = initialState, action) => {
         ...state,
         items: [
           ...state.items,
-          action.item
+          action.item,
         ],
-        unsnapshot_items: [
-          ...state.unsnapshot_items,
-          action.item._id
+        snapshots: [
+          {
+            ...state.snapshots[0],
+            unassigned: [
+              ...state.snapshots[0].unassigned,
+              action.item._id
+            ]
+          }
         ]
       }
     case ITEM_DELETE:
       let items = state.items
       items = items.filter(ele => ele._id !== action.id)
-      let unsnapshot_items = state.unsnapshot_items
+      let unsnapshot_items = state.snapshots[0].unassigned
       unsnapshot_items = unsnapshot_items.filter(ele => ele !== action.id)
       let snapshot = state.snapshots[0].snapshot
       for (var containerId in snapshot) {
@@ -47,10 +51,10 @@ const realReducer = (state = initialState, action) => {
       return {
         ...state,
         items: items,
-        unsnapshot_items: unsnapshot_items,
         snapshots: [{
           ...state.snapshots[0],
-          snapshot: snapshot
+          snapshot: snapshot,
+          unassigned: unsnapshot_items
         }]
       }
     case ITEM_RENAME:
@@ -91,13 +95,13 @@ const realReducer = (state = initialState, action) => {
       return {
         ...state,
         containers: containers,
-        unsnapshot_items: [
-          ...state.unsnapshot_items,
-          added_unsnapshot_items
-        ],
         snapshots: [{
           ...state.snapshots[0],
-          snapshot: new_snapshot
+          snapshot: new_snapshot,
+          unassigned: [
+            ...state.snapshots[0].unassigned,
+            added_unsnapshot_items
+          ]
         }]
       }
     case CONTAINER_RENAME:
