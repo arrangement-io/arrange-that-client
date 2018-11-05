@@ -8,6 +8,9 @@ import {
   SET_REAL_DATA
 } from 'actions/actiontypes'
 
+import { post } from 'services/request'
+import { EXPORT_ARRANGEMENT } from 'services/servicetypes';
+
 const initialState = {
   _id: '',
   name: '',
@@ -17,6 +20,25 @@ const initialState = {
   is_deleted: false,
   timestamp: '',
   snapshots: []
+}
+
+function exportState (real) {
+  var d = new Date()
+  var seconds = d.getTime() / 1000
+  let arrangement = {
+    ...real,
+    modified_timestamp: seconds
+  }
+  post({
+    url: EXPORT_ARRANGEMENT,
+    data: arrangement
+  })
+    .then(response => {
+      console.log(response.data)
+    })
+    .catch(err => {
+      console.log(err)
+    })
 }
 
 const realReducer = (state = initialState, action) => {
@@ -48,7 +70,7 @@ const realReducer = (state = initialState, action) => {
         snapshot[containerId] = snapshot[containerId].filter(ele => ele !== action.id)
       }
 
-      return {
+      const resultItems = {
         ...state,
         items: items,
         snapshots: [{
@@ -57,6 +79,10 @@ const realReducer = (state = initialState, action) => {
           unassigned: unsnapshot_items
         }]
       }
+      
+      exportState(resultItems)
+
+      return resultItems
     case ITEM_RENAME:
       items = state.items
       let item = items.find(ele => ele._id === action.item._id)
@@ -83,7 +109,7 @@ const realReducer = (state = initialState, action) => {
       containers = containers.filter(ele => ele._id !== action.id)
       let added_unsnapshot_items
       snapshot = state.snapshots[0].snapshot
-      let new_snapshot
+      let new_snapshot = {}
       for (var containerId in snapshot) {
         if (containerId === action.id) {
           added_unsnapshot_items = snapshot[containerId]
@@ -92,7 +118,7 @@ const realReducer = (state = initialState, action) => {
         }
       }
 
-      return {
+      const resultContainers = {
         ...state,
         containers: containers,
         snapshots: [{
@@ -100,10 +126,14 @@ const realReducer = (state = initialState, action) => {
           snapshot: new_snapshot,
           unassigned: [
             ...state.snapshots[0].unassigned,
-            added_unsnapshot_items
+            ...added_unsnapshot_items
           ]
         }]
       }
+      
+      exportState(resultContainers)
+
+      return resultContainers
     case CONTAINER_RENAME:
       containers = state.containers
       let container = containers.find(ele => ele._id === action.container._id)
