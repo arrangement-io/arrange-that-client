@@ -10,7 +10,11 @@ import EditContainer from 'components/editcontainer'
 
 import { addContainer } from 'actions/container'
 
-import { uuid } from 'utils'
+import { deleteItem } from 'actions/item'
+import { deleteContainer } from 'actions/container'
+
+import { uuid, getListStyle } from 'utils'
+import { Droppable } from 'react-beautiful-dnd'
 
 export class ContainerCollection extends Component {
   constructor (props) {
@@ -109,7 +113,13 @@ export class ContainerCollection extends Component {
             this.props.containers.map((container) => {
               return (
                 <Grid item xs={12} sm={4} md={3} key={container._id}>
-                  <Container container={container} snapshot={this.props.snapshot} items={this.props.items} />
+                  <Container 
+                    container={container}
+                    snapshot={this.props.snapshot} 
+                    items={this.props.items} 
+                    deleteItem={this.props.deleteItem} 
+                    deleteContainer={this.props.deleteContainer} 
+                  />
                 </Grid>
               )
             })
@@ -154,7 +164,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     addContainer: (container) => {
       dispatch(addContainer(container))
-    }
+    },
+    deleteItem: (id) => {
+      dispatch(deleteItem(id))
+    },
+    deleteContainer: (id) => {
+      dispatch(deleteContainer(id))
+    } 
   }
 }
 

@@ -8,9 +8,11 @@ import { Grid, Typography } from '@material-ui/core'
 import Item from 'components/item'
 import EditItem from 'components/edititem'
 
-import { addItem } from 'actions/item'
+import { addItem, deleteItem } from 'actions/item'
 
-import { uuid } from 'utils'
+import { Droppable } from 'react-beautiful-dnd'
+
+import { uuid, getListStyle } from 'utils'
 
 export class ItemCollection extends Component {
   constructor (props) {
@@ -88,27 +90,37 @@ export class ItemCollection extends Component {
 
   render () {
     return (
-      <div className="itemcollection">
-        <Grid container spacing={24}>
-          {
-            this.props.unsnapshot_items.map((id) => {
-              return (
-                <Grid item xs={12} key={id}>
-                  <Item item={this.props.items.find(ele => ele._id === id)} />
+      <Droppable droppableId="itemcollection">
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            style={getListStyle(snapshot.isDraggingOver)}
+          >
+            <div className="itemcollection">
+              <Grid container spacing={24}>
+                {
+                  this.props.unsnapshot_items.map((id, index) => {
+                    return (
+                      <Grid item xs = {12} key = {id}>
+                        <Item item = {this.props.items.find(ele => ele._id === id)} deleteItem = {this.props.deleteItem} index={index} />
+                      </Grid>
+                    )
+                  })
+                }
+                { this.displayEditItem() }
+                <Grid item xs={12}>
+                  <div className="item" onClick={this.addEditItem}>
+                    <Typography variant="headline" align="center">
+                      +
+                    </Typography>
+                  </div>
                 </Grid>
-              )
-            })
-          }
-          { this.displayEditItem() }
-          <Grid item xs={12}>
-            <div className="item" onClick={this.addEditItem}>
-              <Typography variant="headline" align="center">
-                +
-              </Typography>
+              </Grid>
             </div>
-          </Grid>
-        </Grid>
-      </div>
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     )
   }
 }
@@ -130,6 +142,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     addItem: (item) => {
       dispatch(addItem(item))
+    },
+    deleteItem: (id) => {
+      dispatch(deleteItem(id))
     }
   }
 }
