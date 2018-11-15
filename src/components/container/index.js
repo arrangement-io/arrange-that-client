@@ -9,6 +9,14 @@ import { getListStyle } from 'utils'
 import { Droppable } from 'react-beautiful-dnd'
 
 export class Container extends Component {
+  getItemAry (containerId) {
+    let itemAry = []
+    for (var itemId in this.props.snapshot.snapshot[containerId]) {
+      itemAry.push(this.props.snapshot.snapshot[containerId][itemId])
+    }
+
+    return itemAry
+  }
   getItems (items, containerId) {
     let stateitems = []
     for (var itemId in this.props.snapshot.snapshot[containerId]) {
@@ -31,11 +39,11 @@ export class Container extends Component {
     ]
 
     return (
-      <Droppable droppableId={this.props.container._id}>
+      <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true}>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
-            style={getListStyle(snapshot.isDraggingOver)}
+            style={getListStyle(snapshot.isDraggingOver, this.getItemAry(this.props.container._id).includes(snapshot.draggingOverWith), this.getItemAry(this.props.container._id).length < this.props.container.size ? false : true)}
           >
             <div className="container">
               <Grid container spacing={24}>

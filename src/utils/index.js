@@ -14,9 +14,16 @@ export function uuid (type) {
   return text
 }
 
-export function getListStyle (isDraggingOver) {
+export function getListStyle (isDraggingOver, isOwn, isFull) {
+  let color = 'white'
+  if (isDraggingOver) {
+    if (!isOwn && isFull)
+      color = 'lightcoral'
+    else
+      color = 'lightblue'
+  }
   return {
-    background: isDraggingOver ? 'lightblue' : 'white',
+    background: color,
     padding: 0,
   }
 }

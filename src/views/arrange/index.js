@@ -123,13 +123,13 @@ export class Arrange extends Component {
 
   onDragEnd = result => {
     const { source, destination } = result
-    if (!destination) {
+    if (!destination) { // dropped outside the list
       return
     }
     
-    if (source.droppableId === destination.droppableId) {
+    if (source.droppableId === destination.droppableId) { // dropped in same list
       let items = []
-      if (source.droppableId === 'itemcollection') {
+      if (source.droppableId === 'itemcollection') { // dropped in items' list, only reorder the items in list
         items = this.props.real.snapshots[0].unassigned
         items = reorder(
           items,
@@ -138,7 +138,7 @@ export class Arrange extends Component {
         )
         
         this.props.setUnassigned(items)
-      } else {
+      } else { // dropped in a container, only reorder the items in a container
         items = this.props.real.snapshots[0].snapshot[source.droppableId]
         items = reorder(
           items,
@@ -148,9 +148,13 @@ export class Arrange extends Component {
 
         this.props.setSnapshot({id: source.droppableId, items: items})
       }
-    } else {
+    } else { // dropped in other list
       let result
-      if (source.droppableId === 'itemcollection') {
+      if (source.droppableId === 'itemcollection') { // dropped in a container from items' list, move item from items' list to a container
+        let containerSize = typeof this.props.real.snapshots[0].snapshot[destination.droppableId] === 'undefined' ? 0 : this.props.real.snapshots[0].snapshot[destination.droppableId].length
+        let container = this.props.real.containers.find(ele => ele._id === destination.droppableId)
+        if (containerSize >= container.size) // ignore the dropdown if container's size is full
+          return
         result = move(
           this.props.real.snapshots[0].unassigned,
           this.props.real.snapshots[0].snapshot[destination.droppableId],
@@ -160,7 +164,7 @@ export class Arrange extends Component {
 
         this.props.setUnassigned(result['source'])
         this.props.setSnapshot({id: destination.droppableId, items: result['destination']})
-      } else if (destination.droppableId === 'itemcollection') {
+      } else if (destination.droppableId === 'itemcollection') { // dropped in items' list from a container, move item from a container to items' list
         result = move(
           this.props.real.snapshots[0].snapshot[source.droppableId],
           this.props.real.snapshots[0].unassigned,
@@ -170,7 +174,11 @@ export class Arrange extends Component {
 
         this.props.setSnapshot({id: source.droppableId, items: result['source']})
         this.props.setUnassigned(result['destination'])
-      } else {
+      } else { // dropped in a container from another container, move item from a container to another container
+        let containerSize = typeof this.props.real.snapshots[0].snapshot[destination.droppableId] === 'undefined' ? 0 : this.props.real.snapshots[0].snapshot[destination.droppableId].length
+        let container = this.props.real.containers.find(ele => ele._id === destination.droppableId)
+        if (containerSize >= container.size) // ignore the dropdown if container's size is full
+          return
         result = move(
           this.props.real.snapshots[0].snapshot[source.droppableId],
           this.props.real.snapshots[0].snapshot[destination.droppableId],
