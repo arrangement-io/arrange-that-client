@@ -5,7 +5,9 @@ import {
   CONTAINER_ADD,
   CONTAINER_DELETE,
   CONTAINER_RENAME,
-  SET_REAL_DATA
+  SET_REAL_DATA,
+  SET_UNASSIGNED,
+  SET_SNAPSHOT
 } from 'actions/actiontypes'
 
 import { post } from 'services/request'
@@ -107,7 +109,7 @@ const realReducer = (state = initialState, action) => {
     case CONTAINER_DELETE:
       let containers = state.containers
       containers = containers.filter(ele => ele._id !== action.id)
-      let added_unsnapshot_items
+      let added_unsnapshot_items = []
       snapshot = state.snapshots[0].snapshot
       let new_snapshot = {}
       for (var containerId in snapshot) {
@@ -148,6 +150,30 @@ const realReducer = (state = initialState, action) => {
       }
     case SET_REAL_DATA:
       return action.data
+    case SET_UNASSIGNED:
+      return {
+        ...state,
+        snapshots: [{
+          ...state.snapshots[0],
+          unassigned: action.data
+        }]
+      }
+    case SET_SNAPSHOT:
+      snapshot = state.snapshots[0].snapshot
+      new_snapshot = {}
+      for (var containerId in snapshot) {
+        if (containerId !== action.data.id) {
+          new_snapshot[containerId] = snapshot[containerId]
+        }
+      }
+      new_snapshot[action.data.id] = action.data.items
+      return {
+        ...state,
+        snapshots: [{
+          ...state.snapshots[0],
+          snapshot: new_snapshot
+        }]
+      }
     default:
       return state
   }

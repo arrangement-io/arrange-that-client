@@ -3,6 +3,10 @@ import PropTypes from 'prop-types'
 import { Grid, Typography } from '@material-ui/core'
 import MoreMenu from 'components/moremenu'
 
+import { Draggable } from 'react-beautiful-dnd'
+
+import { getItemStyle } from 'utils'
+
 export class Item extends Component {
   handleItemClick = option => {
     if (option === 'Delete') {
@@ -16,18 +20,36 @@ export class Item extends Component {
     ]
     
     return (
-      <div className="item">
-        <Grid container spacing={24}>
-          <Grid item xs={8}>
-            <Typography variant="headline" align="center">
-              {this.props.item.name}
-            </Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <MoreMenu options = {options} handleItemClick = {this.handleItemClick} />
-          </Grid>
-        </Grid>
-      </div>
+      <Draggable
+        key={this.props.item._id}
+        draggableId={this.props.item._id}
+        index={this.props.index}
+      >
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            style={getItemStyle(
+              snapshot.isDragging,
+              provided.draggableProps.style,
+              this.props.getDragItemColor(this.props.containerId, snapshot.draggingOver)
+            )}
+            className="item"
+          >
+            <Grid container spacing={24}>
+              <Grid item xs={8}>
+                <Typography variant="headline" align="center">
+                  {this.props.item.name}
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <MoreMenu options = {options} handleItemClick = {this.handleItemClick} />
+              </Grid>
+            </Grid>
+          </div>
+        )}
+      </Draggable>
     )
   }
 }
@@ -38,7 +60,9 @@ Item.propTypes = {
     name: PropTypes.string,
     size: PropTypes.number
   }),
-  deleteItem: PropTypes.func
+  deleteItem: PropTypes.func,
+  getDragItemColor: PropTypes.func,
+  containerId: PropTypes.string
 }
 
 export default Item

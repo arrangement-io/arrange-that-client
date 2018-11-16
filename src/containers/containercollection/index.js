@@ -13,7 +13,8 @@ import { addContainer } from 'actions/container'
 import { deleteItem } from 'actions/item'
 import { deleteContainer } from 'actions/container'
 
-import { uuid } from 'utils'
+import { uuid, getListStyle } from 'utils'
+import { Droppable } from 'react-beautiful-dnd'
 
 export class ContainerCollection extends Component {
   constructor (props) {
@@ -117,7 +118,8 @@ export class ContainerCollection extends Component {
                     snapshot={this.props.snapshot} 
                     items={this.props.items} 
                     deleteItem={this.props.deleteItem} 
-                    deleteContainer={this.props.deleteContainer} 
+                    deleteContainer={this.props.deleteContainer}
+                    getDragItemColor={this.props.getDragItemColor}
                   />
                 </Grid>
               )
@@ -152,7 +154,8 @@ ContainerCollection.propTypes = {
     _id: PropTypes.string,
     name: PropTypes.string,
     size: PropTypes.number
-  }))
+  })),
+  getDragItemColor: PropTypes.func
 }
 
 const mapStateToProps = (state, ownProps) => {

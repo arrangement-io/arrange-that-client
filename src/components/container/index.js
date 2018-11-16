@@ -5,7 +5,18 @@ import MoreMenu from 'components/moremenu'
 
 import Item from 'components/item'
 
+import { getListStyle } from 'utils'
+import { Droppable } from 'react-beautiful-dnd'
+
 export class Container extends Component {
+  getItemAry (containerId) {
+    let itemAry = []
+    for (var itemId in this.props.snapshot.snapshot[containerId]) {
+      itemAry.push(this.props.snapshot.snapshot[containerId][itemId])
+    }
+
+    return itemAry
+  }
   getItems (items, containerId) {
     let stateitems = []
     for (var itemId in this.props.snapshot.snapshot[containerId]) {
@@ -28,34 +39,44 @@ export class Container extends Component {
     ]
 
     return (
-      <div className="container">
-        <Grid container spacing={24}>
-          <Grid item xs={8}>
-            <Typography variant="headline" align="center">
-              {this.props.container.name}
-            </Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <MoreMenu options = {options} handleItemClick = {this.handleItemClick} />
-          </Grid>
-          <Grid item xs={12}>
-            <div className="container__items">
+      <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true}>
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            style={getListStyle(snapshot.isDraggingOver, this.getItemAry(this.props.container._id).includes(snapshot.draggingOverWith), this.getItemAry(this.props.container._id).length < this.props.container.size ? false : true)}
+          >
+            <div className="container">
               <Grid container spacing={24}>
-                {
-                  this.getItems(this.props.items, this.props.container._id).map((item) => {
-                    if (typeof item !== 'undefined')
-                      return (
-                        <Grid item xs={12} key={item._id}>
-                          <Item item={item} deleteItem = {this.props.deleteItem} />
-                        </Grid>
-                      )
-                  })
-                }
+                <Grid item xs={8}>
+                  <Typography variant="headline" align="center">
+                    {this.props.container.name}
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <MoreMenu options = {options} handleItemClick = {this.handleItemClick} />
+                </Grid>
+                <Grid item xs={12}>
+                  <div className="container__items">
+                    <Grid container spacing={24}>
+                      {
+                        this.getItems(this.props.items, this.props.container._id).map((item, index) => {
+                          if (typeof item !== 'undefined')
+                            return (
+                              <Grid item xs={12} key={item._id}>
+                                <Item item={item} deleteItem = {this.props.deleteItem} index={index} getDragItemColor={this.props.getDragItemColor} containerId={this.props.container._id} />
+                              </Grid>
+                            )
+                        })
+                      }
+                    </Grid>
+                  </div>
+                </Grid>
               </Grid>
             </div>
-          </Grid>
-        </Grid>
-      </div>
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     )
   }
 }
@@ -77,7 +98,8 @@ Container.propTypes = {
     size: PropTypes.number
   }),
   deleteItem: PropTypes.func,
-  deleteContainer: PropTypes.func
+  deleteContainer: PropTypes.func,
+  getDragItemColor: PropTypes.func
 }
 
 export default Container
