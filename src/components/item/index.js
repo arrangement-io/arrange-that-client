@@ -32,7 +32,8 @@ export class Item extends Component {
             {...provided.dragHandleProps}
             style={getItemStyle(
               snapshot.isDragging,
-              provided.draggableProps.style
+              provided.draggableProps.style,
+              this.props.getDragItemColor(this.props.containerId, snapshot.draggingOver)
             )}
             className="item"
           >
@@ -59,7 +60,9 @@ Item.propTypes = {
     name: PropTypes.string,
     size: PropTypes.number
   }),
-  deleteItem: PropTypes.func
+  deleteItem: PropTypes.func,
+  getDragItemColor: PropTypes.func,
+  containerId: PropTypes.string
 }
 
 export default Item

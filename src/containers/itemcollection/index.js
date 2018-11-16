@@ -102,7 +102,7 @@ export class ItemCollection extends Component {
                   this.props.unsnapshot_items.map((id, index) => {
                     return (
                       <Grid item xs = {12} key = {id}>
-                        <Item item = {this.props.items.find(ele => ele._id === id)} deleteItem = {this.props.deleteItem} index={index} />
+                        <Item item = {this.props.items.find(ele => ele._id === id)} deleteItem = {this.props.deleteItem} index={index} getDragItemColor={this.props.getDragItemColor} containerId="itemcollection" />
                       </Grid>
                     )
                   })
@@ -131,7 +131,8 @@ ItemCollection.propTypes = {
     name: PropTypes.string,
     size: PropTypes.number
   })),
-  unsnapshot_items: PropTypes.array
+  unsnapshot_items: PropTypes.array,
+  getDragItemColor: PropTypes.func
 }
 
 const mapStateToProps = (state, ownProps) => {

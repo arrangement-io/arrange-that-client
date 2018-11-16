@@ -22,6 +22,7 @@ export class Arrange extends Component {
     super(props)
 
     this.exportState = this.exportState.bind(this)
+    this.getDragItemColor = this.getDragItemColor.bind(this)
   }
 
   exportState () {
@@ -192,6 +193,24 @@ export class Arrange extends Component {
     }
   }
 
+  getDragItemColor(sourceId, destId) {
+    if (sourceId === destId)
+      return 'lightgreen'
+    else {
+      const container = this.props.real.containers.find(ele => ele._id === destId)
+      let itemAry = []
+      for (var itemId in this.props.real.snapshots[0].snapshot[destId]) {
+        itemAry.push(this.props.real.snapshots[0].snapshot[destId][itemId])
+      }
+
+      let size = typeof container === 'undefined' ? 1 : container.size
+      if (itemAry.length < size)
+        return 'lightgreen'
+      else
+        return 'lightcoral'
+    }
+  }
+
   render () {
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
@@ -217,13 +236,13 @@ export class Arrange extends Component {
             <Typography variant="headline" gutterBottom align="left">
               Items
             </Typography>
-            <ItemCollection items={this.props.real.items} unsnapshot_items={typeof this.props.real.snapshots[0] === "undefined" ? [] : this.props.real.snapshots[0].unassigned} />   
+            <ItemCollection items={this.props.real.items} unsnapshot_items={typeof this.props.real.snapshots[0] === "undefined" ? [] : this.props.real.snapshots[0].unassigned} getDragItemColor={this.getDragItemColor} />   
           </Grid>
           <Grid item xs={12} sm={8} md={9}>
             <Typography variant="headline" gutterBottom align="left">
               Containers
             </Typography>
-            <ContainerCollection snapshot={this.props.real.snapshots[0]} containers={this.props.real.containers} items={this.props.real.items} />
+            <ContainerCollection snapshot={this.props.real.snapshots[0]} containers={this.props.real.containers} items={this.props.real.items} getDragItemColor={this.getDragItemColor} />
           </Grid>
         </Grid>
       </DragDropContext>

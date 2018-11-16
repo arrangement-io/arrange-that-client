@@ -118,7 +118,8 @@ export class ContainerCollection extends Component {
                     snapshot={this.props.snapshot} 
                     items={this.props.items} 
                     deleteItem={this.props.deleteItem} 
-                    deleteContainer={this.props.deleteContainer} 
+                    deleteContainer={this.props.deleteContainer}
+                    getDragItemColor={this.props.getDragItemColor}
                   />
                 </Grid>
               )
@@ -153,7 +154,8 @@ ContainerCollection.propTypes = {
     _id: PropTypes.string,
     name: PropTypes.string,
     size: PropTypes.number
-  }))
+  })),
+  getDragItemColor: PropTypes.func
 }
 
 const mapStateToProps = (state, ownProps) => {
