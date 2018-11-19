@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "env": {
+    "NODE_PATH": "src",
+    "REACT_APP_DEV_API_HOST": "https://arrangement-server.herokuapp.com",
+    "REACT_APP_PROD_API_HOST": "https://arrangement-server.herokuapp.com"
+  }
+}
+
