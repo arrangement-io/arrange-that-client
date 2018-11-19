@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Typography } from '@material-ui/core'
+import { Grid, Typography, Snackbar } from '@material-ui/core'
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
 
 import { connect } from 'react-redux'
 
@@ -13,8 +15,7 @@ import { addContainer } from 'actions/container'
 import { deleteItem } from 'actions/item'
 import { deleteContainer } from 'actions/container'
 
-import { uuid, getListStyle } from 'utils'
-import { Droppable } from 'react-beautiful-dnd'
+import { uuid } from 'utils'
 
 export class ContainerCollection extends Component {
   constructor (props) {
@@ -23,7 +24,8 @@ export class ContainerCollection extends Component {
       isEdit: false,
       name: '',
       _id: '',
-      size: 0
+      size: 0,
+      isAlert: false
     }
 
     this.addEditContainer = this.addEditContainer.bind(this)
@@ -39,7 +41,8 @@ export class ContainerCollection extends Component {
       isEdit: true,
       _id: uuid('container'),
       name: '',
-      size: 0
+      size: 0,
+      isAlert: false
     })
   }
 
@@ -51,7 +54,6 @@ export class ContainerCollection extends Component {
   }
 
   handleEditContainerSizeChange (e) {
-    
     let val = parseInt(e.target.value)
     if (isNaN(val)) {
       val = 0
@@ -69,14 +71,27 @@ export class ContainerCollection extends Component {
       size: this.state.size
     }
 
+    const container1 = this.props.real.containers.find(ele => ele._id === this.state._id)
+    const container2 = this.props.real.containers.find(ele => ele.name === this.state.name)
+    if (typeof container1 === 'undefined' && typeof container2 === 'undefined') {
+      this.setState({
+        isEdit: false,
+        name: '',
+        _id: '',
+        size: 0,
+        isAlert: false
+      })
+
+      this.props.addContainer(container)
+      return
+    }
     this.setState({
       isEdit: false,
       name: '',
       _id: '',
-      size: 0
+      size: 1,
+      isAlert: true
     })
-
-    this.props.addContainer(container)
   }
 
   handleEditContainerEscKey () {
@@ -84,7 +99,8 @@ export class ContainerCollection extends Component {
       isEdit: false,
       name: '',
       _id: '',
-      size: 0
+      size: 0,
+      isAlert: false
     })
   }
 
@@ -104,6 +120,13 @@ export class ContainerCollection extends Component {
       )
     }
   }
+
+  handleClose = (event, reason) => {
+    this.setState({
+      ...this.state,
+      isAlert: false
+    });
+  };
 
   render () {
     return (
@@ -134,6 +157,30 @@ export class ContainerCollection extends Component {
             </div>
           </Grid>
         </Grid>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.isAlert}
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+          ContentProps={{
+            'aria-describedby': 'container-duplicated',
+          }}
+          message={<span id="container-duplicated">Container duplicated</span>}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className=""
+              onClick={this.handleClose}
+            >
+              <CloseIcon />
+            </IconButton>,
+          ]}
+        />
       </div>
     )
   }
@@ -159,7 +206,12 @@ ContainerCollection.propTypes = {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {}
+  const {
+    real
+  } = state
+  return {
+    real
+  }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
