@@ -46,7 +46,7 @@ function exportState (real) {
 const realReducer = (state = initialState, action) => {
   switch (action.type) {
     case ITEM_ADD:
-      return {
+      const addItems = {
         ...state,
         items: [
           ...state.items,
@@ -62,6 +62,10 @@ const realReducer = (state = initialState, action) => {
           }
         ]
       }
+
+      exportState(addItems)
+
+      return addItems
     case ITEM_DELETE:
       let items = state.items
       items = items.filter(ele => ele._id !== action.id)
@@ -99,13 +103,17 @@ const realReducer = (state = initialState, action) => {
         ]
       }
     case CONTAINER_ADD:
-      return {
+      const addContainers = {
         ...state,
         containers: [
           ...state.containers,
           action.container
         ]
       }
+
+      exportState(addContainers)
+
+      return addContainers
     case CONTAINER_DELETE:
       let containers = state.containers
       containers = containers.filter(ele => ele._id !== action.id)

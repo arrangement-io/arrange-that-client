@@ -66,6 +66,7 @@ export class Container extends Component {
                                 <Item item={item} deleteItem = {this.props.deleteItem} index={index} getDragItemColor={this.props.getDragItemColor} containerId={this.props.container._id} />
                               </Grid>
                             )
+                          return {}
                         })
                       }
                     </Grid>
