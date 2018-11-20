@@ -40,6 +40,7 @@ export class EditItem extends Component {
             onChange={this.props.handleChange}
             onBlur={this.props.handleEsc}
             val={this.props.name}
+            label="Name"
           />
         </Typography>
       </div>

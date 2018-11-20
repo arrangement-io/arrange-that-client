@@ -57,6 +57,7 @@ export class EditContainer extends Component {
                 onChange={this.props.handleNameChange}
                 val={this.props.name}
                 autoFocus={true}
+                label="Name"
               />
             </Typography>
           </Grid>
@@ -71,6 +72,7 @@ export class EditContainer extends Component {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                label="Size"
               />
             </Typography>
           </Grid>
