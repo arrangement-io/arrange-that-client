@@ -30,7 +30,7 @@ class App extends Component {
             mode: 'cors',
             cache: 'default'
         };
-        fetch('https://accounts.google.com/signin/oauth/oauthchooseaccount?client_id=206945578523-0h8t8i7k5d09j0vg31ncspa4pbrddff6.apps.googleusercontent.com&as=xFDBemLg1L9ik5llB8K7Uw&destination=http%3A%2F%2Farrangement-server.herokuapp.com&approval_state=!ChRSWklSU2I5OHRWZDJGMVVzUnJMVhIfQTlDMmZ0Y2VkaW9aMEs2dFEwd1Nsa3VsS1ZfSGRSWQ%E2%88%99APNbktkAAAAAXABpjOv6r9QOSQUANtEjaqia7gTv234E&oauthgdpr=1&xsrfsig=AHgIfE85dgKn7GfOJkXL2gDfCd67Z6reRA&flowName=GeneralOAuthFlow', options).then(r => {
+        fetch('http://arrangement-server.herokuapp.com/login', options).then(r => {
             const token = r.headers.get('x-auth-token');
             r.json().then(user => {
                 if (token) {
@@ -74,7 +74,7 @@ class App extends Component {
     }
 }
 
-// TODO: finish implementing the Google SSO and add back the Route function 
+// TODO: finish implementing the Google SSO and Route function
 //         Route information
 //
 //          render() {
