@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux'
 
-import real from './real';
-import edititem from './edititem';
+import real from './real'
+import account from './account'
+import arrangements from './arrangements'
 
 const rootReducer = combineReducers({
   real,
-  edititem
-});
+  account,
+  arrangements
+})
 
-export default rootReducer;
+export default rootReducer

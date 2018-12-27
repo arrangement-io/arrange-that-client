@@ -37,9 +37,11 @@ function exportState (real) {
   })
     .then(response => {
       console.log(response.data)
+      Promise.resolve()
     })
     .catch(err => {
       console.log(err)
+      Promise.reject(err)
     })
 }
 
@@ -120,7 +122,7 @@ const realReducer = (state = initialState, action) => {
       let added_unsnapshot_items = []
       snapshot = state.snapshots[0].snapshot
       let new_snapshot = {}
-      for (var containerId in snapshot) {
+      for (containerId in snapshot) {
         if (containerId === action.id) {
           added_unsnapshot_items = snapshot[containerId]
         } else {
@@ -169,7 +171,7 @@ const realReducer = (state = initialState, action) => {
     case SET_SNAPSHOT:
       snapshot = state.snapshots[0].snapshot
       new_snapshot = {}
-      for (var containerId in snapshot) {
+      for (containerId in snapshot) {
         if (containerId !== action.data.id) {
           new_snapshot[containerId] = snapshot[containerId]
         }

@@ -6,5 +6,6 @@ export const base_url = () => {
   }
 }
 
-export const ARRANGEMENT = '/arrangement/zzzzEPQPQ'
+// export const ARRANGEMENT = '/arrangement/aJDUX35L6'
+export const ARRANGEMENT = '/arrangement'
 export const EXPORT_ARRANGEMENT = '/arrangement'

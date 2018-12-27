@@ -11,6 +11,7 @@ import createHistory from 'history/createBrowserHistory'
 import Layout from 'layout'
 import GoogleLoginPage from 'views/google-login'
 import Arrange from 'views/arrange'
+import AddArrange from 'views/addarrange'
 
 const history = createHistory()
 
@@ -20,6 +21,7 @@ const router = (
       <Switch>
         <Route exact path='/' component={GoogleLoginPage} />
         <Route exact path='/arrangement' component={Arrange} />
+        <Route exact path='/addarrangement' component={AddArrange} />
       </Switch>
     </Layout>
   </Router>
