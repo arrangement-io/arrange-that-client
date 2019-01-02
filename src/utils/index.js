@@ -4,8 +4,13 @@ export function uuid (type) {
     text = "c"
   else if (type === "item")
     text = "i"
+  else if (type === "snapshot")
+    text = "s"
+  else if (type === "arrangement")
+    text = "a"
   else
     return ''
+    
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
   for (var i = 0; i < 8; i++)
