@@ -38,15 +38,17 @@ export class Arrange extends Component {
     })
       .then(response => {
         console.log(response.data)
+        Promise.resolve()
       })
       .catch(err => {
         console.log(err)
+        Promise.reject(err)
       })
   }
 
   componentDidMount () {
     // Call api and get the response, set state
-    get({
+    /* get({
       url: ARRANGEMENT
     })
       .then(response => {
@@ -58,7 +60,8 @@ export class Arrange extends Component {
       })
       .catch(err => {
         return Promise.reject(err)
-      })
+
+      }) */ 
   }
 
   onDragEnd = result => {
