@@ -37,7 +37,7 @@ export class Header extends Component {
   handleClick (event, id) {
     console.log(id)
     get({
-      url: ARRANGEMENT + '/' + id
+      url: ARRANGEMENT + '/' + id + '/json'
     })
     .then(response => {
       const stateVal = {
