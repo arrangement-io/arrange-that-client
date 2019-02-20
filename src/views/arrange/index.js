@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 
 import { Grid, Typography, Button } from '@material-ui/core'
 
+import SimpleModalLauncher from 'components/modalLauncher'
+
 import ItemCollection from 'containers/itemcollection'
 import ContainerCollection from 'containers/containercollection'
 
@@ -22,6 +24,7 @@ export class Arrange extends Component {
     super(props)
 
     this.exportState = this.exportState.bind(this)
+    this.exportToTSV = this.exportToTSV.bind(this)
     this.getDragItemColor = this.getDragItemColor.bind(this)
   }
 
@@ -43,6 +46,19 @@ export class Arrange extends Component {
       .catch(err => {
         console.log(err)
         Promise.reject(err)
+      })
+  }
+
+  exportToTSV () {
+    this.exportState()
+    get({
+      url: `${EXPORT_ARRANGEMENT}/EPQPQmmmm/tsv`
+      // url: `${EXPORT_ARRANGEMENT}/${this.props.real._id}/tsv`
+    })
+      .then(response => {
+        console.log(response.data)
+        alert(response.data)
+        Promise.resolve()
       })
   }
 
@@ -164,9 +180,10 @@ export class Arrange extends Component {
           </Grid>
           <Grid item xs={12} sm={4}>
             <Typography variant="headline" gutterBottom align="center">
-              <Button variant="outlined" color="primary" onClick={this.exportState}>
+              <Button variant="outlined" color="primary" onClick={this.exportToTSV}>
                 Export
               </Button>
+              
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4}>
