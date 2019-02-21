@@ -5,7 +5,7 @@ import { withRouter } from "react-router"
 
 import { get } from 'services/request'
 import { ARRANGEMENT } from 'services/servicetypes'
-import { setRealData } from 'actions/real'
+import { setRealData } from 'actions/real/real'
 
 export class Header extends Component {
   constructor (props) {

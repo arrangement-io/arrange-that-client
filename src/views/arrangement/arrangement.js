@@ -4,14 +4,14 @@ import { connect } from 'react-redux'
 
 import { Grid, Typography, Button } from '@material-ui/core'
 
-import ItemCollection from 'containers/itemcollection'
-import ContainerCollection from 'containers/containercollection'
+import ItemCollection from 'containers/itemcollection/itemcollection'
+import ContainerCollection from 'containers/containercollection/containercollection'
 
 import { get, post } from 'services/request'
 import { ARRANGEMENT } from 'services/servicetypes'
 import { EXPORT_ARRANGEMENT } from 'services/servicetypes'
 
-import { setRealData, setUnassigned, setSnapshot } from 'actions/real'
+import { setRealData, setUnassigned, setSnapshot } from 'actions/real/real'
 
 import { DragDropContext } from 'react-beautiful-dnd'
 

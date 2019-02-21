@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { TextField, Button, Grid } from '@material-ui/core'
 
-import { setRealData } from 'actions/real'
+import { setRealData } from 'actions/real/real'
 import { uuid } from 'utils'
 
 export class AddArrange extends Component {

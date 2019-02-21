@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Header from 'containers/header'
+import Header from 'containers/header/header'
 import { Grid } from '@material-ui/core';
 
 const Default = props => {

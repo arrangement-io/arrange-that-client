@@ -4,8 +4,8 @@ import { post, get } from 'services/request'
 import config from 'config.json'
 import { connect } from 'react-redux'
 
-import { setAccount } from 'actions/account'
-import { setArrangements } from 'actions/arrangements'
+import { setAccount } from 'actions/account/account'
+import { setArrangements } from 'actions/arrangements/arrangements'
 
 class GoogleLoginPage extends Component {
 
