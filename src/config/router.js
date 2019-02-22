@@ -20,7 +20,7 @@ const router = (
     <Layout>
       <Switch>
         <Route exact path='/' component={GoogleLoginPage} />
-        <Route exact path='/arrangement' component={Arrangement} />
+        <Route exact path='/arrangement/:arrangement_id' component={Arrangement} />
         <Route exact path='/addarrangement' component={AddArrangement} />
       </Switch>
     </Layout>

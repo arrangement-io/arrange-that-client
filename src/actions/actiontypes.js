@@ -14,3 +14,5 @@ export const SET_REAL_DATA = "SET_REAL_DATA"
 
 export const SET_UNASSIGNED = "SET_UNASSIGNED"
 export const SET_SNAPSHOT = "SET_SNAPSHOT"
+
+export const SAVE_STATE = "SAVE_STATE"
