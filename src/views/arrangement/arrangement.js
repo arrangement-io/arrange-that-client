@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { Grid, Typography, Button } from '@material-ui/core'
 
-import SimpleModalLauncher from 'components/modalLauncher'
+import ModalLauncher from 'components/modallauncher/modallauncher'
 
 import ItemCollection from 'containers/itemcollection/itemcollection'
 import ContainerCollection from 'containers/containercollection/containercollection'

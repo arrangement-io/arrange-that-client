@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import injectSheet from 'react-jss';
-import styles from './SimpleModalLauncherStyles'; // Import styles
-import SimpleModal from 'components/modal'; // Import SimpleModal component
+import styles from './modallauncherstyles'; // Import styles
+import Modal from 'components/modal/modal'; // Import Modal component
 
 // Declaration of the component as React Class Component
-class SimpleModalLauncher extends Component {
+class ModalLauncher extends Component {
   
   // Init of the component before it is mounted.
   // Sets the modal visibility (showModal) to false.
@@ -37,12 +37,12 @@ class SimpleModalLauncher extends Component {
         </button>
 
         {showModal &&
-          <SimpleModal onCloseRequest={() => this.handleToggleModal()}>
+          <Modal onCloseRequest={() => this.handleToggleModal()}>
             <img src="https://placeimg.com/900/650/nature" alt="Nature" />
-          </SimpleModal>}
+          </Modal>}
       </div>
     );
   }
 }
 
-export default injectSheet(styles)(SimpleModalLauncher);
+export default injectSheet(styles)(ModalLauncher);

@@ -1,10 +1,10 @@
 import { React, Component } from 'react';
 import injectSheet from 'react-jss';
 import isNil from 'lodash/fp/isNil';
-import styles from './SimpleModalStyles'; // Import styles
+import styles from './modalstyles'; // Import styles
 
 // Declaration of the component as React Class Component
-class SimpleModal extends Component {
+class Modal extends Component {
   
   // Init of the component before it is mounted.
   constructor(props) {
@@ -82,4 +82,4 @@ class SimpleModal extends Component {
 }
 
 
-export default injectSheet(styles)(SimpleModal);
+export default injectSheet(styles)(Modal);
