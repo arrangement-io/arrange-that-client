@@ -7,10 +7,10 @@ import { Grid, Typography, Snackbar } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 
-import Item from 'components/item'
-import EditItem from 'components/edititem'
+import Item from 'components/item/item'
+import EditItem from 'components/edititem/edititem'
 
-import { addItem, deleteItem } from 'actions/item'
+import { addItem, deleteItem } from 'actions/item/item'
 
 import { Droppable } from 'react-beautiful-dnd'
 

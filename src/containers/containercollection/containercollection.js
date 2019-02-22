@@ -6,14 +6,13 @@ import CloseIcon from '@material-ui/icons/Close'
 
 import { connect } from 'react-redux'
 
-import Container from 'components/container'
+import Container from 'components/container/container'
 
-import EditContainer from 'components/editcontainer'
+import EditContainer from 'components/editcontainer/editcontainer'
 
-import { addContainer } from 'actions/container'
+import { addContainer, deleteContainer } from 'actions/container/container'
 
-import { deleteItem } from 'actions/item'
-import { deleteContainer } from 'actions/container'
+import { deleteItem } from 'actions/item/item'
 
 import { uuid } from 'utils'
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Grid, Typography } from '@material-ui/core'
-import MoreMenu from 'components/moremenu'
+import MoreMenu from 'components/moremenu/moremenu'
 
 import { Draggable } from 'react-beautiful-dnd'
 
