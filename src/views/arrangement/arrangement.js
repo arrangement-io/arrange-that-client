@@ -189,17 +189,19 @@ export class Arrange extends Component {
               <Button variant="outlined" color="primary" onClick={this.exportToTSV}>
                 Export
               </Button>
-              <Modal
-                aria-labelledby="simple-modal-title"
-                aria-describedby="simple-modal-description"
+              <Modal style={{
+                  top: `50%`,
+                  left: `50%`,
+                  transform: `translate(-50%, -50%)`,
+                }}
                 open={this.state.showTSV}
                 onClose={() => this.setState({ showTSV: false })}
               >
                 <div>
-                  <Typography variant="headline" id="modal-title">
+                  <Typography variant="headline" id="modal-title" gutterBottom align="center">
                     Exported Arrangement
                   </Typography>
-                  <TextField id="simple-modal-description" multiline defaultValue={this.state.exportText} />
+                  <TextField id="simple-modal-description" disabled multiline defaultValue={this.state.exportText} />
                 </div>
               </Modal>
               
