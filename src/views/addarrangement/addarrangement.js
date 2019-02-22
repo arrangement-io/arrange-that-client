@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { TextField, Button, Grid } from '@material-ui/core'
 
-import { setRealData } from 'actions/real/real'
+import { setRealData, setSnapshot } from 'actions/real/real'
 import { uuid } from 'utils'
 
 export class AddArrange extends Component {
@@ -43,9 +43,10 @@ export class AddArrange extends Component {
       return
     }
     var d = new Date()
+    const arrangement_id = uuid("arrangement")
     let real = {
       user: this.props.account.user.googleId,
-      _id: uuid("arrangement"),
+      _id: arrangement_id,
       containers: [],
       is_deleted: false,
       items: [],
@@ -63,7 +64,7 @@ export class AddArrange extends Component {
     }
 
     this.props.setRealData(real)
-    this.props.history.push('/arrangement')
+    this.props.history.push('/arrangement/' + arrangement_id)
   }
 
   render () {
@@ -112,6 +113,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     setRealData: (data) => {
       dispatch(setRealData(data))
+    },
+    setSnapshot: (data) => {
+      dispatch(setSnapshot(data))
     }
   }
 }

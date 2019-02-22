@@ -46,22 +46,27 @@ export class Arrange extends Component {
       })
   }
 
-  componentDidMount () {
-    // Call api and get the response, set state
-    /* get({
-      url: ARRANGEMENT
-    })
+  // Loads the state from the backend given the arrangement_id in the url param
+  loadState () {
+    const id = this.props.match.params.arrangement_id
+    return get({url: ARRANGEMENT + "/" + id})
       .then(response => {
-        const stateVal = {
-          ...response.data.arrangement
+        if (response.data.arrangement == "no arrangement found") {
+          console.log("no arrangement found")
         }
-        this.props.setRealData(stateVal)
-        return Promise.resolve();
+        else {
+          this.props.setRealData(response.data.arrangement)
+        }
+        Promise.resolve()
       })
       .catch(err => {
-        return Promise.reject(err)
+        console.log(err)
+        Promise.reject(err)
+      })
+  }
 
-      }) */ 
+  componentDidMount () {
+    this.loadState()
   }
 
   onDragEnd = result => {
@@ -139,17 +144,19 @@ export class Arrange extends Component {
     if (sourceId === destId)
       return 'lightgreen'
     else {
-      const container = this.props.real.containers.find(ele => ele._id === destId)
-      let itemAry = []
-      for (var itemId in this.props.real.snapshots[0].snapshot[destId]) {
-        itemAry.push(this.props.real.snapshots[0].snapshot[destId][itemId])
+      if (this.props.real.containers) {
+        const container = this.props.real.containers.find(ele => ele._id === destId)
+        let itemAry = []
+        for (var itemId in this.props.real.snapshots[0].snapshot[destId]) {
+          itemAry.push(this.props.real.snapshots[0].snapshot[destId][itemId])
+        }
+  
+        let size = typeof container === 'undefined' ? 1 : container.size
+        if (itemAry.length < size)
+          return 'lightgreen'
+        else
+          return 'lightcoral'
       }
-
-      let size = typeof container === 'undefined' ? 1 : container.size
-      if (itemAry.length < size)
-        return 'lightgreen'
-      else
-        return 'lightcoral'
     }
   }
 
@@ -193,9 +200,7 @@ export class Arrange extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const {
-    real
-  } = state
+  const { real } = state
   return {
     real
   }
