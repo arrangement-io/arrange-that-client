@@ -2,9 +2,7 @@ import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
 
-import { Grid, Typography, Button } from '@material-ui/core'
-
-import ModalLauncher from 'components/modallauncher/modallauncher'
+import { Grid, Typography, Button, Modal, TextField } from '@material-ui/core'
 
 import ItemCollection from 'containers/itemcollection/itemcollection'
 import ContainerCollection from 'containers/containercollection/containercollection'
@@ -27,6 +25,7 @@ export class Arrange extends Component {
     this.exportState = this.exportState.bind(this)
     this.exportToTSV = this.exportToTSV.bind(this)
     this.getDragItemColor = this.getDragItemColor.bind(this)
+    this.state = { showTSV: false }
   }
 
   exportState () {
@@ -59,8 +58,14 @@ export class Arrange extends Component {
       .then(response => {
         console.log(response.data)
         alert(response.data)
+        this.setState({ exportText: response.data,
+                        showTSV: true })
         Promise.resolve()
       })
+  }
+
+  closeTSV () {
+    this.setState({ showTSV: false })
   }
 
   componentDidMount () {
@@ -184,6 +189,19 @@ export class Arrange extends Component {
               <Button variant="outlined" color="primary" onClick={this.exportToTSV}>
                 Export
               </Button>
+              <Modal
+                aria-labelledby="simple-modal-title"
+                aria-describedby="simple-modal-description"
+                open={this.state.showTSV}
+                onClose={() => this.setState({ showTSV: false })}
+              >
+                <div>
+                  <Typography variant="headline" id="modal-title">
+                    Exported Arrangement
+                  </Typography>
+                  <TextField id="simple-modal-description" multiline defaultValue={this.state.exportText} />
+                </div>
+              </Modal>
               
             </Typography>
           </Grid>

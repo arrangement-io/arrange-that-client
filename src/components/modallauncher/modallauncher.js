@@ -12,6 +12,7 @@ class ModalLauncher extends Component {
     super(props);
     this.state = {
       showModal: false,
+      content: "",
     };
   }
   
@@ -19,13 +20,18 @@ class ModalLauncher extends Component {
   // If `state.showModal` is false, sets it to true,
   // if is true, sets it to false.
   handleToggleModal() {
-    this.setState({ showModal: !this.state.showModal });
+    
+    this.setState(
+      { showModal: !this.state.showModal,
+        content: this.state.exportText}
+      );
+    var x = this.state
+    debugger;
   }
 
   render() {
     const { classes } = this.props;
     const { showModal } = this.state;
-
     return (
       <div>
         <button
@@ -38,7 +44,7 @@ class ModalLauncher extends Component {
 
         {showModal &&
           <Modal onCloseRequest={() => this.handleToggleModal()}>
-            <img src="https://placeimg.com/900/650/nature" alt="Nature" />
+            <div> {this.content} </div>
           </Modal>}
       </div>
     );

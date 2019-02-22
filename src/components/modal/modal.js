@@ -1,4 +1,4 @@
-import { React, Component } from 'react';
+import React, { Component } from 'react';
 import injectSheet from 'react-jss';
 import isNil from 'lodash/fp/isNil';
 import styles from './modalstyles'; // Import styles
