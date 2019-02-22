@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Grid, Typography } from '@material-ui/core'
-import MoreMenu from 'components/moremenu'
+import MoreMenu from 'components/moremenu/moremenu'
 
-import Item from 'components/item'
+import Item from 'components/item/item'
 
 import { getListStyle } from 'utils'
 import { Droppable } from 'react-beautiful-dnd'
