@@ -77,7 +77,6 @@ class GoogleLoginPage extends Component {
   }
 
   render() {
-    console.log(config.GOOGLE_CLIENT_ID);
     let content = !!this.state.isAuthenticated ?
     (
       <div>
