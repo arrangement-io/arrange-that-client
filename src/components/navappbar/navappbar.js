@@ -31,7 +31,10 @@ class NavAppBar extends Component {
                         <Typography variant="h6" color="inherit" align="left" className={classes.grow}>
                             Arrange.Space
                         </Typography>
-                        <Button color="inherit">
+                        <Button href="/addarrangement" color="inherit">
+                            New Arrangement
+                        </Button>
+                        <Button disabled="true" color="inherit">
                             Arrangements
                         </Button>
                     </Toolbar>
