@@ -6,6 +6,7 @@ import { withRouter } from "react-router"
 import { get } from 'services/request'
 import { ARRANGEMENT } from 'services/servicetypes'
 import { setRealData } from 'actions/real/real'
+import NavAppBar from 'components/navappbar/navappbar'
 
 export class Header extends Component {
   constructor (props) {
@@ -57,53 +58,7 @@ export class Header extends Component {
   render () {
     const { open } = this.state
 
-    return (
-      <div>
-        {
-          this.props.account.isAuthenticated ? (
-            <div>
-              <Button
-                variant="contained"
-                buttonRef={node => {
-                  this.anchorEl = node;
-                }}
-                aria-owns={open ? 'menu-list-grow' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleToggle}
-              >
-                MENU
-              </Button>
-              <Popper open={open} anchorEl={this.anchorEl} transition>
-                {({ TransitionProps, placement }) => (
-                  <Grow
-                    {...TransitionProps}
-                    id="menu-list-grow"
-                    style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                  >
-                    <Paper>
-                      <ClickAwayListener onClickAway={this.handleClose}>
-                        <MenuList>
-                          <MenuItem onClick={this.addArrangement}>+ Arrangement</MenuItem>
-                          {
-                            this.props.arrangements.map((ele, index) => {
-                              return (
-                                <MenuItem key = {index} onClick = {(event) => this.handleClick(event, ele.id)}>{ele.name}</MenuItem>
-                              )
-                            })
-                          }
-                        </MenuList>
-                      </ClickAwayListener>
-                    </Paper>
-                  </Grow>
-                )}
-              </Popper>
-            </div>
-          ) : (
-            `Nav Bar`
-          )
-        }
-      </div>
-    )
+    return <NavAppBar />
   }
 }
 
