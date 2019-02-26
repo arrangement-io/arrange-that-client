@@ -6,6 +6,7 @@ import { Grid, Typography, Button, Modal, TextField } from '@material-ui/core'
 
 import ItemCollection from 'containers/itemcollection/itemcollection'
 import ContainerCollection from 'containers/containercollection/containercollection'
+import ExportButton from 'components/exportbutton/exportbutton'
 
 
 import { get, post } from 'services/request'
@@ -49,7 +50,6 @@ export class Arrange extends Component {
       })
   }
 
-<<<<<<< HEAD
   exportToTSV () {
     this.exportState()
     get({
@@ -69,19 +69,12 @@ export class Arrange extends Component {
     this.setState({ showTSV: false })
   }
 
-  componentDidMount () {
-    // Call api and get the response, set state
-    /* get({
-      url: ARRANGEMENT
-    })
-=======
   // Loads the state from the backend given the arrangement_id in the url param
   loadState () {
     const id = this.props.match.params.arrangement_id
     return get({url: ARRANGEMENT + "/" + id})
->>>>>>> master
       .then(response => {
-        if (response.data.arrangement == "no arrangement found") {
+        if (response.data.arrangement === "no arrangement found") {
           console.log("no arrangement found")
         }
         else {
@@ -224,6 +217,7 @@ export class Arrange extends Component {
                   
                 </div>
               </Modal>
+              <ExportButton />
               
             </Typography>
           </Grid>
