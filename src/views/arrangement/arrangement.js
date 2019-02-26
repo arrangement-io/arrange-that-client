@@ -177,19 +177,16 @@ export class Arrange extends Component {
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Typography variant="headline" gutterBottom align="right">
-              JS
-            </Typography>
           </Grid>
           <Grid item xs={12} sm={4} md={3}>
             <Typography variant="headline" gutterBottom align="left">
-              Items
+              Unassigned
             </Typography>
             <ItemCollection items={this.props.real.items} unsnapshot_items={typeof this.props.real.snapshots[0] === "undefined" ? [] : this.props.real.snapshots[0].unassigned} getDragItemColor={this.getDragItemColor} />   
           </Grid>
           <Grid item xs={12} sm={8} md={9}>
             <Typography variant="headline" gutterBottom align="left">
-              Containers
+              Arrangement
             </Typography>
             <ContainerCollection snapshot={this.props.real.snapshots[0]} containers={this.props.real.containers} items={this.props.real.items} getDragItemColor={this.getDragItemColor} />
           </Grid>
