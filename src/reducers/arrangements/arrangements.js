@@ -1,5 +1,5 @@
 import {
-  SET_ARRANGEMENTS
+  SET_ARRANGEMENTS,
 } from 'actions/actiontypes'
 
 const initialState = []

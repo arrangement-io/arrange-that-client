@@ -28,14 +28,14 @@ class NavAppBar extends Component {
                         <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
                             <MenuIcon />
                         </IconButton> 
-                        <Typography variant="h6" color="inherit" align="left" className={classes.grow}>
+                        <Typography variant="headline" color="inherit" align="left" className={classes.grow}>
                             Arrange.Space
                         </Typography>
                         <Button href="/addarrangement" color="inherit">
-                            New Arrangement
+                            New
                         </Button>
-                        <Button disabled="true" color="inherit">
-                            Arrangements
+                        <Button href="/all_arrangements" color="inherit">
+                            View All
                         </Button>
                     </Toolbar>
                 </AppBar>
