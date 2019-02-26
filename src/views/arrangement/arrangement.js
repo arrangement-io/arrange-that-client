@@ -190,18 +190,23 @@ export class Arrange extends Component {
                 Export
               </Button>
               <Modal style={{
-                  top: `50%`,
-                  left: `50%`,
-                  transform: `translate(-50%, -50%)`,
+                  top: `30%`,
+                  left: `30%`,
+                  backgroundColor: 'white',
+                  outline: 'none',
                 }}
                 open={this.state.showTSV}
                 onClose={() => this.setState({ showTSV: false })}
               >
-                <div>
-                  <Typography variant="headline" id="modal-title" gutterBottom align="center">
+                <div style={{ backgroundColor:'white', width: 200 }} >
+                  <Typography variant="headline" id="modal-title" gutterBottom align="center"
+                      
+                  >
                     Exported Arrangement
+                    
                   </Typography>
                   <TextField id="simple-modal-description" disabled multiline defaultValue={this.state.exportText} />
+                  
                 </div>
               </Modal>
               
