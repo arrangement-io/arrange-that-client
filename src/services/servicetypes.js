@@ -8,3 +8,4 @@ export const base_url = () => {
 
 export const ARRANGEMENT = '/arrangement'
 export const EXPORT_ARRANGEMENT = '/arrangement'
+export const ARRANGEMENTS = '/arrangements'
