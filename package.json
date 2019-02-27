@@ -19,7 +19,7 @@
     "universal-cookie": "^3.0.7"
   },
   "scripts": {
-    "precommit": "eslint ./src/App.js --fix",
+    "precommit": "eslint ./src/App.jsx --fix",
     "eslint:fix": "eslint src --fix",
     "start": "react-scripts start",
     "build": "react-scripts build",
