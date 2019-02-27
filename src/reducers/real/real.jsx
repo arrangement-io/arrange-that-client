@@ -11,8 +11,8 @@ import {
     SAVE_STATE
 } from 'actions/actiontypes'
 
-import { post, get } from 'services/request'
-import { ARRANGEMENT, EXPORT_ARRANGEMENT } from 'services/servicetypes';
+import { post } from 'services/request'
+import { EXPORT_ARRANGEMENT } from 'services/servicetypes';
 
 const initialState = {
     _id: '',
