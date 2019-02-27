@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 
 import Item from 'components/item/item'
-import EditItem from 'components/edititem/edititem'
+import EditItem from 'components/editItem/editItem'
 
 import { addItem, deleteItem } from 'actions/item/item'
 
