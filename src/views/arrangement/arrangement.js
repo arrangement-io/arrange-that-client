@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
 
-import { Grid, Typography, Button } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 
 import ItemCollection from 'containers/itemcollection/itemcollection'
 import ContainerCollection from 'containers/containercollection/containercollection'
+import ExportButton from 'components/exportbutton/exportbutton'
 
-import { get, post } from 'services/request'
+import { get } from 'services/request'
 import { ARRANGEMENT } from 'services/servicetypes'
-import { EXPORT_ARRANGEMENT } from 'services/servicetypes'
 
 import { setRealData, setUnassigned, setSnapshot } from 'actions/real/real'
 
@@ -21,29 +21,7 @@ export class Arrange extends Component {
   constructor(props) {
     super(props)
 
-    this.exportState = this.exportState.bind(this)
     this.getDragItemColor = this.getDragItemColor.bind(this)
-  }
-
-  exportState () {
-    var d = new Date()
-    var seconds = d.getTime() / 1000
-    let arrangement = {
-      ...this.props.real,
-      modified_timestamp: seconds
-    }
-    post({
-      url: EXPORT_ARRANGEMENT,
-      data: arrangement
-    })
-      .then(response => {
-        console.log(response.data)
-        Promise.resolve()
-      })
-      .catch(err => {
-        console.log(err)
-        Promise.reject(err)
-      })
   }
 
   // Loads the state from the backend given the arrangement_id in the url param
@@ -51,7 +29,7 @@ export class Arrange extends Component {
     const id = this.props.match.params.arrangement_id
     return get({url: ARRANGEMENT + "/" + id})
       .then(response => {
-        if (response.data.arrangement == "no arrangement found") {
+        if (response.data.arrangement === "no arrangement found") {
           console.log("no arrangement found")
         }
         else {
@@ -171,9 +149,8 @@ export class Arrange extends Component {
           </Grid>
           <Grid item xs={12} sm={4}>
             <Typography variant="headline" gutterBottom align="center">
-              <Button variant="outlined" color="primary" onClick={this.exportState}>
-                Export
-              </Button>
+              <ExportButton handleExport={this.exportToTSV}/>
+              
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4}>
