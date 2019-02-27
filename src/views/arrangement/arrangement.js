@@ -57,16 +57,11 @@ export class Arrange extends Component {
       // url: `${EXPORT_ARRANGEMENT}/${this.props.real._id}/tsv`
     })
       .then(response => {
-        console.log(response.data)
-        alert(response.data)
         this.setState({ exportText: response.data,
                         showTSV: true })
+        alert('hi');
         Promise.resolve()
       })
-  }
-
-  closeTSV () {
-    this.setState({ showTSV: false })
   }
 
   // Loads the state from the backend given the arrangement_id in the url param
@@ -197,27 +192,7 @@ export class Arrange extends Component {
               <Button variant="outlined" color="primary" onClick={this.exportToTSV}>
                 Export
               </Button>
-              <Modal style={{
-                  top: `30%`,
-                  left: `30%`,
-                  backgroundColor: 'white',
-                  outline: 'none',
-                }}
-                open={this.state.showTSV}
-                onClose={() => this.setState({ showTSV: false })}
-              >
-                <div style={{ backgroundColor:'white', width: 200 }} >
-                  <Typography variant="headline" id="modal-title" gutterBottom align="center"
-                      
-                  >
-                    Exported Arrangement
-                    
-                  </Typography>
-                  <TextField id="simple-modal-description" disabled multiline defaultValue={this.state.exportText} />
-                  
-                </div>
-              </Modal>
-              <ExportButton />
+              <ExportButton handleExport={this.exportToTSV}/>
               
             </Typography>
           </Grid>

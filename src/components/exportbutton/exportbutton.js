@@ -30,11 +30,24 @@ const styles = theme => ({
 });
 
 class SimpleModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleExport = this.props.handleExport;
+    var x = this.props;
+    this.handleExport = this.handleExport.bind(this);
+    debugger;
+    this.handleExport();
+    var x = this.state;
+    debugger;
+  }
+
   state = {
     open: false,
-  };
+    exportText: "",
+  }
 
   handleOpen = () => {
+    this.handleExport()
     this.setState({ open: true });
   };
 
@@ -47,7 +60,7 @@ class SimpleModal extends React.Component {
 
     return (
       <div>
-        <Button variant="outlined" color="primary" onClick={this.exportToTSV}>
+        <Button variant="outlined" color="primary" onClick={this.handleOpen}>
           Export
         </Button>
         <Modal style={{
@@ -56,8 +69,8 @@ class SimpleModal extends React.Component {
             backgroundColor: 'white',
             outline: 'none',
           }}
-          open={this.state.showTSV}
-          onClose={() => this.setState({ showTSV: false })}
+          open={this.state.open}
+          onClose={this.handleClose}
         >
           <div style={{ backgroundColor:'white', width: 200 }} >
             <Typography variant="headline" id="modal-title" gutterBottom align="center"

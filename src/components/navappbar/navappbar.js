@@ -37,6 +37,9 @@ class NavAppBar extends Component {
                         <Button href="/all_arrangements" color="inherit">
                             View All
                         </Button>
+                        <Button color="inherit">
+                            Export
+                        </Button>
                     </Toolbar>
                 </AppBar>
             </div>
