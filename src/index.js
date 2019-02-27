@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import store from 'store/store'
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-import store from 'store/store'
 
 function handleChange () {
-  console.log(store.getState())
+    console.log(store.getState())
 }
 
 store.subscribe(handleChange)
