@@ -138,7 +138,7 @@ export class ItemCollection extends Component {
                   <Grid item xs={12}>
                     <div className="item" onClick={this.addEditItem}>
                       <Typography variant="headline" align="center">
-                        +
+                        Add Person
                       </Typography>
                     </div>
                   </Grid>

@@ -151,7 +151,7 @@ export class ContainerCollection extends Component {
           <Grid item xs={12} sm={4} md={3}>
             <div className="container" onClick={this.addEditContainer}>
               <Typography variant="headline" align="center">
-                +
+                Add Space
               </Typography>
             </div>
           </Grid>
