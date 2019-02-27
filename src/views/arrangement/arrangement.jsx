@@ -4,11 +4,11 @@ import { connect } from 'react-redux'
 
 import { Grid, Typography, Button } from '@material-ui/core'
 
-import ItemCollection from 'containers/itemcollection/itemcollection'
-import ContainerCollection from 'containers/containercollection/containercollection'
+import ItemCollection from 'containers/itemCollection/itemCollection'
+import ContainerCollection from 'containers/containerCollection/containerCollection'
 
 import { get, post } from 'services/request'
-import { ARRANGEMENT, EXPORT_ARRANGEMENT } from 'services/servicetypes'
+import { ARRANGEMENT, EXPORT_ARRANGEMENT } from 'services/serviceTypes'
 
 import { setRealData, setUnassigned, setSnapshot } from 'actions/real/real'
 

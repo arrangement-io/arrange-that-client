@@ -3,7 +3,7 @@ import {
     SET_UNASSIGNED,
     SET_SNAPSHOT,
     SAVE_STATE
-} from 'actions/actiontypes'
+} from 'actions/actionTypes'
 
 export const setRealData = (data) => ({
     type: SET_REAL_DATA,

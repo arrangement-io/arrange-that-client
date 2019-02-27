@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from "react-router"
 
 import { get } from 'services/request'
-import { ARRANGEMENT } from 'services/servicetypes'
+import { ARRANGEMENT } from 'services/serviceTypes'
 import { setRealData } from 'actions/real/real'
 import NavAppBar from 'components/navappbar/navappbar'
 

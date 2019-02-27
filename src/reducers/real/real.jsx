@@ -9,10 +9,10 @@ import {
     SET_UNASSIGNED,
     SET_SNAPSHOT,
     SAVE_STATE
-} from 'actions/actiontypes'
+} from 'actions/actionTypes'
 
 import { post } from 'services/request'
-import { EXPORT_ARRANGEMENT } from 'services/servicetypes';
+import { EXPORT_ARRANGEMENT } from 'services/serviceTypes';
 
 const initialState = {
     _id: '',

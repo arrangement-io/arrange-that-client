@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { base_url } from './servicetypes';
+import { base_url } from './serviceTypes';
 
 axios.defaults.headers.common['Content-Type'] = 'application/json; charset=UTF-8';
 

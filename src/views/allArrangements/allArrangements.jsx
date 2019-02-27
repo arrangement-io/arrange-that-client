@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from "react-router"
 import { get } from 'services/request'
-import { ARRANGEMENTS } from 'services/servicetypes'
+import { ARRANGEMENTS } from 'services/serviceTypes'
 import { setArrangements } from 'actions/arrangements/arrangements'
 
 

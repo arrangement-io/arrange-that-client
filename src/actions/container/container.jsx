@@ -2,7 +2,7 @@ import {
     CONTAINER_ADD,
     CONTAINER_DELETE,
     CONTAINER_RENAME
-} from 'actions/actiontypes'
+} from 'actions/actionTypes'
 
 export const addContainer = (container) => ({
     type: CONTAINER_ADD,

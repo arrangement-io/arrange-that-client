@@ -2,7 +2,7 @@ import {
     ITEM_ADD,
     ITEM_DELETE,
     ITEM_RENAME
-} from 'actions/actiontypes'
+} from 'actions/actionTypes'
 
 export const addItem = (item) => ({
     type: ITEM_ADD,

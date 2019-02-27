@@ -1,6 +1,6 @@
 import {
     SET_ACCOUNT
-} from 'actions/actiontypes'
+} from 'actions/actionTypes'
 import Cookies from 'universal-cookie'
 
 const cookies = new Cookies();

@@ -11,7 +11,7 @@ import createHistory from 'history/createBrowserHistory'
 import Layout from 'layout'
 import GoogleLoginPage from 'views/google-login/google-login'
 import Arrangement from 'views/arrangement/arrangement'
-import AddArrangement from 'views/addarrangement/addarrangement'
+import AddArrangement from 'views/addArrangement/addArrangement'
 import AllArrangements from 'views/allArrangements/allArrangements'
 
 const history = createHistory()

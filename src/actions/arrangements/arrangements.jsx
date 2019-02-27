@@ -1,6 +1,6 @@
 import {
     SET_ARRANGEMENTS,
-} from 'actions/actiontypes'
+} from 'actions/actionTypes'
 
 export const setArrangements = (arrangements) => ({
     type: SET_ARRANGEMENTS,

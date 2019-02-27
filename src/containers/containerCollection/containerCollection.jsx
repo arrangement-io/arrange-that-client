@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 
 import Container from 'components/container/container'
 
-import EditContainer from 'components/editcontainer/editcontainer'
+import EditContainer from 'components/editContainer/editContainer'
 
 import { addContainer, deleteContainer } from 'actions/container/container'
 
