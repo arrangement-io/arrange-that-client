@@ -43,12 +43,12 @@ class AllArrangementsTable extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     const {
-      arrangements
+        arrangements
     } = state
     return {
-      arrangements
+        arrangements
     }
-  }
+}
   
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {

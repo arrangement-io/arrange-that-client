@@ -5,9 +5,9 @@ import account from './account/account'
 import arrangements from './arrangements/arrangements'
 
 const rootReducer = combineReducers({
-  real,
-  account,
-  arrangements
+    real,
+    account,
+    arrangements
 })
 
 export default rootReducer

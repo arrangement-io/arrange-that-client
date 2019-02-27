@@ -1,8 +1,8 @@
 import {
-  SET_ACCOUNT
+    SET_ACCOUNT
 } from 'actions/actiontypes'
 
 export const setAccount = (account) => ({
-  type: SET_ACCOUNT,
-  account
+    type: SET_ACCOUNT,
+    account
 })

@@ -1,5 +1,5 @@
 import {
-  SET_ACCOUNT
+    SET_ACCOUNT
 } from 'actions/actiontypes'
 import Cookies from 'universal-cookie'
 
@@ -11,20 +11,20 @@ const previousToken = cookies.get('token')
 const previousUser = cookies.get('user')
 
 const initialState = {
-  isAuthenticated: (previousToken === undefined) ? false : true,
-  user: previousUser,
-  token: previousToken
+    isAuthenticated: (previousToken === undefined) ? false : true,
+    user: previousUser,
+    token: previousToken
 }
 
 const accountReducer = (state = initialState, action) => {
-  switch (action.type) {
+    switch (action.type) {
     case SET_ACCOUNT:
-      cookies.set('token', action.account.token, {path: '/'})
-      cookies.set('user', action.account.user, {path: '/'})
-      return action.account
+        cookies.set('token', action.account.token, {path: '/'})
+        cookies.set('user', action.account.user, {path: '/'})
+        return action.account
     default:
-      return state
-  }
+        return state
+    }
 }
 
 export default accountReducer

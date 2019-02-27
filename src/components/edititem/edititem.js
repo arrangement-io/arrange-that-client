@@ -3,56 +3,56 @@ import PropTypes from 'prop-types'
 import { Typography, TextField } from '@material-ui/core'
 
 export class EditItem extends Component {
-  constructor (props) {
-    super(props)
+    constructor (props) {
+        super(props)
 
-    this.handleKeyPress = this.handleKeyPress.bind(this)
-    this.escFunction = this.escFunction.bind(this);
-  }
-
-  handleKeyPress (event) {
-    if (event.key === 'Enter') {
-      this.props.handleEnter()
+        this.handleKeyPress = this.handleKeyPress.bind(this)
+        this.escFunction = this.escFunction.bind(this);
     }
-  }
 
-  escFunction (event) {
-    if(event.keyCode === 27) {
-      this.props.handleEsc()
+    handleKeyPress (event) {
+        if (event.key === 'Enter') {
+            this.props.handleEnter()
+        }
     }
-  }
 
-  componentDidMount(){
-    document.addEventListener("keydown", this.escFunction, false);
-  }
+    escFunction (event) {
+        if(event.keyCode === 27) {
+            this.props.handleEsc()
+        }
+    }
 
-  componentWillUnmount(){
-    document.removeEventListener("keydown", this.escFunction, false);
-  }
+    componentDidMount(){
+        document.addEventListener("keydown", this.escFunction, false);
+    }
+
+    componentWillUnmount(){
+        document.removeEventListener("keydown", this.escFunction, false);
+    }
   
-  render () {
-    return (
-      <div className="item">
-        <Typography variant="headline" align="center">
-          <TextField
-            autoFocus={true}
-            onKeyPress={this.handleKeyPress}
-            onChange={this.props.handleChange}
-            onBlur={this.props.handleEsc}
-            val={this.props.name}
-            label="Name"
-          />
-        </Typography>
-      </div>
-    )
-  }
+    render () {
+        return (
+            <div className="item">
+                <Typography variant="headline" align="center">
+                    <TextField
+                        autoFocus={true}
+                        onKeyPress={this.handleKeyPress}
+                        onChange={this.props.handleChange}
+                        onBlur={this.props.handleEsc}
+                        val={this.props.name}
+                        label="Name"
+                    />
+                </Typography>
+            </div>
+        )
+    }
 }
 
 EditItem.propTypes = {
-  name: PropTypes.string,
-  handleChange: PropTypes.func,
-  handleEnter: PropTypes.func,
-  handleEsc: PropTypes.func
+    name: PropTypes.string,
+    handleChange: PropTypes.func,
+    handleEnter: PropTypes.func,
+    handleEsc: PropTypes.func
 }
 
 export default EditItem

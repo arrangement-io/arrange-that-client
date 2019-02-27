@@ -19,8 +19,8 @@
     "universal-cookie": "^3.0.7"
   },
   "scripts": {
-    "precommit": "eslint src server.js models routes services --fix",
-    "eslint:fix": "eslint src server.js models routes services --fix",
+    "precommit": "eslint ./src/App.js --fix",
+    "eslint:fix": "eslint src --fix",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
