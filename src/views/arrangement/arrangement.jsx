@@ -8,8 +8,7 @@ import ItemCollection from 'containers/itemcollection/itemcollection'
 import ContainerCollection from 'containers/containercollection/containercollection'
 
 import { get, post } from 'services/request'
-import { ARRANGEMENT } from 'services/servicetypes'
-import { EXPORT_ARRANGEMENT } from 'services/servicetypes'
+import { ARRANGEMENT, EXPORT_ARRANGEMENT } from 'services/servicetypes'
 
 import { setRealData, setUnassigned, setSnapshot } from 'actions/real/real'
 
