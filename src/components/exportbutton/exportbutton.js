@@ -1,22 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button, Modal, TextField } from '@material-ui/core'
-
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
+import { get } from 'services/request'
+import { setTSVExport } from 'actions/exportData/exportData'
+import { EXPORT_ARRANGEMENT } from 'services/servicetypes'
 
 const styles = theme => ({
   paper: {
@@ -30,25 +19,24 @@ const styles = theme => ({
 });
 
 class SimpleModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleExport = this.props.handleExport;
-    var x = this.props;
-    this.handleExport = this.handleExport.bind(this);
-    debugger;
-    this.handleExport();
-    var x = this.state;
-    debugger;
-  }
-
   state = {
     open: false,
-    exportText: "",
+  }
+
+  exportToTSV () {
+    get({
+      url: `${EXPORT_ARRANGEMENT}/EPQPQmmmm/tsv`
+      // url: `${EXPORT_ARRANGEMENT}/${this.props.real._id}/tsv`
+    })
+      .then(response => {
+        this.props.setTSVExport(response.data);
+        this.setState({ open: true });
+        Promise.resolve()
+      })
   }
 
   handleOpen = () => {
-    this.handleExport()
-    this.setState({ open: true });
+    this.exportToTSV()
   };
 
   handleClose = () => {
@@ -56,8 +44,6 @@ class SimpleModal extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
-
     return (
       <div>
         <Button variant="outlined" color="primary" onClick={this.handleOpen}>
@@ -79,7 +65,7 @@ class SimpleModal extends React.Component {
               Exported Arrangement
               
             </Typography>
-            <TextField id="simple-modal-description" disabled multiline defaultValue={this.state.exportText} />
+            <TextField id="simple-modal-description" disabled multiline defaultValue={this.props.exportData.TSV} />
             
           </div>
         </Modal>
@@ -92,7 +78,28 @@ SimpleModal.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
+const mapStateToProps = (state, ownProps) => {
+  const {
+    real,
+    exportData
+  } = state
+  return {
+    real,
+    exportData
+  }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    setTSVExport: (tsvData) => {
+      dispatch(setTSVExport(tsvData))
+    },
+  }
+}
+
 // We need an intermediary variable for handling the recursive nesting.
 const ExportButton = withStyles(styles)(SimpleModal);
-
-export default ExportButton;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+) (ExportButton);

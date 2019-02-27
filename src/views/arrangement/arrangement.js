@@ -2,16 +2,14 @@ import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
 
-import { Grid, Typography, Button, Modal, TextField } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 
 import ItemCollection from 'containers/itemcollection/itemcollection'
 import ContainerCollection from 'containers/containercollection/containercollection'
 import ExportButton from 'components/exportbutton/exportbutton'
 
-
-import { get, post } from 'services/request'
+import { get } from 'services/request'
 import { ARRANGEMENT } from 'services/servicetypes'
-import { EXPORT_ARRANGEMENT } from 'services/servicetypes'
 
 import { setRealData, setUnassigned, setSnapshot } from 'actions/real/real'
 
@@ -23,45 +21,7 @@ export class Arrange extends Component {
   constructor(props) {
     super(props)
 
-    this.exportState = this.exportState.bind(this)
-    this.exportToTSV = this.exportToTSV.bind(this)
     this.getDragItemColor = this.getDragItemColor.bind(this)
-    this.state = { showTSV: false }
-  }
-
-  exportState () {
-    var d = new Date()
-    var seconds = d.getTime() / 1000
-    let arrangement = {
-      ...this.props.real,
-      modified_timestamp: seconds
-    }
-    post({
-      url: EXPORT_ARRANGEMENT,
-      data: arrangement
-    })
-      .then(response => {
-        console.log(response.data)
-        Promise.resolve()
-      })
-      .catch(err => {
-        console.log(err)
-        Promise.reject(err)
-      })
-  }
-
-  exportToTSV () {
-    this.exportState()
-    get({
-      url: `${EXPORT_ARRANGEMENT}/EPQPQmmmm/tsv`
-      // url: `${EXPORT_ARRANGEMENT}/${this.props.real._id}/tsv`
-    })
-      .then(response => {
-        this.setState({ exportText: response.data,
-                        showTSV: true })
-        alert('hi');
-        Promise.resolve()
-      })
   }
 
   // Loads the state from the backend given the arrangement_id in the url param
@@ -189,9 +149,6 @@ export class Arrange extends Component {
           </Grid>
           <Grid item xs={12} sm={4}>
             <Typography variant="headline" gutterBottom align="center">
-              <Button variant="outlined" color="primary" onClick={this.exportToTSV}>
-                Export
-              </Button>
               <ExportButton handleExport={this.exportToTSV}/>
               
             </Typography>
