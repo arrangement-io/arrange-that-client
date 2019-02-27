@@ -9,14 +9,14 @@ const initialState = {
 
 const exportTSVDataReducer = (state = initialState, action) => {
     switch (action.type) {
-        case SET_TSV_EXPORT:
-            const TSVExportDataState = {
-                ...state,
-                TSV: action.data
-            }
-            return TSVExportDataState
-        default:
-            return state
+    case SET_TSV_EXPORT:
+        const TSVExportDataState = {
+            ...state,
+            TSV: action.data
+        }
+        return TSVExportDataState
+    default:
+        return state
     }
 }
 

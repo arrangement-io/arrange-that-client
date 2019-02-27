@@ -6,10 +6,10 @@ import arrangements from './arrangements/arrangements'
 import exportData from './exportData/exportData'
 
 const rootReducer = combineReducers({
-  real,
-  account,
-  arrangements,
-  exportData,
+    real,
+    account,
+    arrangements,
+    exportData,
 })
 
 export default rootReducer

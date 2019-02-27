@@ -27,8 +27,8 @@ class SimpleModal extends React.Component {
 
     exportToTSV() {
         get({
-                url: `${EXPORT_ARRANGEMENT}/${this.props.real._id}/tsv`
-            })
+            url: `${EXPORT_ARRANGEMENT}/${this.props.real._id}/tsv`
+        })
             .then(response => {
                 this.props.setTSVExport(response.data);
                 this.setState({
@@ -59,38 +59,38 @@ class SimpleModal extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-        <div>
-            <Button variant="outlined" color="primary" onClick={this.handleOpen}>
+            <div>
+                <Button variant="outlined" color="primary" onClick={this.handleOpen}>
                 Export
-            </Button>
-            <Modal open={this.state.open} onClose={this.handleClose}>
-                <div className={classes.paper}>
-                    <Typography variant="headline" id="modal-title" gutterBottom align="center">
+                </Button>
+                <Modal open={this.state.open} onClose={this.handleClose}>
+                    <div className={classes.paper}>
+                        <Typography variant="headline" id="modal-title" gutterBottom align="center">
                         Exported Arrangement
-                    </Typography>
-                    <div>
-                        <List dense={true}>
-                        <ListItem>
-                            <ListItemText
-                            primary="1. Make sure the text is selected in the text area below"
-                            />
-                        </ListItem>
-                        <ListItem>
-                            <ListItemText
-                            primary="2. Press Ctrl-C (Windows) / ⌘-C (Mac) to copy"
-                            />
-                        </ListItem>
-                        <ListItem>
-                            <ListItemText
-                            primary="3. Paste into a spreadsheet"
-                            />
-                        </ListItem>
-                        </List>
+                        </Typography>
+                        <div>
+                            <List dense={true}>
+                                <ListItem>
+                                    <ListItemText
+                                        primary="1. Make sure the text is selected in the text area below"
+                                    />
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText
+                                        primary="2. Press Ctrl-C (Windows) / ⌘-C (Mac) to copy"
+                                    />
+                                </ListItem>
+                                <ListItem>
+                                    <ListItemText
+                                        primary="3. Paste into a spreadsheet"
+                                    />
+                                </ListItem>
+                            </List>
+                        </div>
+                        <TextField variant="outlined" disabled multiline defaultValue={this.props.exportData.TSV} />        
                     </div>
-                    <TextField variant="outlined" disabled multiline defaultValue={this.props.exportData.TSV} />        
-                </div>
-            </Modal>
-        </div>
+                </Modal>
+            </div>
         );
     }
 }
