@@ -5,7 +5,7 @@ import { withRouter } from "react-router"
 import { get } from 'services/request'
 import { ARRANGEMENT } from 'services/serviceTypes'
 import { setRealData } from 'actions/real/real'
-import NavAppBar from 'components/navappbar/navappbar'
+import NavAppBar from 'components/navAppBar/navAppBar'
 
 export class Header extends Component {
     constructor (props) {
