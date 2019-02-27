@@ -1,0 +1,6 @@
+node_modules
+public
+src/serviceWorker.js
+*.css
+*.json
+*.js
