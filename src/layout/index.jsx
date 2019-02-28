@@ -8,7 +8,7 @@ const Default = props => {
     const { children } = props
 
     return (
-        <Grid container spacing={24}>
+        <Grid container spacing={0}>
             <Grid item xs={12}>
                 <Header />
             </Grid>

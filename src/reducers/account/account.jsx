@@ -11,7 +11,7 @@ const previousToken = cookies.get('token')
 const previousUser = cookies.get('user')
 
 const initialState = {
-    isAuthenticated: (previousToken === undefined) ? false : true,
+    isAuthenticated: (previousToken === "" || previousUser === "") ? false : true,
     user: previousUser,
     token: previousToken
 }
