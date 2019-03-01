@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
 
-import { Grid, Typography, Button } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 
 import ItemCollection from 'containers/itemCollection/itemCollection'
 import ContainerCollection from 'containers/containerCollection/containerCollection'
 import ExportButton from 'components/exportbutton/exportbutton'
 
-import { get, post } from 'services/request'
-import { ARRANGEMENT, EXPORT_ARRANGEMENT } from 'services/serviceTypes'
+import { get } from 'services/request'
+import { ARRANGEMENT } from 'services/serviceTypes'
 
 import { setRealData, setUnassigned, setSnapshot } from 'actions/real/real'
 
@@ -29,7 +29,7 @@ export class Arrange extends Component {
         const id = this.props.match.params.arrangement_id
         return get({url: ARRANGEMENT + "/" + id})
             .then(response => {
-                if (response.data.arrangement == "no arrangement found") {
+                if (response.data.arrangement === "no arrangement found") {
                     console.log("no arrangement found")
                 }
                 else {
@@ -76,11 +76,7 @@ export class Arrange extends Component {
             }
         } else { // dropped in other list
             let result
-            if (source.droppableId === 'itemcollection') { // dropped in a container from items' list, move item from items' list to a container
-                let containerSize = typeof this.props.real.snapshots[0].snapshot[destination.droppableId] === 'undefined' ? 0 : this.props.real.snapshots[0].snapshot[destination.droppableId].length
-                let container = this.props.real.containers.find(ele => ele._id === destination.droppableId)
-                if (containerSize >= container.size) // ignore the dropdown if container's size is full
-                    return
+            if (source.droppableId === 'itemcollection') { // dropped in a container from items' list, move
                 result = move(
                     this.props.real.snapshots[0].unassigned,
                     this.props.real.snapshots[0].snapshot[destination.droppableId],
@@ -101,10 +97,6 @@ export class Arrange extends Component {
                 this.props.setSnapshot({id: source.droppableId, items: result['source']})
                 this.props.setUnassigned(result['destination'])
             } else { // dropped in a container from another container, move item from a container to another container
-                let containerSize = typeof this.props.real.snapshots[0].snapshot[destination.droppableId] === 'undefined' ? 0 : this.props.real.snapshots[0].snapshot[destination.droppableId].length
-                let container = this.props.real.containers.find(ele => ele._id === destination.droppableId)
-                if (containerSize >= container.size) // ignore the dropdown if container's size is full
-                    return
                 result = move(
                     this.props.real.snapshots[0].snapshot[source.droppableId],
                     this.props.real.snapshots[0].snapshot[destination.droppableId],
@@ -119,23 +111,7 @@ export class Arrange extends Component {
     }
 
     getDragItemColor(sourceId, destId) {
-        if (sourceId === destId)
-            return 'lightgreen'
-        else {
-            if (this.props.real.containers) {
-                const container = this.props.real.containers.find(ele => ele._id === destId)
-                let itemAry = []
-                for (var itemId in this.props.real.snapshots[0].snapshot[destId]) {
-                    itemAry.push(this.props.real.snapshots[0].snapshot[destId][itemId])
-                }
-    
-                let size = typeof container === 'undefined' ? 1 : container.size
-                if (itemAry.length < size)
-                    return 'lightgreen'
-                else
-                    return 'lightcoral'
-            }
-        }
+        return 'white'
     }
 
     render () {
