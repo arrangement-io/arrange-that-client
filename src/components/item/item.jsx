@@ -8,50 +8,51 @@ import { Draggable } from 'react-beautiful-dnd'
 import { getItemStyle } from 'utils'
 
 export class Item extends Component {
-  handleItemClick = option => {
-      if (option === 'Delete') {
-          this.props.deleteItem(this.props.item._id)
-      }
-  }
+    handleItemClick = option => {
+        if (option === 'Delete') {
+            this.props.deleteItem(this.props.item._id)
+        }
+    }
 
-  render () {
-      const options = [
-          'Delete'
-      ]
-    
-      return (
-          <Draggable
-              key={this.props.item._id}
-              draggableId={this.props.item._id}
-              index={this.props.index}
-          >
-              {(provided, snapshot) => (
-                  <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={getItemStyle(
-                          snapshot.isDragging,
-                          provided.draggableProps.style,
-                          this.props.getDragItemColor(this.props.containerId, snapshot.draggingOver)
-                      )}
-                      className="item"
-                  >
-                      <Grid container spacing={24}>
-                          <Grid item xs={8}>
-                              <Typography variant="headline" align="center">
-                                  {this.props.item.name}
-                              </Typography>
-                          </Grid>
-                          <Grid item xs={4}>
-                              <MoreMenu options = {options} handleItemClick = {this.handleItemClick} />
-                          </Grid>
-                      </Grid>
-                  </div>
-              )}
-          </Draggable>
-      )
-  }
+    render () {
+        const options = [
+            'Delete'
+        ]
+        
+        return (
+            <Draggable
+                key={this.props.item._id}
+                draggableId={this.props.item._id}
+                index={this.props.index}
+            >
+                {(provided, snapshot) => (
+                    <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={getItemStyle(
+                            snapshot.isDragging,
+                            provided.draggableProps.style,
+                            this.props.getDragItemColor(this.props.containerId, snapshot.draggingOver)
+                        )}
+                        className="item"
+                    >
+                        <Grid container alignItems="center" spacing={8}>
+                            <Grid item xs={1} />
+                            <Grid item xs={7}>
+                                <Typography variant="body1" align="left">
+                                    {this.props.item.name}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <MoreMenu options = {options} handleItemClick = {this.handleItemClick} />
+                            </Grid>
+                        </Grid>
+                    </div>
+                )}
+            </Draggable>
+        )
+    }
 }
 
 Item.propTypes = {
