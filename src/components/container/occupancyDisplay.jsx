@@ -20,7 +20,7 @@ const styles = theme => ({
 export class OccupancyDisplay extends Component {
     render = () => {
         const { classes } = this.props
-        const color = (this.props.count > this.props.total) ? "secondary" : ""
+        const color = (this.props.count > this.props.total) ? "secondary" : "default"
         return (
             <Chip label={this.props.count + "/" + this.props.total} className={classes.chip} color={color} />
         )

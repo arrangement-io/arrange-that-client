@@ -65,7 +65,7 @@ export class Container extends Component {
                             <Grid container spacing={8}>
                                 <Grid item xs={12}>
                                     <div className="container__items">
-                                        <Grid container spacing={24}>
+                                        <Grid container spacing={0}>
                                             {
                                                 items.map((item, index) => {
                                                     if (typeof item !== 'undefined')

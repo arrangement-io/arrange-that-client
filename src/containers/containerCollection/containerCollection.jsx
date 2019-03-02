@@ -130,7 +130,7 @@ export class ContainerCollection extends Component {
   render () {
       return (
           <div className="containercollection">
-              <Grid container spacing={24}>
+              <Grid container spacing={8}>
                   {
                       this.props.containers.map((container) => {
                           return (
