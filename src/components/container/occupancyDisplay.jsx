@@ -5,14 +5,14 @@ import Chip from '@material-ui/core/Chip'
 
 const styles = theme => ({
     root: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexWrap: 'wrap',
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
     },
     chip: {
-      margin: theme.spacing.unit,
+        margin: theme.spacing.unit,
     },
-  });
+});
 
 /**
  * Displays the occupancy of the space as a fraction.

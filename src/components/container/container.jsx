@@ -87,7 +87,7 @@ export class Container extends Component {
                 )}
             </Droppable>
         )
-  }
+    }
 }
 
 Container.propTypes = {

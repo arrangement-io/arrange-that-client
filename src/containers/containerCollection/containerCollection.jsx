@@ -134,7 +134,7 @@ export class ContainerCollection extends Component {
                   {
                       this.props.containers.map((container) => {
                           return (
-                              <Grid item xs={12} sm={4} md={3} key={container._id}>
+                              <Grid item xs={12} sm={6} md={3} lg={2} key={container._id}>
                                   <Container 
                                       container={container}
                                       snapshot={this.props.snapshot} 
@@ -148,7 +148,7 @@ export class ContainerCollection extends Component {
                       })
                   }
                   { this.displayEditContainer() }
-                  <Grid item xs={12} sm={4} md={3}>
+                  <Grid item xs={12} sm={6} md={3} lg={2}>
                       <div className="container" onClick={this.addEditContainer}>
                           <Typography variant="headline" align="center">
                 +

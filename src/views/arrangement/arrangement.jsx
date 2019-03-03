@@ -27,15 +27,15 @@ export class Arrange extends Component {
     }
 
     handleTabAdd() {
-		this.tabs.push({
-			title: 'New Tab',
-			content: 'Hey Buddy!'
-		});
+        this.tabs.push({
+            title: 'New Tab',
+            content: 'Hey Buddy!'
+        });
 
-		this.setState({
-			activeTab: this.tabs.length - 1
-		});
-	}
+        this.setState({
+            activeTab: this.tabs.length - 1
+        });
+    }
 
     // Loads the state from the backend given the arrangement_id in the url param
     loadState () {
@@ -80,15 +80,13 @@ export class Arrange extends Component {
                 <Tabs 
                     active={this.state.activeTab} 
                     onTabSwitch={this.handleTabSwitch.bind(this)}
-                    onTabAdd={ this.handleTabAdd.bind(this) }
                     draggable={ true }
-                    showAdd={ true }
                 >
                     {this.props.real.snapshots.map((snapshot, index) => {
                         console.log(snapshot)
                         return (
                             <Tab key={index} title={snapshot.name}>
-                                <Snapshot />
+                                <Snapshot snapshotId={snapshot._id} />
                             </Tab>
                         )
                     })}

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import { Grid, Typography } from '@material-ui/core'
 import ItemCollection from 'containers/itemCollection/itemCollection'
@@ -9,6 +10,10 @@ import { setRealData, setUnassigned, setSnapshot } from 'actions/real/real'
 import { reorder, move } from 'utils'
 
 class Snapshot extends Component {
+    componentDidMount () {
+        this.healUnassignedItems(this.props.snapshotId)
+    }
+
     onDragEnd = result => {
         const { source, destination } = result
         if (!destination) { // dropped outside the list
@@ -24,7 +29,6 @@ class Snapshot extends Component {
                     source.index,
                     destination.index
                 )
-            
                 this.props.setUnassigned(items)
             } else { // dropped in a container, only reorder the items in a container
                 items = this.props.real.snapshots[0].snapshot[source.droppableId]
@@ -33,7 +37,6 @@ class Snapshot extends Component {
                     source.index,
                     destination.index
                 )
-
                 this.props.setSnapshot({id: source.droppableId, items: items})
             }
         } else { // dropped in other list
@@ -45,7 +48,6 @@ class Snapshot extends Component {
                     source,
                     destination
                 )
-
                 this.props.setUnassigned(result['source'])
                 this.props.setSnapshot({id: destination.droppableId, items: result['destination']})
             } else if (destination.droppableId === 'itemcollection') { // dropped in items' list from a container, move item from a container to items' list
@@ -55,7 +57,6 @@ class Snapshot extends Component {
                     source,
                     destination
                 )
-
                 this.props.setSnapshot({id: source.droppableId, items: result['source']})
                 this.props.setUnassigned(result['destination'])
             } else { // dropped in a container from another container, move item from a container to another container
@@ -65,34 +66,59 @@ class Snapshot extends Component {
                     source,
                     destination
                 )
-
                 this.props.setSnapshot({id: source.droppableId, items: result['source']})
                 this.props.setSnapshot({id: destination.droppableId, items: result['destination']})
             }
         }
     }
 
+    healUnassignedItems = (snapshotId) => {
+        const snap = this.props.real.snapshots.find(x => x._id === snapshotId)
+        let clean_unassigned = snap.unassigned.filter(n => n)
+        let unassigned_set = new Set(this.props.real.items.map(item => item._id))
+        Object.values(snap.snapshot).map(items => items.map(item => unassigned_set.delete(item))) // Retain only unassigned checking the containers for assignment
+        clean_unassigned.map(item => unassigned_set.delete(item)) // Removed the items that are already in unassigned.
+        // Self healing. If there are missing unassigned items, add them back into unassigned.
+        if (unassigned_set.size > 0) {
+            console.log("there are some missing unassigned")
+            Array.from(unassigned_set).map(item => clean_unassigned.push(item))
+            this.props.setUnassigned(clean_unassigned)
+        }
+    }
+
+    getSnapshot = (snapshotId) => {
+        return this.props.real.snapshots.find(x => x._id === snapshotId)
+    }
+
+    getUnassignedItems = (snapshotId) => {
+        const snap = this.getSnapshot(snapshotId)
+        if (typeof snap === "undefined") {
+            return []
+        } else {
+            return snap.unassigned
+        }
+    }
+
     getDragItemColor(sourceId, destId) {
         return 'white'
     }
-    tabs = [];
 
     render () {
-        const unassigned_items = typeof this.props.real.snapshots[0] === "undefined" ? [] : this.props.real.snapshots[0].unassigned
+        const unassigned_items = this.getUnassignedItems(this.props.snapshotId)
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
                 <Grid container spacing={8}>
-                    <Grid item xs={12} sm={4} md={3}>
+                    <Grid item xs={5} sm={4} md={3} lg={2}>
                         <Typography variant="headline" gutterBottom align="left">
                             People
                         </Typography>
                         <ItemCollection items={this.props.real.items} unsnapshot_items={unassigned_items} getDragItemColor={this.getDragItemColor} />   
                     </Grid>
-                    <Grid item xs={12} sm={8} md={9}>
+                    <Grid item xs={7} sm={8} md={9} lg={10}>
                         <Typography variant="headline" gutterBottom align="left">
                             Spaces
                         </Typography>
-                        <ContainerCollection snapshot={this.props.real.snapshots[0]} containers={this.props.real.containers} items={this.props.real.items} getDragItemColor={this.getDragItemColor} />
+                        <ContainerCollection snapshot={this.getSnapshot(this.props.snapshotId)} containers={this.props.real.containers} items={this.props.real.items} getDragItemColor={this.getDragItemColor} />
                     </Grid>
                 </Grid>
             </DragDropContext>
@@ -117,6 +143,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(setSnapshot(data))
         }
     }
+}
+
+Snapshot.propTypes = {
+    snapshotId: PropTypes.string
 }
 
 export default connect(
