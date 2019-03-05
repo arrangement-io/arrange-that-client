@@ -5,14 +5,14 @@ import Chip from '@material-ui/core/Chip'
 
 const styles = theme => ({
     root: {
-      display: 'flex',
-      justifyContent: 'center',
-      flexWrap: 'wrap',
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
     },
     chip: {
-      margin: theme.spacing.unit,
+        margin: theme.spacing.unit,
     },
-  });
+});
 
 /**
  * Displays the occupancy of the space as a fraction.
@@ -20,7 +20,7 @@ const styles = theme => ({
 export class OccupancyDisplay extends Component {
     render = () => {
         const { classes } = this.props
-        const color = (this.props.count > this.props.total) ? "secondary" : ""
+        const color = (this.props.count > this.props.total) ? "secondary" : "default"
         return (
             <Chip label={this.props.count + "/" + this.props.total} className={classes.chip} color={color} />
         )
