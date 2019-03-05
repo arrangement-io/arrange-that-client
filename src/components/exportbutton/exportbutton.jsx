@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button, Modal, TextField, List, ListItem, ListItemText} from '@material-ui/core'
@@ -23,6 +23,11 @@ const styles = theme => ({
 class SimpleModal extends React.Component {
     state = {
         open: false,
+    }
+
+    constructor(props) {
+        super(props);
+        this.textRef = React.createRef();
     }
 
     exportToTSV() {
@@ -72,22 +77,22 @@ class SimpleModal extends React.Component {
                             <List dense={true}>
                                 <ListItem>
                                     <ListItemText
-                                        primary="1. Make sure the text is selected in the text area below"
+                                        primary='1. Click the "Copy to Clipboard" Button'
                                     />
                                 </ListItem>
                                 <ListItem>
                                     <ListItemText
-                                        primary="2. Press Ctrl-C (Windows) / ⌘-C (Mac) to copy"
-                                    />
-                                </ListItem>
-                                <ListItem>
-                                    <ListItemText
-                                        primary="3. Paste into a spreadsheet"
+                                        primary="2. Paste into a spreadsheet"
                                     />
                                 </ListItem>
                             </List>
                         </div>
-                        <TextField variant="outlined" disabled multiline defaultValue={this.props.exportData.TSV} />        
+                        <Button color="primary" onClick={() => {this.textRef.select(); document.execCommand('copy');}}>
+                        Copy to Clipboard
+                        </Button>
+                        <TextField variant="outlined" margin="normal" rows="4" ref={this.textRef} 
+                            InputProps={{ readOnly: true, }} fullWidth multiline 
+                            value={this.props.exportData.TSV} inputRef={(e) => {this.textRef = e}}/>        
                     </div>
                 </Modal>
             </div>
