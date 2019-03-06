@@ -8,7 +8,8 @@ import {
     SET_REAL_DATA,
     SET_UNASSIGNED,
     SET_SNAPSHOT,
-    SAVE_STATE
+    SAVE_STATE,
+    ARRANGEMENT_RENAME
 } from 'actions/actionTypes'
 
 import { post } from 'services/request'
@@ -198,6 +199,14 @@ const realReducer = (state = initialState, action) => {
     case SAVE_STATE:
         exportState(state)
         return state
+
+    case ARRANGEMENT_RENAME:
+        const arrangementRenameState = {
+            ...state,
+            name: action.name
+        }
+        exportState(arrangementRenameState)
+        return arrangementRenameState
 
     default:
         return state

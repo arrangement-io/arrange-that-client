@@ -18,3 +18,5 @@ export const SET_SNAPSHOT = "SET_SNAPSHOT"
 export const SAVE_STATE = "SAVE_STATE"
 
 export const SET_TSV_EXPORT = "SET_TSV_EXPORT"
+
+export const ARRANGEMENT_RENAME = "ARRANGEMENT_RENAME"
