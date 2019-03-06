@@ -15,15 +15,15 @@ export class EditItem extends Component {
 
     handleKeyPress (event) {
         switch (event.key) {
-            case ENTER_KEY:
-                this.props.handleEnter(event.key)
-                break;
+        case ENTER_KEY:
+            this.props.handleEnter(event.key)
+            break;
             //TODO add handler for tab key
             // case 'Tab':
             //     this.props.handleEnter(event.key)
             //     break;
-            default:
-                break;
+        default:
+            break;
         }
     }
 
