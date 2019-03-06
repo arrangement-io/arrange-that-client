@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Typography, TextField } from '@material-ui/core'
 
+const ENTER_KEY = 'Enter';
+const ESC_KEY = 'Escape';
+// const TAB_KEY = 'Tab';
 export class EditItem extends Component {
     constructor (props) {
         super(props)
@@ -11,13 +14,21 @@ export class EditItem extends Component {
     }
 
     handleKeyPress (event) {
-        if (event.key === 'Enter') {
-            this.props.handleEnter()
+        switch (event.key) {
+            case ENTER_KEY:
+                this.props.handleEnter(event.key)
+                break;
+            //TODO add handler for tab key
+            // case 'Tab':
+            //     this.props.handleEnter(event.key)
+            //     break;
+            default:
+                break;
         }
     }
 
     escFunction (event) {
-        if(event.keyCode === 27) {
+        if(event.keyCode === ESC_KEY) {
             this.props.handleEsc()
         }
     }
@@ -38,7 +49,7 @@ export class EditItem extends Component {
                         autoFocus={true}
                         onKeyPress={this.handleKeyPress}
                         onChange={this.props.handleChange}
-                        onBlur={this.props.handleEsc}
+                        onBlur={this.props.handleEnter}
                         val={this.props.name}
                         label="Name"
                     />
@@ -52,7 +63,7 @@ EditItem.propTypes = {
     name: PropTypes.string,
     handleChange: PropTypes.func,
     handleEnter: PropTypes.func,
-    handleEsc: PropTypes.func
+    handleEsc: PropTypes.func,
 }
 
 export default EditItem
