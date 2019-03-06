@@ -1,7 +1,7 @@
 import {
     SET_REAL_DATA,
-    SET_UNASSIGNED,
-    SET_SNAPSHOT,
+    SET_UNASSIGNED_ITEMS,
+    SET_CONTAINER_ITEMS,
     SAVE_STATE
 } from 'actions/actionTypes'
 
@@ -10,14 +10,17 @@ export const setRealData = (data) => ({
     data
 })
 
-export const setUnassigned = (data) => ({
-    type: SET_UNASSIGNED,
-    data
+export const setUnassignedItems = (snapshotId, unassigned) => ({
+    type: SET_UNASSIGNED_ITEMS,
+    snapshotId,
+    unassigned
 })
 
-export const setSnapshot = (data) => ({
-    type: SET_SNAPSHOT,
-    data
+export const setContainerItems = (snapshotId, containerId, items) => ({
+    type: SET_CONTAINER_ITEMS,
+    snapshotId,
+    containerId,
+    items
 })
 
 export const saveState = (data) => ({
