@@ -6,7 +6,7 @@ import { Grid, Typography } from '@material-ui/core'
 import ItemCollection from 'containers/itemCollection/itemCollection'
 import ContainerCollection from 'containers/containerCollection/containerCollection'
 import { DragDropContext } from 'react-beautiful-dnd'
-import { setRealData, setUnassigned, setSnapshot } from 'actions/real/real'
+import { setRealData, setUnassignedItems, setContainerItems } from 'actions/real/real'
 import { reorder, move } from 'utils'
 
 class Snapshot extends Component {
@@ -14,8 +14,9 @@ class Snapshot extends Component {
         this.healUnassignedItems(this.props.snapshotId)
     }
 
-    onDragEnd = result => {
+    onDragEnd = (result) => {
         const { source, destination } = result
+        const snapshot = this.getSnapshot(this.props.snapshotId)
         if (!destination) { // dropped outside the list
             return
         }
@@ -23,66 +24,74 @@ class Snapshot extends Component {
         if (source.droppableId === destination.droppableId) { // dropped in same list
             let items = []
             if (source.droppableId === 'itemcollection') { // dropped in items' list, only reorder the items in list
-                items = this.props.real.snapshots[0].unassigned
+                items = snapshot.unassigned
                 items = reorder(
                     items,
                     source.index,
                     destination.index
                 )
-                this.props.setUnassigned(items)
+                this.props.setUnassignedItems(this.props.snapshotId, items)
             } else { // dropped in a container, only reorder the items in a container
-                items = this.props.real.snapshots[0].snapshot[source.droppableId]
+                items = snapshot.snapshot[source.droppableId]
                 items = reorder(
                     items,
                     source.index,
                     destination.index
                 )
-                this.props.setSnapshot({id: source.droppableId, items: items})
+                this.props.setContainerItems(this.props.snapshotId, source.droppableId, items)
             }
         } else { // dropped in other list
             let result
             if (source.droppableId === 'itemcollection') { // dropped in a container from items' list, move
                 result = move(
-                    this.props.real.snapshots[0].unassigned,
-                    this.props.real.snapshots[0].snapshot[destination.droppableId],
+                    snapshot.unassigned,
+                    snapshot.snapshot[destination.droppableId],
                     source,
                     destination
                 )
-                this.props.setUnassigned(result['source'])
-                this.props.setSnapshot({id: destination.droppableId, items: result['destination']})
+                this.props.setUnassignedItems(this.props.snapshotId, result['source'])
+                this.props.setContainerItems(this.props.snapshotId, destination.droppableId, result['destination'])
             } else if (destination.droppableId === 'itemcollection') { // dropped in items' list from a container, move item from a container to items' list
                 result = move(
-                    this.props.real.snapshots[0].snapshot[source.droppableId],
-                    this.props.real.snapshots[0].unassigned,
+                    snapshot.snapshot[source.droppableId],
+                    snapshot.unassigned,
                     source,
                     destination
                 )
-                this.props.setSnapshot({id: source.droppableId, items: result['source']})
-                this.props.setUnassigned(result['destination'])
+                this.props.setContainerItems(this.props.snapshotId, source.droppableId, result['source'])
+                this.props.setUnassignedItems(this.props.snapshotId, result['destination'])
             } else { // dropped in a container from another container, move item from a container to another container
                 result = move(
-                    this.props.real.snapshots[0].snapshot[source.droppableId],
-                    this.props.real.snapshots[0].snapshot[destination.droppableId],
+                    snapshot.snapshot[source.droppableId],
+                    snapshot.snapshot[destination.droppableId],
                     source,
                     destination
                 )
-                this.props.setSnapshot({id: source.droppableId, items: result['source']})
-                this.props.setSnapshot({id: destination.droppableId, items: result['destination']})
+                this.props.setContainerItems(this.props.snapshotId, source.droppableId, result['source'])
+                this.props.setContainerItems(this.props.snapshotId, destination.droppableId, result['destination'])
             }
         }
     }
 
     healUnassignedItems = (snapshotId) => {
-        const snap = this.props.real.snapshots.find(x => x._id === snapshotId)
+        const snap = this.getSnapshot(snapshotId)
+        // make sure no undefined items in unassigned
         let clean_unassigned = snap.unassigned.filter(n => n)
+        // make a set of all items
         let unassigned_set = new Set(this.props.real.items.map(item => item._id))
-        Object.values(snap.snapshot).map(items => items.map(item => unassigned_set.delete(item))) // Retain only unassigned checking the containers for assignment
+        for (let containerId in snap.snapshot) {
+            console.log(snap.snapshot[containerId])
+            snap.snapshot[containerId].map(item => {
+                console.log(item)
+                unassigned_set.delete(item)
+            }) // Retain only unassigned checking the containers for assignment
+        }
         clean_unassigned.map(item => unassigned_set.delete(item)) // Removed the items that are already in unassigned.
         // Self healing. If there are missing unassigned items, add them back into unassigned.
         if (unassigned_set.size > 0) {
             console.log("there are some missing unassigned")
             Array.from(unassigned_set).map(item => clean_unassigned.push(item))
-            this.props.setUnassigned(clean_unassigned)
+            this.props.setUnassignedItems(snapshotId, clean_unassigned)
         }
     }
 
@@ -136,11 +145,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         setRealData: (data) => {
             dispatch(setRealData(data))
         },
-        setUnassigned: (data) => {
-            dispatch(setUnassigned(data))
+        setUnassignedItems: (snapshotId, unassigned) => {
+            dispatch(setUnassignedItems(snapshotId, unassigned))
         },
-        setSnapshot: (data) => {
-            dispatch(setSnapshot(data))
+        setContainerItems: (snapshotId, containerId, items) => {
+            dispatch(setContainerItems(snapshotId, containerId, items))
         }
     }
 }

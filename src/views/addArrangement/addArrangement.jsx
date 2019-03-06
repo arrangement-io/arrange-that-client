@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { TextField, Button, Grid } from '@material-ui/core'
 
-import { setRealData, setSnapshot } from 'actions/real/real'
+import { setRealData } from 'actions/real/real'
 import { uuid } from 'utils'
 
 export class AddArrange extends Component {
@@ -11,11 +11,10 @@ export class AddArrange extends Component {
         super(props)
         this.state = {
             arrangement_name: '',
-            snapshot_name: ''
+            snapshot_name: 'Version 1'
         }
 
         this.handleArrangementChange = this.handleArrangementChange.bind(this)
-        this.handleSnapshotChange = this.handleSnapshotChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
     }
 
@@ -23,13 +22,6 @@ export class AddArrange extends Component {
         this.setState({
             ...this.state,
             arrangement_name: e.target.value
-        })
-    }
-
-    handleSnapshotChange (e) {
-        this.setState({
-            ...this.state,
-            snapshot_name: e.target.value
         })
     }
 
@@ -81,15 +73,6 @@ export class AddArrange extends Component {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField
-                            inputRef={field => this.inputSnapshot = field}
-                            autoFocus={false}
-                            onChange={this.handleSnapshotChange}
-                            val={this.state.snapshot_name}
-                            label="Snapshot Name"
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
                         <Button variant="contained" color="primary" onClick={this.handleClick}>
                             OK
                         </Button>
@@ -113,9 +96,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         setRealData: (data) => {
             dispatch(setRealData(data))
-        },
-        setSnapshot: (data) => {
-            dispatch(setSnapshot(data))
         }
     }
 }

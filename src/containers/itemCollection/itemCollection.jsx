@@ -124,7 +124,7 @@ export class ItemCollection extends Component {
                           style={getListStyle(snapshot.isDraggingOver)}
                       >
                           <div className="itemcollection">
-                              <Grid container spacing={24}>
+                              <Grid container spacing={0}>
                                   {
                                       this.props.unsnapshot_items.map((id, index) => {
                                           return (
