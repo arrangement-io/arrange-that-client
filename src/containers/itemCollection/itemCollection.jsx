@@ -60,14 +60,14 @@ export class ItemCollection extends Component {
 
         // Prevent the addition of an empty item.
         if (item.name === '') {
-          this.setState({
+            this.setState({
                 isEdit: false,
                 name: '',
                 _id: '',
                 size: 1,
                 isAlert: false
             })
-          return;
+            return;
         }
 
         const item1 = this.props.real.items.find(ele => ele._id === this.state._id)
@@ -84,14 +84,14 @@ export class ItemCollection extends Component {
   
             this.props.addItem(item)
         } else {
-          // In this case, there is a duplicate, so we send an alert
-          this.setState({
-              isEdit: false,
-              name: '',
-              _id: '',
-              size: 1,
-              isAlert: true
-          })
+            // In this case, there is a duplicate, so we send an alert
+            this.setState({
+                isEdit: false,
+                name: '',
+                _id: '',
+                size: 1,
+                isAlert: true
+            })
         }
     }
 
@@ -106,88 +106,88 @@ export class ItemCollection extends Component {
     }
 
     handleClose = (event, reason) => {
-      this.setState({
-          ...this.state,
-          isAlert: false
-      });
+        this.setState({
+            ...this.state,
+            isAlert: false
+        });
     };
 
-  displayEditItem () {
-      if (this.state.isEdit) {
-          return (
-              <Grid item xs={12}>
-                  <EditItem 
-                      name={this.state.name}
-                      handleChange={this.handleEditItemChange}
-                      handleEnter={this.handleEditItemSubmit}
-                      handleEsc={this.handleEditItemEscKey}
-                  />
-              </Grid>
-          )
-      }
-  }
+    displayEditItem () {
+        if (this.state.isEdit) {
+            return (
+                <Grid item xs={12}>
+                    <EditItem 
+                        name={this.state.name}
+                        handleChange={this.handleEditItemChange}
+                        handleEnter={this.handleEditItemSubmit}
+                        handleEsc={this.handleEditItemEscKey}
+                    />
+                </Grid>
+            )
+        }
+    }
 
-  render () {
-      return (
-          <div>
-              <Droppable droppableId="itemcollection">
-                  {(provided, snapshot) => (
-                      <div
-                          ref={provided.innerRef}
-                          style={getListStyle(snapshot.isDraggingOver)}
-                      >
-                          <div className="itemcollection">
-                              <Grid container spacing={24}>
-                                  {
-                                      this.props.unsnapshot_items.map((id, index) => {
-                                          return (
-                                              <Grid item xs = {12} key = {id}>
-                                                  <Item item = {this.props.items.find(ele => ele._id === id)} deleteItem = {this.props.deleteItem} index={index} getDragItemColor={this.props.getDragItemColor} containerId="itemcollection" />
-                                              </Grid>
-                                          )
-                                      })
-                                  }
-                                  { this.displayEditItem() }
-                                  <Grid item xs={12}>
-                                      <div className="item" onClick={this.addEditItem}>
-                                          <Typography variant="headline" align="center">
+    render () {
+        return (
+            <div>
+                <Droppable droppableId="itemcollection">
+                    {(provided, snapshot) => (
+                        <div
+                            ref={provided.innerRef}
+                            style={getListStyle(snapshot.isDraggingOver)}
+                        >
+                            <div className="itemcollection">
+                                <Grid container spacing={24}>
+                                    {
+                                        this.props.unsnapshot_items.map((id, index) => {
+                                            return (
+                                                <Grid item xs = {12} key = {id}>
+                                                    <Item item = {this.props.items.find(ele => ele._id === id)} deleteItem = {this.props.deleteItem} index={index} getDragItemColor={this.props.getDragItemColor} containerId="itemcollection" />
+                                                </Grid>
+                                            )
+                                        })
+                                    }
+                                    { this.displayEditItem() }
+                                    <Grid item xs={12}>
+                                        <div className="item" onClick={this.addEditItem}>
+                                            <Typography variant="headline" align="center">
                         +
-                                          </Typography>
-                                      </div>
-                                  </Grid>
-                              </Grid>
-                          </div>
-                          {provided.placeholder}
-                      </div>
-                  )}
-              </Droppable>
-              <Snackbar
-                  anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
-                  }}
-                  open={this.state.isAlert}
-                  autoHideDuration={6000}
-                  onClose={this.handleClose}
-                  ContentProps={{
-                      'aria-describedby': 'item-duplicated',
-                  }}
-                  message={<span id="item-duplicated">Item duplicated</span>}
-                  action={[
-                      <IconButton
-                          key="close"
-                          aria-label="Close"
-                          color="inherit"
-                          className=""
-                          onClick={this.handleClose}
-                      >
-                          <CloseIcon />
-                      </IconButton>,
-                  ]}
-              />
-          </div>
-      )
-  }
+                                            </Typography>
+                                        </div>
+                                    </Grid>
+                                </Grid>
+                            </div>
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </Droppable>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.isAlert}
+                    autoHideDuration={6000}
+                    onClose={this.handleClose}
+                    ContentProps={{
+                        'aria-describedby': 'item-duplicated',
+                    }}
+                    message={<span id="item-duplicated">Item duplicated</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            className=""
+                            onClick={this.handleClose}
+                        >
+                            <CloseIcon />
+                        </IconButton>,
+                    ]}
+                />
+            </div>
+        )
+    }
 }
 
 ItemCollection.propTypes = {

@@ -34,6 +34,7 @@ export class EditItem extends Component {
     }
 
     componentDidMount(){
+        // TODO Add event listener for tab key in order to do the tab thing
         document.addEventListener("keydown", this.escFunction, false);
     }
 
