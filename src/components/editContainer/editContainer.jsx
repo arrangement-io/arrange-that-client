@@ -8,6 +8,7 @@ export class EditContainer extends Component {
 
         this.handleNameKeyPress = this.handleNameKeyPress.bind(this)
         this.handleSizeKeyPress = this.handleSizeKeyPress.bind(this)
+        this.handleBlur = this.handleBlur.bind(this)
         this.escFunction = this.escFunction.bind(this);
     }
 
@@ -29,6 +30,12 @@ export class EditContainer extends Component {
                 this.props.handleEnter()
             }
         }
+    }
+
+    handleBlur () {
+        // if (this.props.name !== '' && this.props.size !== 0 && this.props.size !== '') {
+        //     this.props.handleEnter()
+        // }
     }
 
     escFunction (event) {
@@ -55,6 +62,7 @@ export class EditContainer extends Component {
                                 inputRef={field => this.inputName = field}
                                 onKeyPress={this.handleNameKeyPress}
                                 onChange={this.props.handleNameChange}
+                                // onBlur={this.handleBlur}
                                 val={this.props.name}
                                 autoFocus={true}
                                 label="Name"
@@ -68,6 +76,7 @@ export class EditContainer extends Component {
                                 inputRef={field => this.inputSize = field}
                                 onKeyPress={this.handleSizeKeyPress}
                                 onChange={this.props.handleSizeChange}
+                                // onBlur={this.handleBlur}
                                 val={this.props.size}
                                 InputLabelProps={{
                                     shrink: true,
