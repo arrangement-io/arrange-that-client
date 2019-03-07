@@ -75,3 +75,15 @@ export function move (source, destination, droppableSource, droppableDestination
 
     return result
 }
+
+export function getSnapshotIndex (state, snapshotId) {
+    return state.snapshots.findIndex(x => x._id === snapshotId)
+}
+
+export function getSnapshotContainerIndex (snapshot, containerId) {
+    return snapshot.snapshotContainers.findIndex(x => x._id === containerId)
+}
+
+export function getSnapshotContainer (snapshot, containerId) {
+    return snapshot.snapshotContainers.find(x => x._id === containerId)
+}

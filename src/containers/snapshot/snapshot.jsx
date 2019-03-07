@@ -7,7 +7,7 @@ import ItemCollection from 'containers/itemCollection/itemCollection'
 import ContainerCollection from 'containers/containerCollection/containerCollection'
 import { DragDropContext } from 'react-beautiful-dnd'
 import { setRealData, setUnassignedItems, setContainerItems } from 'actions/real/real'
-import { reorder, move } from 'utils'
+import { reorder, move, getSnapshotContainer } from 'utils'
 
 class Snapshot extends Component {
     componentDidMount () {
@@ -32,7 +32,7 @@ class Snapshot extends Component {
                 )
                 this.props.setUnassignedItems(this.props.snapshotId, items)
             } else { // dropped in a container, only reorder the items in a container
-                items = snapshot.snapshot[source.droppableId]
+                items = getSnapshotContainer(snapshot, source.droppableId).items
                 items = reorder(
                     items,
                     source.index,
@@ -45,7 +45,7 @@ class Snapshot extends Component {
             if (source.droppableId === 'itemcollection') { // dropped in a container from items' list, move
                 result = move(
                     snapshot.unassigned,
-                    snapshot.snapshot[destination.droppableId],
+                    getSnapshotContainer(snapshot, destination.droppableId).items,
                     source,
                     destination
                 )
@@ -53,7 +53,7 @@ class Snapshot extends Component {
                 this.props.setContainerItems(this.props.snapshotId, destination.droppableId, result['destination'])
             } else if (destination.droppableId === 'itemcollection') { // dropped in items' list from a container, move item from a container to items' list
                 result = move(
-                    snapshot.snapshot[source.droppableId],
+                    getSnapshotContainer(snapshot, source.droppableId).items,
                     snapshot.unassigned,
                     source,
                     destination
@@ -62,8 +62,8 @@ class Snapshot extends Component {
                 this.props.setUnassignedItems(this.props.snapshotId, result['destination'])
             } else { // dropped in a container from another container, move item from a container to another container
                 result = move(
-                    snapshot.snapshot[source.droppableId],
-                    snapshot.snapshot[destination.droppableId],
+                    getSnapshotContainer(snapshot, source.droppableId).items,
+                    getSnapshotContainer(snapshot, destination.droppableId).items,
                     source,
                     destination
                 )
@@ -79,13 +79,10 @@ class Snapshot extends Component {
         let clean_unassigned = snap.unassigned.filter(n => n)
         // make a set of all items
         let unassigned_set = new Set(this.props.real.items.map(item => item._id))
-        for (let containerId in snap.snapshot) {
-            console.log(snap.snapshot[containerId])
-            snap.snapshot[containerId].map(item => {
-                console.log(item)
-                unassigned_set.delete(item)
-            }) // Retain only unassigned checking the containers for assignment
+        for (let container of snap.snapshotContainers) {
+            container.items.map(item => unassigned_set.delete(item))
         }
+
         clean_unassigned.map(item => unassigned_set.delete(item)) // Removed the items that are already in unassigned.
         // Self healing. If there are missing unassigned items, add them back into unassigned.
         if (unassigned_set.size > 0) {

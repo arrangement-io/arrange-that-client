@@ -48,7 +48,8 @@ export class AddArrange extends Component {
             snapshots: [{
                 _id: uuid("snapshot"),
                 name: this.state.snapshot_name,
-                snapshot: {},
+                snapshot: {}, // TO REMOVE
+                snapshotContainers: [],
                 unassigned: []
             }],
             timestamp: d.getTime() / 1000,

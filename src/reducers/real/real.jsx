@@ -16,7 +16,13 @@ import {
 } from 'actions/actionTypes'
 
 import { post } from 'services/request'
-import { EXPORT_ARRANGEMENT } from 'services/serviceTypes';
+import { EXPORT_ARRANGEMENT } from 'services/serviceTypes'
+import * as ArrangementSchema from 'schema/arrangementSchema.json'
+import { getSnapshotIndex, getSnapshotContainerIndex } from 'utils'
+
+import * as Ajv from 'ajv'
+let ajv = new Ajv()
+const arrangementValidation = ajv.compile(ArrangementSchema)
 
 const initialState = {
     _id: '',
@@ -36,22 +42,26 @@ function exportState (real) {
         ...real,
         modified_timestamp: seconds
     }
-    post({
-        url: EXPORT_ARRANGEMENT,
-        data: arrangement
-    })
-        .then(response => {
-            console.log(response.data)
-            Promise.resolve()
+    // Test arrangement based on json validation
+    let valid = arrangementValidation(arrangement)
+    if (valid) {
+        post({
+            url: EXPORT_ARRANGEMENT,
+            data: arrangement
         })
-        .catch(err => {
-            console.log(err)
-            Promise.reject(err)
-        })
-}
-
-const getSnapshotIndex = (state, snapshotId) => {
-    return state.snapshots.findIndex(x => x._id === snapshotId)
+            .then(response => {
+                console.log(response.data)
+                Promise.resolve()
+            })
+            .catch(err => {
+                console.log(err)
+                Promise.reject(err)
+            })
+    }
+    else {
+        console.log("Invalid state")
+    }
+    
 }
 
 const realReducer = (state = initialState, action) => {
@@ -84,10 +94,13 @@ const realReducer = (state = initialState, action) => {
 
             // Remove item from all snapshots
             for (let snapshot of deleteItemState.snapshots) {
-                console.log(snapshot)
                 // Remove item from all containers in snapshot
                 for (let container_id in snapshot.snapshot) {
                     snapshot.snapshot[container_id] = snapshot.snapshot[container_id].filter(ele => ele !== action.id)
+                }
+                // Remove item from all containers in snapshot NEW
+                for (let container of snapshot.snapshotContainers) {
+                    container = container.items.filter(ele => ele !== action.id)
                 }
                 // Remove item from unassigned in snapshot
                 snapshot.unassigned = snapshot.unassigned.filter(ele => ele !== action.id)
@@ -126,6 +139,11 @@ const realReducer = (state = initialState, action) => {
             for (let snapshot of addContainerState.snapshots) {
                 snapshot.snapshot[action.container._id] = []
             }
+            // Add container to all snapshots NEW
+            for (let snapshot of addContainerState.snapshots) {
+                snapshot.snapshotContainers.push({"_id": action.container._id, "items": []})
+            }
+
             exportState(addContainerState)
             return addContainerState
         }
@@ -144,6 +162,14 @@ const realReducer = (state = initialState, action) => {
                     snapshot.unassigned.push(item)
                 }
                 delete snapshot.snapshot[action.id]
+            }
+            // Delete container to all snapshots NEW
+            for (let snapshot of deleteContainerState.snapshots) {
+                const containerIndex = getSnapshotContainerIndex(snapshot, action.id)
+                for (let item of snapshot.snapshotContainers[containerIndex].items) {
+                    snapshot.unassigned.push(item)
+                }
+                delete snapshot.snapshotContainers[containerIndex]
             }
 
             exportState(deleteContainerState)
@@ -188,7 +214,10 @@ const realReducer = (state = initialState, action) => {
                 ...state
             }
             const index = getSnapshotIndex(setContainerItemsState, action.snapshotId)
+            const containerIndex = getSnapshotContainerIndex(setContainerItemsState.snapshots[index], action.containerId)
             setContainerItemsState.snapshots[index].snapshot[action.containerId] = action.items
+            // NEW
+            setContainerItemsState.snapshots[index].snapshotContainers[containerIndex].items = action.items
 
             exportState(setContainerItemsState)
             return setContainerItemsState
@@ -220,14 +249,14 @@ const realReducer = (state = initialState, action) => {
             return snapshotDeleteState
         }
 
-        case ARRANGEMENT_RENAME:
+        case ARRANGEMENT_RENAME: {
             const arrangementRenameState = {
                 ...state,
                 name: action.name
             }
             exportState(arrangementRenameState)
             return arrangementRenameState
-
+        }
 
         case SNAPSHOT_RENAME: {
             const snapshotRenameState = {

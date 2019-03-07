@@ -84,9 +84,13 @@ export class Arrange extends Component {
 
     createNewSnapshot = () => {
         const numberOfCurrentSnapshots = this.props.real.snapshots.length
-        const newSnapshotContainers = {}
+        const newSnapshotSnapshot = {}
+        const newSnapshotContainers = []
         for (let container of this.props.real.containers) {
-            newSnapshotContainers[container._id] = []
+            newSnapshotSnapshot[container._id] = []
+        }
+        for (let container of this.props.real.containers) {
+            newSnapshotContainers.push({_id: container._id, items: []})
         }
         const newUnassigned = []
         for (let item of this.props.real.items) {
@@ -95,7 +99,8 @@ export class Arrange extends Component {
         const newSnapshot = {
             _id: uuid("snapshot"),
             name: "Ver " + (numberOfCurrentSnapshots + 1),
-            snapshot: newSnapshotContainers,
+            snapshot: newSnapshotSnapshot,
+            snapshotContainers: newSnapshotContainers,
             unassigned: []
         }
         return newSnapshot
@@ -149,7 +154,6 @@ export class Arrange extends Component {
                     showAdd={true}
                 >
                     {this.props.real.snapshots.map((snapshot, index) => {
-                        console.log(snapshot)
                         return (
                             <Tab key={index} title={snapshot.name}>
                                 <Snapshot snapshotId={snapshot._id} />
