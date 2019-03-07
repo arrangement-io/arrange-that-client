@@ -10,17 +10,21 @@ import ExportButton from 'components/exportbutton/exportbutton'
 import { get } from 'services/request'
 import { ARRANGEMENT } from 'services/serviceTypes'
 
-import { setRealData } from 'actions/real/real'
+import { setRealData, arrangementRename } from 'actions/real/real'
 import { snapshotAdd } from 'actions/snapshot/snapshot'
 import { uuid } from 'utils'
 
 import Tabs, { Tab } from 'react-awesome-tabs';
 
+import EditArrangementTitle from 'components/editArrangementTitle/editArrangementTitle'
+
 export class Arrange extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            activeTab: 0
+            activeTab: 0,
+            isEdit: false,
+            name: this.props.real.name
         };
     }
 
@@ -35,6 +39,47 @@ export class Arrange extends Component {
         this.setState({
             activeTab: numberOfCurrentSnapshots
         });
+    }
+
+    handleArrangementTitleEnter = (name) => {
+        //pass
+        this.setState({
+            ...this.state,
+            isEdit: false
+        })
+        this.props.arrangementRename(name)
+    }
+
+    handleArrangementTitleEsc = () => {
+        this.setState({
+            ...this.state,
+            isEdit: false
+        })
+    }
+
+    addEditArrangementTitle = () => {
+        this.setState({
+            ...this.state,
+            isEdit: true
+        })
+    }
+
+    displayEditArrangementTitle = () => {
+        if (this.state.isEdit) {
+            return (
+                <EditArrangementTitle
+                    name={this.props.real.name}
+                    handleEnter={this.handleArrangementTitleEnter}
+                    handleEsc={this.handleArrangementTitleEsc}/>
+            )
+        }
+        else {
+            return (
+                <Typography variant="headline" gutterBottom align="left">
+                    {this.props.real.name}
+                </Typography>
+            )
+        }
     }
 
     createNewSnapshot = () => {
@@ -85,9 +130,9 @@ export class Arrange extends Component {
             <div>
                 <Grid container spacing={8} className="arrange">
                     <Grid item xs={12} sm={4}>
-                        <Typography variant="headline" gutterBottom align="left">
-                            {this.props.real.name}
-                        </Typography>
+                        <div className="arrangementTitle" onClick={this.addEditArrangementTitle}>
+                            {this.displayEditArrangementTitle()}
+                        </div>
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <Typography variant="headline" gutterBottom align="center">
@@ -126,6 +171,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         setRealData: (data) => {
             dispatch(setRealData(data))
+        },
+        arrangementRename: (name) => {
+            dispatch(arrangementRename(name))
         },
         snapshotAdd: (snapshot) => {
             dispatch(snapshotAdd(snapshot))
