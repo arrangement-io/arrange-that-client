@@ -1,8 +1,9 @@
 import {
     SET_REAL_DATA,
+    SAVE_STATE,
+    ARRANGEMENT_RENAME,
     SET_UNASSIGNED_ITEMS,
-    SET_CONTAINER_ITEMS,
-    SAVE_STATE
+    SET_CONTAINER_ITEMS
 } from 'actions/actionTypes'
 
 export const setRealData = (data) => ({
@@ -26,4 +27,9 @@ export const setContainerItems = (snapshotId, containerId, items) => ({
 export const saveState = (data) => ({
     type: SAVE_STATE,
     data
+})
+
+export const arrangementRename = (name) => ({
+    type: ARRANGEMENT_RENAME,
+    name
 })

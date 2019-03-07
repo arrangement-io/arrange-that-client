@@ -6,6 +6,7 @@ import {
     CONTAINER_DELETE,
     CONTAINER_RENAME,
     SET_REAL_DATA,
+    ARRANGEMENT_RENAME,
     SET_UNASSIGNED_ITEMS,
     SET_CONTAINER_ITEMS,
     SAVE_STATE,
@@ -218,6 +219,15 @@ const realReducer = (state = initialState, action) => {
             exportState(snapshotDeleteState)
             return snapshotDeleteState
         }
+
+        case ARRANGEMENT_RENAME:
+            const arrangementRenameState = {
+                ...state,
+                name: action.name
+            }
+            exportState(arrangementRenameState)
+            return arrangementRenameState
+
 
         case SNAPSHOT_RENAME: {
             const snapshotRenameState = {
