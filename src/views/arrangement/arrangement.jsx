@@ -10,7 +10,9 @@ import ExportButton from 'components/exportbutton/exportbutton'
 import { get } from 'services/request'
 import { ARRANGEMENT } from 'services/serviceTypes'
 
-import { setRealData, setUnassigned, setSnapshot, arrangementRename } from 'actions/real/real'
+import { setRealData, arrangementRename } from 'actions/real/real'
+import { snapshotAdd } from 'actions/snapshot/snapshot'
+import { uuid } from 'utils'
 
 import Tabs, { Tab } from 'react-awesome-tabs';
 
@@ -30,14 +32,12 @@ export class Arrange extends Component {
         this.setState({activeTab: active})
     }
 
-    handleTabAdd = () => {
-        this.tabs.push({
-            title: 'New Tab',
-            content: 'Hey Buddy!'
-        });
+    handleTabAdd() {
+        const numberOfCurrentSnapshots = this.props.real.snapshots.length
+        this.props.snapshotAdd(this.createNewSnapshot())
 
         this.setState({
-            activeTab: this.tabs.length - 1
+            activeTab: numberOfCurrentSnapshots
         });
     }
 
@@ -82,6 +82,25 @@ export class Arrange extends Component {
         }
     }
 
+    createNewSnapshot = () => {
+        const numberOfCurrentSnapshots = this.props.real.snapshots.length
+        const newSnapshotContainers = {}
+        for (let container of this.props.real.containers) {
+            newSnapshotContainers[container._id] = []
+        }
+        const newUnassigned = []
+        for (let item of this.props.real.items) {
+            newUnassigned.push(item._id)
+        }
+        const newSnapshot = {
+            _id: uuid("snapshot"),
+            name: "Ver " + (numberOfCurrentSnapshots + 1),
+            snapshot: newSnapshotContainers,
+            unassigned: []
+        }
+        return newSnapshot
+    }
+
     // Loads the state from the backend given the arrangement_id in the url param
     loadState () {
         const id = this.props.match.params.arrangement_id
@@ -91,6 +110,7 @@ export class Arrange extends Component {
                     console.log("no arrangement found")
                 }
                 else {
+                    console.log(response.data.arrangement)
                     this.props.setRealData(response.data.arrangement)
                 }
                 Promise.resolve()
@@ -108,7 +128,7 @@ export class Arrange extends Component {
     render () {
         return (
             <div>
-                <Grid container spacing={24} className="arrange">
+                <Grid container spacing={8} className="arrange">
                     <Grid item xs={12} sm={4}>
                         <div className="arrangementTitle" onClick={this.addEditArrangementTitle}>
                             {this.displayEditArrangementTitle()}
@@ -125,7 +145,8 @@ export class Arrange extends Component {
                 <Tabs 
                     active={this.state.activeTab} 
                     onTabSwitch={this.handleTabSwitch.bind(this)}
-                    draggable={ true }
+                    onTabAdd={this.handleTabAdd.bind(this)}
+                    showAdd={true}
                 >
                     {this.props.real.snapshots.map((snapshot, index) => {
                         console.log(snapshot)
@@ -151,14 +172,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         setRealData: (data) => {
             dispatch(setRealData(data))
         },
-        setUnassigned: (data) => {
-            dispatch(setUnassigned(data))
-        },
-        setSnapshot: (data) => {
-            dispatch(setSnapshot(data))
-        },
         arrangementRename: (name) => {
             dispatch(arrangementRename(name))
+        },
+        snapshotAdd: (snapshot) => {
+            dispatch(snapshotAdd(snapshot))
         }
     }
 }

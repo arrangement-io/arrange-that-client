@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Typography, TextField } from '@material-ui/core'
 
+const ESC_KEY = 27
+
 export class EditArrangementTitle extends Component {
     constructor (props) {
         super(props)
@@ -11,14 +13,14 @@ export class EditArrangementTitle extends Component {
     }
     
     state = {
-        name: ''
-      };
+        name: this.props.name
+    };
    
     handleChange = name => event => {
         this.setState({
-          name: event.target.value
+            name: event.target.value
         });
-      };
+    };
     
     handleKeyPress (event) {
         if (event.key === 'Enter') {
@@ -30,7 +32,7 @@ export class EditArrangementTitle extends Component {
     }
 
     escFunction (event) {
-        if(event.keyCode === 27) {
+        if(event.keyCode === ESC_KEY) {
             this.props.handleEsc()
         }
     }
@@ -44,9 +46,9 @@ export class EditArrangementTitle extends Component {
     }
 
     render () {
-		return (
-			<Typography variant="headline" align="left">
-				<TextField
+        return (
+            <Typography variant="headline" align="left">
+                <TextField
                     id="outlined-name"
                     label="Arrangement Name"
                     value={this.state.name}
@@ -55,11 +57,10 @@ export class EditArrangementTitle extends Component {
                     onBlur={this.props.handleEsc}
                     margin="normal"
                     variant="outlined"
-                    autoFocus="true"
-                />
-			</Typography>
-		)
-	}
+                    autoFocus="true"/>
+            </Typography>
+        )
+    }
 }
 
 EditArrangementTitle.propTypes = {
