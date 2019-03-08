@@ -85,20 +85,20 @@ export class ContainerCollection extends Component {
             this.props.addContainer(container)
             return
         } else { // duplicates found
-          if (this.state.size === '') { // user inputed size
-            this.setState({
-                isEdit: false,
-                name: '',
-                _id: '',
-                size: 1,
-                isAlert: true
-            })
-          } else {
-            this.setState({
-                ...this.state,
-                isAlert: true
-            })
-          }
+            if (this.state.size === '') { // user inputed size
+                this.setState({
+                    isEdit: false,
+                    name: '',
+                    _id: '',
+                    size: 1,
+                    isAlert: true
+                })
+            } else {
+                this.setState({
+                    ...this.state,
+                    isAlert: true
+                })
+            }
         }
     }
 
