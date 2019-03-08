@@ -14,7 +14,9 @@ var style = {
 class HomePage extends Component {
     componentDidMount () {
         if (this.props.account.isAuthenticated) {
-            this.props.history.push("/all_arrangements")
+            setTimeout(function() {
+                this.props.history.push("/all_arrangements")
+            }.bind(this), 100)
         }
     }
 

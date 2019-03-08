@@ -84,7 +84,7 @@ const realReducer = (state = initialState, action) => {
             exportState(addItemState)
             return addItemState
         }
-            
+                
         case ITEM_DELETE: {
             const deleteItemState = {
                 ...state
@@ -140,7 +140,6 @@ const realReducer = (state = initialState, action) => {
             exportState(addContainerState)
             return addContainerState
         }
-            
 
         case CONTAINER_DELETE: {
             const deleteContainerState = {
@@ -157,7 +156,6 @@ const realReducer = (state = initialState, action) => {
                 }
                 snapshot.snapshotContainers.splice(containerIndex, 1)
             }
-
             exportState(deleteContainerState)
             return deleteContainerState
         }
@@ -167,7 +165,7 @@ const realReducer = (state = initialState, action) => {
             let container = containers.find(ele => ele._id === action.container._id)
             container.name = action.container.name
             containers = containers.filter(ele => ele._id !== action.containers._id)
-        
+            
             const resultContainerRename = {
                 ...state,
                 containers: [
@@ -190,7 +188,7 @@ const realReducer = (state = initialState, action) => {
             }
             const index = getSnapshotIndex(setUnassignedState, action.snapshotId)
             setUnassignedState.snapshots[index].unassigned = action.unassigned
-            
+                
             exportState(setUnassignedState)
             return setUnassignedState
         }
@@ -216,7 +214,6 @@ const realReducer = (state = initialState, action) => {
             const snapshotAddState = {
                 ...state
             }
-
             snapshotAddState.snapshots.push(action.snapshot)
             exportState(snapshotAddState)
             return snapshotAddState
@@ -232,7 +229,7 @@ const realReducer = (state = initialState, action) => {
             exportState(snapshotDeleteState)
             return snapshotDeleteState
         }
-
+        
         case ARRANGEMENT_RENAME: {
             const arrangementRenameState = {
                 ...state,
@@ -242,6 +239,7 @@ const realReducer = (state = initialState, action) => {
             return arrangementRenameState
         }
 
+        
         case SNAPSHOT_RENAME: {
             const snapshotRenameState = {
                 ...state
