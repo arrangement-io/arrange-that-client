@@ -133,18 +133,18 @@ export class ContainerCollection extends Component {
                 <Grid container spacing={8}>
                     {
                         this.props.containers.map((container) => {
-                        return (
-                            <Grid item xs={12} sm={6} md={3} lg={2} key={container._id}>
-                                <Container 
-                                    container={container}
-                                    snapshot={this.props.snapshot} 
-                                    items={this.props.items} 
-                                    deleteItem={this.props.deleteItem} 
-                                    deleteContainer={this.props.deleteContainer}
-                                    getDragItemColor={this.props.getDragItemColor}
-                                />
-                            </Grid>
-                        )
+                            return (
+                                <Grid item xs={12} sm={6} md={3} lg={2} key={container._id}>
+                                    <Container 
+                                        container={container}
+                                        snapshot={this.props.snapshot} 
+                                        items={this.props.items} 
+                                        deleteItem={this.props.deleteItem} 
+                                        deleteContainer={this.props.deleteContainer}
+                                        getDragItemColor={this.props.getDragItemColor}
+                                    />
+                                </Grid>
+                            )
                         
                         })
                     }
