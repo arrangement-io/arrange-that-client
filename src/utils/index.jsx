@@ -81,9 +81,9 @@ export function getSnapshotIndex (state, snapshotId) {
 }
 
 export function getSnapshotContainerIndex (snapshot, containerId) {
-    return snapshot.snapshotContainers.findIndex(x => x._id === containerId)
+    return snapshot.snapshotContainers.findIndex(x => (x && x._id === containerId))
 }
 
 export function getSnapshotContainer (snapshot, containerId) {
-    return snapshot.snapshotContainers.find(x => x._id === containerId)
+    return snapshot.snapshotContainers.find(x => (x && x._id === containerId))
 }

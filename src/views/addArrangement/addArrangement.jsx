@@ -48,7 +48,7 @@ export class AddArrange extends Component {
             snapshots: [{
                 _id: uuid("snapshot"),
                 name: this.state.snapshot_name,
-                snapshot: {}, // TO REMOVE
+                snapshot: {}, // TO REMOVE after it is removed on backend
                 snapshotContainers: [],
                 unassigned: []
             }],

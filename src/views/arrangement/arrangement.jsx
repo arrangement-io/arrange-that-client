@@ -98,7 +98,7 @@ export class Arrange extends Component {
         }
         const newSnapshot = {
             _id: uuid("snapshot"),
-            name: "Ver " + (numberOfCurrentSnapshots + 1),
+            name: "Version " + (numberOfCurrentSnapshots + 1),
             snapshot: newSnapshotSnapshot,
             snapshotContainers: newSnapshotContainers,
             unassigned: []

@@ -11,6 +11,7 @@ import { reorder, move, getSnapshotContainer } from 'utils'
 
 class Snapshot extends Component {
     componentDidMount () {
+        this.healSnapshotContainers(this.props.snapshotId)
         this.healUnassignedItems(this.props.snapshotId)
     }
 
@@ -89,6 +90,16 @@ class Snapshot extends Component {
             console.log("there are some missing unassigned")
             Array.from(unassigned_set).map(item => clean_unassigned.push(item))
             this.props.setUnassignedItems(snapshotId, clean_unassigned)
+        }
+    }
+
+    healSnapshotContainers = (snapshotId) => {
+        const snap = this.getSnapshot(snapshotId)
+        // make sure no undefined and null containers
+        let cleanSnapshotContainers = snap.snapshotContainers.filter(n => n)
+        if (cleanSnapshotContainers.length !== snap.snapshotContainers.length) {
+            snap.snapshotContainers = cleanSnapshotContainers
+            this.props.setRealData(this.props.real)
         }
     }
 

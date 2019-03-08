@@ -120,69 +120,70 @@ export class ContainerCollection extends Component {
         }
     }
 
-  handleClose = (event, reason) => {
-      this.setState({
-          ...this.state,
-          isAlert: false
-      });
-  };
+    handleClose = (event, reason) => {
+        this.setState({
+            ...this.state,
+            isAlert: false
+        });
+    };
 
-  render () {
-      return (
-          <div className="containercollection">
-              <Grid container spacing={8}>
-                  {
-                      this.props.containers.map((container) => {
-                          return (
-                              <Grid item xs={12} sm={6} md={3} lg={2} key={container._id}>
-                                  <Container 
-                                      container={container}
-                                      snapshot={this.props.snapshot} 
-                                      items={this.props.items} 
-                                      deleteItem={this.props.deleteItem} 
-                                      deleteContainer={this.props.deleteContainer}
-                                      getDragItemColor={this.props.getDragItemColor}
-                                  />
-                              </Grid>
-                          )
-                      })
-                  }
-                  { this.displayEditContainer() }
-                  <Grid item xs={12} sm={6} md={3} lg={2}>
-                      <div className="container" onClick={this.addEditContainer}>
-                          <Typography variant="headline" align="center">
-                +
-                          </Typography>
-                      </div>
-                  </Grid>
-              </Grid>
-              <Snackbar
-                  anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
-                  }}
-                  open={this.state.isAlert}
-                  autoHideDuration={6000}
-                  onClose={this.handleClose}
-                  ContentProps={{
-                      'aria-describedby': 'container-duplicated',
-                  }}
-                  message={<span id="container-duplicated">Container duplicated</span>}
-                  action={[
-                      <IconButton
-                          key="close"
-                          aria-label="Close"
-                          color="inherit"
-                          className=""
-                          onClick={this.handleClose}
-                      >
-                          <CloseIcon />
-                      </IconButton>,
-                  ]}
-              />
-          </div>
-      )
-  }
+    render () {
+        return (
+            <div className="containercollection">
+                <Grid container spacing={8}>
+                    {
+                        this.props.containers.map((container) => {
+                        return (
+                            <Grid item xs={12} sm={6} md={3} lg={2} key={container._id}>
+                                <Container 
+                                    container={container}
+                                    snapshot={this.props.snapshot} 
+                                    items={this.props.items} 
+                                    deleteItem={this.props.deleteItem} 
+                                    deleteContainer={this.props.deleteContainer}
+                                    getDragItemColor={this.props.getDragItemColor}
+                                />
+                            </Grid>
+                        )
+                        
+                        })
+                    }
+                    { this.displayEditContainer() }
+                    <Grid item xs={12} sm={6} md={3} lg={2}>
+                        <div className="container" onClick={this.addEditContainer}>
+                            <Typography variant="headline" align="center">
+                                +
+                            </Typography>
+                        </div>
+                    </Grid>
+                </Grid>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.isAlert}
+                    autoHideDuration={6000}
+                    onClose={this.handleClose}
+                    ContentProps={{
+                        'aria-describedby': 'container-duplicated',
+                    }}
+                    message={<span id="container-duplicated">Container duplicated</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            className=""
+                            onClick={this.handleClose}
+                        >
+                            <CloseIcon />
+                        </IconButton>,
+                    ]}
+                />
+            </div>
+        )
+    }
 }
 
 ContainerCollection.propTypes = {
