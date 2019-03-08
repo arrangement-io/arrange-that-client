@@ -10,31 +10,95 @@ import ExportButton from 'components/exportbutton/exportbutton'
 import { get } from 'services/request'
 import { ARRANGEMENT } from 'services/serviceTypes'
 
-import { setRealData, setUnassigned, setSnapshot } from 'actions/real/real'
+import { setRealData, arrangementRename } from 'actions/real/real'
+import { snapshotAdd } from 'actions/snapshot/snapshot'
+import { uuid } from 'utils'
 
 import Tabs, { Tab } from 'react-awesome-tabs';
+
+import EditArrangementTitle from 'components/editArrangementTitle/editArrangementTitle'
 
 export class Arrange extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            activeTab: 0
+            activeTab: 0,
+            isEdit: false,
+            name: this.props.real.name
         };
     }
 
-    handleTabSwitch(active) {
+    handleTabSwitch = (active) => {
         this.setState({activeTab: active})
     }
 
     handleTabAdd() {
-        this.tabs.push({
-            title: 'New Tab',
-            content: 'Hey Buddy!'
-        });
+        const numberOfCurrentSnapshots = this.props.real.snapshots.length
+        this.props.snapshotAdd(this.createNewSnapshot())
 
         this.setState({
-            activeTab: this.tabs.length - 1
+            activeTab: numberOfCurrentSnapshots
         });
+    }
+
+    handleArrangementTitleEnter = (name) => {
+        //pass
+        this.setState({
+            ...this.state,
+            isEdit: false
+        })
+        this.props.arrangementRename(name)
+    }
+
+    handleArrangementTitleEsc = () => {
+        this.setState({
+            ...this.state,
+            isEdit: false
+        })
+    }
+
+    addEditArrangementTitle = () => {
+        this.setState({
+            ...this.state,
+            isEdit: true
+        })
+    }
+
+    displayEditArrangementTitle = () => {
+        if (this.state.isEdit) {
+            return (
+                <EditArrangementTitle
+                    name={this.props.real.name}
+                    handleEnter={this.handleArrangementTitleEnter}
+                    handleEsc={this.handleArrangementTitleEsc}/>
+            )
+        }
+        else {
+            return (
+                <Typography variant="headline" gutterBottom align="left">
+                    {this.props.real.name}
+                </Typography>
+            )
+        }
+    }
+
+    createNewSnapshot = () => {
+        const numberOfCurrentSnapshots = this.props.real.snapshots.length
+        const newSnapshotContainers = {}
+        for (let container of this.props.real.containers) {
+            newSnapshotContainers[container._id] = []
+        }
+        const newUnassigned = []
+        for (let item of this.props.real.items) {
+            newUnassigned.push(item._id)
+        }
+        const newSnapshot = {
+            _id: uuid("snapshot"),
+            name: "Ver " + (numberOfCurrentSnapshots + 1),
+            snapshot: newSnapshotContainers,
+            unassigned: []
+        }
+        return newSnapshot
     }
 
     // Loads the state from the backend given the arrangement_id in the url param
@@ -46,6 +110,7 @@ export class Arrange extends Component {
                     console.log("no arrangement found")
                 }
                 else {
+                    console.log(response.data.arrangement)
                     this.props.setRealData(response.data.arrangement)
                 }
                 Promise.resolve()
@@ -63,11 +128,11 @@ export class Arrange extends Component {
     render () {
         return (
             <div>
-                <Grid container spacing={24} className="arrange">
+                <Grid container spacing={8} className="arrange">
                     <Grid item xs={12} sm={4}>
-                        <Typography variant="headline" gutterBottom align="left">
-                            {this.props.real.name}
-                        </Typography>
+                        <div className="arrangementTitle" onClick={this.addEditArrangementTitle}>
+                            {this.displayEditArrangementTitle()}
+                        </div>
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <Typography variant="headline" gutterBottom align="center">
@@ -80,7 +145,8 @@ export class Arrange extends Component {
                 <Tabs 
                     active={this.state.activeTab} 
                     onTabSwitch={this.handleTabSwitch.bind(this)}
-                    draggable={ true }
+                    onTabAdd={this.handleTabAdd.bind(this)}
+                    showAdd={true}
                 >
                     {this.props.real.snapshots.map((snapshot, index) => {
                         console.log(snapshot)
@@ -106,11 +172,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         setRealData: (data) => {
             dispatch(setRealData(data))
         },
-        setUnassigned: (data) => {
-            dispatch(setUnassigned(data))
+        arrangementRename: (name) => {
+            dispatch(arrangementRename(name))
         },
-        setSnapshot: (data) => {
-            dispatch(setSnapshot(data))
+        snapshotAdd: (snapshot) => {
+            dispatch(snapshotAdd(snapshot))
         }
     }
 }

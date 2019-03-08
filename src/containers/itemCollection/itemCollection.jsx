@@ -142,7 +142,7 @@ export class ItemCollection extends Component {
                             style={getListStyle(snapshot.isDraggingOver)}
                         >
                             <div className="itemcollection">
-                                <Grid container spacing={24}>
+                                <Grid container spacing={0}>
                                     {
                                         this.props.unsnapshot_items.map((id, index) => {
                                             return (
@@ -155,9 +155,7 @@ export class ItemCollection extends Component {
                                     { this.displayEditItem() }
                                     <Grid item xs={12}>
                                         <div className="item" onClick={this.addEditItem}>
-                                            <Typography variant="headline" align="center">
-                        +
-                                            </Typography>
+                                            <Typography variant="headline" align="center">+</Typography>
                                         </div>
                                     </Grid>
                                 </Grid>
