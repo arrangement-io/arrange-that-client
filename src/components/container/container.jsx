@@ -6,27 +6,20 @@ import MoreMenu from 'components/moremenu/moremenu'
 import Item from 'components/item/item'
 import OccupancyDisplay from 'components/container/occupancyDisplay'
 
-import { getListStyle } from 'utils'
+import { getListStyle, getSnapshotContainer } from 'utils'
 import { Droppable } from 'react-beautiful-dnd'
 
 export class Container extends Component {
-    getItemAry (containerId) {
-        let itemAry = []
-        for (var itemId in this.props.snapshot.snapshot[containerId]) {
-            itemAry.push(this.props.snapshot.snapshot[containerId][itemId])
-        }
-
-        return itemAry
+    getItemIds = (containerId) => {
+        return getSnapshotContainer(this.props.snapshot, containerId).items
     }
-    
-    getItems (items, containerId) {
-        let stateitems = []
-        for (var itemId in this.props.snapshot.snapshot[containerId]) {
-            const item = items.find(ele => ele._id === this.props.snapshot.snapshot[containerId][itemId])
-            stateitems.push(item)
-        }
 
-        return stateitems
+    getItems = (items, containerId) => {
+        const itemsInContainer = []
+        for (let itemId of this.getItemIds(containerId)) {
+            itemsInContainer.push(items.find(ele => ele._id === itemId))
+        }
+        return itemsInContainer
     }
 
     handleItemClick = option => {
@@ -46,7 +39,7 @@ export class Container extends Component {
                 {(provided, snapshot) => (
                     <div
                         ref={provided.innerRef}
-                        style={getListStyle(snapshot.isDraggingOver, this.getItemAry(this.props.container._id).includes(snapshot.draggingOverWith), this.getItemAry(this.props.container._id).length < this.props.container.size ? false : true)}
+                        style={getListStyle(snapshot.isDraggingOver, this.getItemIds(this.props.container._id).includes(snapshot.draggingOverWith), items.length < this.props.container.size ? false : true)}
                     >
                         <div className="container">
                             <Grid container alignItems="center" spacing={8}>

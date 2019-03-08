@@ -21,12 +21,12 @@ const initialState = {
 
 const accountReducer = (state = initialState, action) => {
     switch (action.type) {
-    case SET_ACCOUNT:
-        cookies.set('token', action.account.token, {path: '/'})
-        cookies.set('user', action.account.user, {path: '/'})
-        return action.account
-    default:
-        return state
+        case SET_ACCOUNT:
+            cookies.set('token', action.account.token, {path: '/'})
+            cookies.set('user', action.account.user, {path: '/'})
+            return action.account
+        default:
+            return state
     }
 }
 
