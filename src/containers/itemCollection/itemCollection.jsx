@@ -92,6 +92,10 @@ export class ItemCollection extends Component {
                 size: 1,
                 isAlert: true
             })
+            // this.setState({
+            //     ...this.state,
+            //     isAlert: true
+            // })
         }
     }
 
@@ -127,6 +131,7 @@ export class ItemCollection extends Component {
         }
     }
 
+    //TODO The snackbar alert seems to hide itself prematurely on click away from a duplicated item.
     render () {
         return (
             <div>

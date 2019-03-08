@@ -73,6 +73,7 @@ export class ContainerCollection extends Component {
         const container1 = this.props.real.containers.find(ele => ele._id === this.state._id)
         const container2 = this.props.real.containers.find(ele => ele.name === this.state.name)
         if (typeof container1 === 'undefined' && typeof container2 === 'undefined') {
+            //Duplicates not found
             this.setState({
                 isEdit: false,
                 name: '',
@@ -83,14 +84,22 @@ export class ContainerCollection extends Component {
 
             this.props.addContainer(container)
             return
+        } else { // duplicates found
+          if (this.state.size === '') { // user inputed size
+            this.setState({
+                isEdit: false,
+                name: '',
+                _id: '',
+                size: 1,
+                isAlert: true
+            })
+          } else {
+            this.setState({
+                ...this.state,
+                isAlert: true
+            })
+          }
         }
-        this.setState({
-            isEdit: false,
-            name: '',
-            _id: '',
-            size: 1,
-            isAlert: true
-        })
     }
 
     handleEditContainerEscKey () {

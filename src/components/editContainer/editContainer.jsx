@@ -8,11 +8,12 @@ export class EditContainer extends Component {
 
         this.handleNameKeyPress = this.handleNameKeyPress.bind(this)
         this.handleSizeKeyPress = this.handleSizeKeyPress.bind(this)
-        this.handleBlur = this.handleBlur.bind(this)
+        this.handleClick = this.handleClick.bind(this)
         this.escFunction = this.escFunction.bind(this);
+        this.containerRef = React.createRef()
     }
 
-    handleNameKeyPress (e) {
+    handleNameKeyPress = (e) => {
         if (e.key === 'Enter' && this.props.name !== '') {
             if (this.props.size === '' || this.props.size === 0) {
                 this.inputSize.focus()
@@ -22,7 +23,7 @@ export class EditContainer extends Component {
         }
     }
 
-    handleSizeKeyPress (e) {
+    handleSizeKeyPress = (e) => {
         if (e.key === 'Enter' && this.props.size !== 0 && this.props.size !== '') {
             if (this.props.name === '') {
                 this.inputName.focus()
@@ -32,13 +33,18 @@ export class EditContainer extends Component {
         }
     }
 
-    handleBlur () {
-        // if (this.props.name !== '' && this.props.size !== 0 && this.props.size !== '') {
-        //     this.props.handleEnter()
-        // }
+    handleClick = (e) => {
+        if (this.containerRef.contains(e.target)) { //Click inside, don't do anything
+            return;
+        }
+        if (this.props.name !== '' && this.props.size !== 0 && this.props.size !== '') {
+            this.props.handleEnter()
+        } else if (this.props.name === '' && (this.props.size === '' || this.props.size === 0)) {
+            this.props.handleEsc()
+        }
     }
 
-    escFunction (event) {
+    escFunction = (event) => {
         if(event.keyCode === 27) {
             this.props.handleEsc()
         }
@@ -46,15 +52,17 @@ export class EditContainer extends Component {
 
     componentDidMount(){
         document.addEventListener("keydown", this.escFunction, false);
+        document.addEventListener("mousedown", this.handleClick, false);
     }
 
     componentWillUnmount(){
         document.removeEventListener("keydown", this.escFunction, false);
+        document.removeEventListener("mousedown", this.handleClick, false);
     }
   
     render () {
         return (
-            <div className="container">
+            <div className="container" ref={containerRef => this.containerRef = containerRef}>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
                         <Typography variant="headline" align="center">
