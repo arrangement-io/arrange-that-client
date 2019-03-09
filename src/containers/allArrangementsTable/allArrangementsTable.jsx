@@ -11,7 +11,7 @@ import { setArrangements } from 'actions/arrangements/arrangements'
 class AllArrangementsTable extends Component {
     constructor(props) {
         super(props);
-   }
+    }
 
     handleCellClick (id) {
         return () => {
