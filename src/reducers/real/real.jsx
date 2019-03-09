@@ -15,15 +15,8 @@ import {
     SNAPSHOT_RENAME
 } from 'actions/actionTypes'
 
-import { post } from 'services/request'
-import { EXPORT_ARRANGEMENT } from 'services/serviceTypes'
-import * as ArrangementSchema from 'schema/arrangementSchema.json'
+import { updateArrangement } from 'services/arrangementService'
 import { getSnapshotIndex, getSnapshotContainerIndex } from 'utils'
-
-import * as Ajv from 'ajv'
-
-let ajv = new Ajv()
-const arrangementValidation = ajv.compile(ArrangementSchema)
 
 const initialState = {
     _id: '',
@@ -44,25 +37,15 @@ function exportState (real) {
         modified_timestamp: seconds
     }
     // Test arrangement based on json validation
-    let valid = arrangementValidation(arrangement)
-    if (valid) {
-        post({
-            url: EXPORT_ARRANGEMENT,
-            data: arrangement
+    updateArrangement(arrangement)
+        .then(response => {
+            console.log(response.data)
+            Promise.resolve()
         })
-            .then(response => {
-                console.log(response.data)
-                Promise.resolve()
-            })
-            .catch(err => {
-                console.log(err)
-                Promise.reject(err)
-            })
-    }
-    else {
-        console.log("Invalid state")
-    }
-    
+        .catch(err => {
+            console.log(err)
+            Promise.reject(err)
+        })
 }
 
 const realReducer = (state = initialState, action) => {
@@ -229,7 +212,7 @@ const realReducer = (state = initialState, action) => {
             exportState(snapshotDeleteState)
             return snapshotDeleteState
         }
-        
+
         case ARRANGEMENT_RENAME: {
             const arrangementRenameState = {
                 ...state,
@@ -239,7 +222,6 @@ const realReducer = (state = initialState, action) => {
             return arrangementRenameState
         }
 
-        
         case SNAPSHOT_RENAME: {
             const snapshotRenameState = {
                 ...state
