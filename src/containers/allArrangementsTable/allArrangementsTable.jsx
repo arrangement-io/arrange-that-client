@@ -4,6 +4,7 @@ import { withRouter } from 'react-router'
 
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { withSnackbar } from 'notistack';
 
 import { updateArrangement } from 'services/arrangementService'
 import { setArrangements } from 'actions/arrangements/arrangements'
@@ -30,6 +31,7 @@ class AllArrangementsTable extends Component {
                 .then(response => {
                     console.log("deleted arrangement")
                     this.props.setArrangements(this.props.arrangements.filter(a => a._id !== deletedArrangement._id))
+                    this.props.enqueueSnackbar('Deleted Arrangement')
                     Promise.resolve()
                 })
                 .catch(err => {
@@ -83,7 +85,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 }
   
-export default withRouter(connect(
+export default withSnackbar(withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-) (AllArrangementsTable))
+) (AllArrangementsTable)))
