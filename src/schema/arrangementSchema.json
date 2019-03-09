@@ -55,12 +55,13 @@
                                     "type": "array",
                                     "items": {"type": "string"}
                                 }
-                            }
+                            },
+                            "required": ["_id", "items"]
                         }
                     }
                 },
                 "additionalProperties":false,
-                "required": ["_id", "name", "unassigned"]
+                "required": ["_id", "name", "unassigned", "snapshotContainers"]
             }
         },
         "modified_timestamp": {"type": "number"},
