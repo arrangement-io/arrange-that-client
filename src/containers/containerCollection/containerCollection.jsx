@@ -102,6 +102,50 @@ export class ContainerCollection extends Component {
         }
     }
 
+    // This function splits a string by tabs/newlines and individually
+    // submits each container and then adds another edit container. It
+    // assumes the default size of the container is 5 (a typical sedan)
+    handleEditContainerPaste = (pasteString) => {
+        //TODO does this work on Windows? Does it need to check for carriage return?
+        var splitStrings = pasteString.split(/[\t\n]/)
+
+        for (let containerName of splitStrings) {
+            //TODO Need to double check whether this logic of interacting with other functions is correct
+            const container = {
+                _id: uuid('container'),
+                name: containerName,
+                size: 5
+            }
+    
+            // Prevent the addition of an empty item, null item, or all whitespace item
+            if (container.name === null || container.name.match(/^\s*$/) !== null) {
+                continue;
+            }
+
+            const container1 = this.props.real.containers.find(ele => ele._id === this.state._id)
+            const container2 = this.props.real.containers.find(ele => ele.name === this.state.name)
+            if (typeof container1 === 'undefined' && typeof container2 === 'undefined') {
+                //Duplicates not found
+                this.setState({
+                    isEdit: false,
+                    name: '',
+                    _id: '',
+                    size: 0,
+                    isAlert: false
+                })
+
+                this.props.addContainer(container)
+            }
+        }
+        this.setState({
+            isEdit: false,
+            name: '',
+            _id: '',
+            size: 0,
+            isAlert: false
+        })
+    }
+
     handleEditContainerEscKey () {
         this.setState({
             isEdit: false,
@@ -122,6 +166,7 @@ export class ContainerCollection extends Component {
                         handleNameChange={this.handleEditContainerNameChange}
                         handleSizeChange={this.handleEditContainerSizeChange}
                         handleEnter={this.handleEditContainerEnterKey}
+                        handlePaste={this.handleEditContainerPaste}
                         handleEsc={this.handleEditContainerEscKey}
                     />
                 </Grid>

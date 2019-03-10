@@ -51,15 +51,60 @@ export class ItemCollection extends Component {
         })
     }
 
+    // This function splits a string by tabs/newlines and individually
+    // submits each item and then adds another edit item.
+    handleEditItemPaste = (pasteString) => {
+        //TODO does this work on Windows? Does it need to check for carriage return?
+        var splitStrings = pasteString.split(/[\t\n]/)
+
+        for (let itemName of splitStrings) {
+            //TODO Need to double check whether this logic of interacting with other functions is correct
+            const item = {
+                _id: uuid('item'),
+                name: itemName,
+                size: 1
+            }
+    
+            // Prevent the addition of an empty item, null item, or all whitespace item
+            if (item.name === null || item.name.match(/^\s*$/) !== null) {
+                continue;
+            }
+
+            const item1 = this.props.real.items.find(ele => ele._id === this.state._id)
+            const item2 = this.props.real.items.find(ele => ele.name === this.state.name)
+            // Check for duplicates. In this case, duplicates are not found, so add the item.
+            if (typeof item1 === 'undefined' && typeof item2 === 'undefined') {
+                this.setState({
+                    isEdit: false,
+                    name: '',
+                    _id: '',
+                    size: 1,
+                    isAlert: false
+                })
+    
+                this.props.addItem(item)
+            } 
+        }
+        this.setState({
+            isEdit: false,
+            name: '',
+            _id: '',
+            size: 1,
+            isAlert: false
+        })
+    }
+
     handleEditItemSubmit () {
+        alert("1")
         const item = {
             _id: this.state._id,
             name: this.state.name,
             size: this.state.size
         }
 
-        // Prevent the addition of an empty item.
-        if (item.name === '') {
+        // Prevent the addition of an empty item, null item, or all whitespace item
+        if (item.name === null || item.name.match(/^\s*$/) !== null) {
+            alert(item.name + " alert 2")
             this.setState({
                 isEdit: false,
                 name: '',
@@ -125,6 +170,7 @@ export class ItemCollection extends Component {
                         handleChange={this.handleEditItemChange}
                         handleEnter={this.handleEditItemSubmit}
                         handleEsc={this.handleEditItemEscKey}
+                        handlePaste={this.handleEditItemPaste}
                     />
                 </Grid>
             )
