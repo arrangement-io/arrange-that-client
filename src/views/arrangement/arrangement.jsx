@@ -7,8 +7,7 @@ import Snapshot from 'containers/snapshot/snapshot'
 
 import ExportButton from 'components/exportbutton/exportbutton'
 
-import { get } from 'services/request'
-import { ARRANGEMENT } from 'services/serviceTypes'
+import { getArrangement } from 'services/arrangementService'
 
 import { setRealData, arrangementRename } from 'actions/real/real'
 import { snapshotAdd } from 'actions/snapshot/snapshot'
@@ -42,7 +41,6 @@ export class Arrange extends Component {
     }
 
     handleArrangementTitleEnter = (name) => {
-        //pass
         this.setState({
             ...this.state,
             isEdit: false
@@ -109,7 +107,7 @@ export class Arrange extends Component {
     // Loads the state from the backend given the arrangement_id in the url param
     loadState () {
         const id = this.props.match.params.arrangement_id
-        return get({url: ARRANGEMENT + "/" + id})
+        return getArrangement(id)
             .then(response => {
                 if (response.data.arrangement === "no arrangement found") {
                     console.log("no arrangement found")

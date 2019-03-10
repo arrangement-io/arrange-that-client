@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from "react-router"
-import { get } from 'services/request'
-import { ARRANGEMENTS } from 'services/serviceTypes'
+import { getAllArrangements } from 'services/arrangementService'
 import { setArrangements } from 'actions/arrangements/arrangements'
 
 
@@ -10,7 +9,7 @@ import AllArrangementsTable from 'containers/allArrangementsTable/allArrangement
 
 class AllArrangements extends Component {
     loadArrangements () {
-        return get({url: ARRANGEMENTS + "/" + this.props.account.user.googleId})
+        return getAllArrangements(this.props.account.user.googleId)
             .then(response => {
                 this.props.setArrangements(response.data.arrangements)
                 Promise.resolve()
