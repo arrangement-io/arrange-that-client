@@ -27,15 +27,16 @@ export class EditItem extends Component {
         }
     }
 
+    handlePasteText = (e) => {
+        var pastedText = e.clipboardData.getData('Text')
+        this.props.handlePaste(pastedText)
+
+    }
+
     escFunction = (event) => {
         if(event.keyCode === ESC_KEY) {
             this.props.handleEsc()
         }
-    }
-
-    handlePasteText = (e) => {
-        var pastedText = e.clipboardData.getData('Text')
-        this.props.handlePaste(pastedText)
     }
 
     componentDidMount(){

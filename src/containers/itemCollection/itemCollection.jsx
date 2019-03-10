@@ -95,7 +95,6 @@ export class ItemCollection extends Component {
     }
 
     handleEditItemSubmit () {
-        alert("1")
         const item = {
             _id: this.state._id,
             name: this.state.name,
@@ -104,7 +103,6 @@ export class ItemCollection extends Component {
 
         // Prevent the addition of an empty item, null item, or all whitespace item
         if (item.name === null || item.name.match(/^\s*$/) !== null) {
-            alert(item.name + " alert 2")
             this.setState({
                 isEdit: false,
                 name: '',
