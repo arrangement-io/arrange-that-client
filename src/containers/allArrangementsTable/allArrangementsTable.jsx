@@ -5,6 +5,7 @@ import { withRouter } from 'react-router'
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { withSnackbar } from 'notistack';
+import Timestamp from 'react-timestamp'
 
 import { updateArrangement } from 'services/arrangementService'
 import { setArrangements } from 'actions/arrangements/arrangements'
@@ -58,7 +59,7 @@ class AllArrangementsTable extends Component {
                                 {row.name}
                             </TableCell>
                             <TableCell align="right">{row.owner}</TableCell>
-                            <TableCell align="right">{row.modified_timestamp}</TableCell>
+                            <TableCell align="right"><Timestamp time={row.modified_timestamp} format="full" /></TableCell>
                             <TableCell align="right"><DeleteIcon onClick={this.handleDeleteArrangement(row)}/></TableCell>
                         </TableRow>
                     ))}
