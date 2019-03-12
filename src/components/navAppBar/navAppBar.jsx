@@ -9,6 +9,8 @@ import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { setAccount, logout } from 'actions/account/account'
 import config from 'config.json'
+import { withSnackbar } from 'notistack';
+
 
 const styles = {
     root: {
@@ -38,7 +40,7 @@ class NavAppBar extends Component {
     }
 
     onFailure = (error) => {
-        alert(error);
+        this.props.enqueueSnackbar('Could not login')
     }
 
     googleResponse = (response) => {
@@ -65,7 +67,6 @@ class NavAppBar extends Component {
 
     render () {
         const classes = this.props.classes
-        console.log(this.props)
         let buttons = null
 
         if (this.props.account.isAuthenticated) {
@@ -136,7 +137,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 }
 
-const MyNavAppBar = withStyles(styles)(NavAppBar)
+const MyNavAppBar = withSnackbar(withStyles(styles)(NavAppBar))
 export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps)(MyNavAppBar))
