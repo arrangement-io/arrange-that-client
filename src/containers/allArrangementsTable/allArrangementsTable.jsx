@@ -41,6 +41,14 @@ class AllArrangementsTable extends Component {
         }
     }
 
+    getNameFromGoogleId = (id) => {
+        const user = this.props.users.filter(u => u.googleId === id)
+        if (user.length === 1) {
+            return user[0].name
+        }
+        return id
+    }
+
     render () {
         return (
             <Table>
@@ -58,7 +66,7 @@ class AllArrangementsTable extends Component {
                             <TableCell component="th" scope="row" onClick={this.handleCellClick(row._id)} >
                                 {row.name}
                             </TableCell>
-                            <TableCell align="right">{row.owner}</TableCell>
+                            <TableCell align="right">{this.getNameFromGoogleId(row.owner)}</TableCell>
                             <TableCell align="right"><Timestamp time={row.modified_timestamp} format="full" /></TableCell>
                             <TableCell align="right"><DeleteIcon onClick={this.handleDeleteArrangement(row)}/></TableCell>
                         </TableRow>
@@ -71,10 +79,12 @@ class AllArrangementsTable extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     const {
-        arrangements
+        arrangements,
+        users
     } = state
     return {
-        arrangements
+        arrangements,
+        users
     }
 }
   

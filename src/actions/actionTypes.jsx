@@ -12,6 +12,8 @@ export const SNAPSHOT_RENAME = "SNAPSHOT_RENAME"
 
 export const SET_ACCOUNT = "SET_ACCOUNT"
 
+export const SET_USERS = "SET_USERS"
+
 export const SET_ARRANGEMENTS = "SET_ARRANGEMENTS"
 
 export const SET_REAL_DATA = "SET_REAL_DATA"

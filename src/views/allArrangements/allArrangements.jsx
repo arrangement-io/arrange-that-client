@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from "react-router"
 import { getAllArrangements } from 'services/arrangementService'
+import { getAllUsers } from 'services/usersService'
 import { setArrangements } from 'actions/arrangements/arrangements'
-
+import { setUsers } from 'actions/users/users'
 
 import AllArrangementsTable from 'containers/allArrangementsTable/allArrangementsTable'
 
@@ -20,8 +21,21 @@ class AllArrangements extends Component {
             })
     }
 
+    loadUsers = () => {
+        return getAllUsers()
+            .then(response => {
+                this.props.setUsers(response.data.users)
+                Promise.resolve()
+            })
+            .catch(err => {
+                console.log(err)
+                Promise.reject(err)
+            })
+    }
+
     componentDidMount () {
         this.loadArrangements()
+        this.loadUsers()
     }
 
     render () {
@@ -42,6 +56,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         setArrangements: (arrangements) => {
             dispatch(setArrangements(arrangements))
+        },
+        setUsers: (users) => {
+            dispatch(setUsers(users))
         }
     }
 }
