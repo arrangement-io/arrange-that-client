@@ -14,7 +14,6 @@ import config from 'config.json'
 import { withSnackbar } from 'notistack';
 
 
-
 const styles = {
     root: {
         flexGrow: 1,
@@ -32,10 +31,6 @@ class NavAppBar extends Component {
     logout = () => {
         this.props.logout()
         this.props.history.push("/")
-    }
-
-    goToNewArrangement = () => {
-        this.props.history.push("/addarrangement")
     }
 
     goToViewAllArrangements = () => {
