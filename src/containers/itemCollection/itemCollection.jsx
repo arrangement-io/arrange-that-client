@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import PropTypes from 'prop-types'
-import { Grid, Typography, Snackbar } from '@material-ui/core'
+import { Grid, Typography, Snackbar, Card, CardHeader, CardContent } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 
@@ -13,8 +13,21 @@ import EditItem from 'components/editItem/editItem'
 import { addItem, deleteItem } from 'actions/item/item'
 
 import { Droppable } from 'react-beautiful-dnd'
+import { withStyles } from '@material-ui/core/styles'
 
 import { uuid, getListStyle } from 'utils'
+
+const styles = theme => ({
+    card: {
+        background:"#fafafa"
+    },
+    cardHeader: {
+        paddingLeft: 10,
+        paddingTop: 10,
+        paddingBottom: 0,
+        paddingRight: 10
+    }
+})
 
 export class ItemCollection extends Component {
     constructor (props) {
@@ -133,6 +146,8 @@ export class ItemCollection extends Component {
 
     //TODO The snackbar alert seems to hide itself prematurely on click away from a duplicated item.
     render () {
+        const { classes } = this.props;
+
         return (
             <div>
                 <Droppable droppableId="itemcollection">
@@ -141,26 +156,29 @@ export class ItemCollection extends Component {
                             ref={provided.innerRef}
                             style={getListStyle(snapshot.isDraggingOver)}
                         >
-                            <div className="itemcollection">
-                                <Grid container spacing={0}>
-                                    {
-                                        this.props.unsnapshot_items.map((id, index) => {
-                                            return (
-                                                <Grid item xs = {12} key = {id}>
-                                                    <Item item = {this.props.items.find(ele => ele._id === id)} deleteItem = {this.props.deleteItem} index={index} getDragItemColor={this.props.getDragItemColor} containerId="itemcollection" />
-                                                </Grid>
-                                            )
-                                        })
-                                    }
-                                    { this.displayEditItem() }
-                                    <Grid item xs={12}>
-                                        <div className="item" onClick={this.addEditItem}>
-                                            <Typography variant="headline" align="center">+</Typography>
-                                        </div>
+                            <Card className={classes.card}>
+                                <CardHeader className={classes.cardHeader} title="People"/>
+                                <CardContent className={classes.CardContent}>
+                                    <Grid container spacing={0}>
+                                        {
+                                            this.props.unsnapshot_items.map((id, index) => {
+                                                return (
+                                                    <Grid item xs = {12} key = {id}>
+                                                        <Item item = {this.props.items.find(ele => ele._id === id)} deleteItem = {this.props.deleteItem} index={index} getDragItemColor={this.props.getDragItemColor} containerId="itemcollection" />
+                                                    </Grid>
+                                                )
+                                            })
+                                        }
+                                        { this.displayEditItem() }
+                                        {provided.placeholder}
+                                        <Grid item xs={12}>
+                                            <div className="item" onClick={this.addEditItem}>
+                                                <Typography variant="headline" align="center">+</Typography>
+                                            </div>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                            </div>
-                            {provided.placeholder}
+                                </CardContent>
+                            </Card>
                         </div>
                     )}
                 </Droppable>
@@ -226,4 +244,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-) (ItemCollection)
+) (withStyles(styles)(ItemCollection))
