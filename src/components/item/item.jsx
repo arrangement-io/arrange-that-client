@@ -1,11 +1,24 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Typography } from '@material-ui/core'
+import { Card, CardHeader, Typography } from '@material-ui/core'
 import MoreMenu from 'components/moremenu/moremenu'
 
 import { Draggable } from 'react-beautiful-dnd'
+import { withStyles } from '@material-ui/core/styles'
 
 import { getItemStyle } from 'utils'
+
+const styles = theme => ({
+    card: {
+        maxHeight: 40
+    },
+    cardHeader: {
+        paddingLeft: 10,
+        paddingTop: 0,
+        paddingBottom: 0,
+        paddingRight: 10
+    }
+})
 
 export class Item extends Component {
     handleItemClick = option => {
@@ -15,6 +28,8 @@ export class Item extends Component {
     }
 
     render () {
+        const { classes } = this.props;
+
         const options = [
             'Delete'
         ]
@@ -35,19 +50,18 @@ export class Item extends Component {
                             provided.draggableProps.style,
                             this.props.getDragItemColor(this.props.containerId, snapshot.draggingOver)
                         )}
-                        className="item"
                     >
-                        <Grid container alignItems="center" spacing={8}>
-                            <Grid item xs={1} />
-                            <Grid item xs={7}>
-                                <Typography variant="body1" align="left">
-                                    {this.props.item.name}
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <MoreMenu options = {options} handleItemClick = {this.handleItemClick} />
-                            </Grid>
-                        </Grid>
+                        <Card className={classes.card}>
+                            <CardHeader
+                                className={classes.cardHeader}
+                                title={
+                                    <Typography variant="body1" align="left">
+                                        {this.props.item.name}
+                                    </Typography>
+                                }
+                                action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
+                            />
+                        </Card>
                     </div>
                 )}
             </Draggable>
@@ -66,4 +80,4 @@ Item.propTypes = {
     containerId: PropTypes.string
 }
 
-export default Item
+export default withStyles(styles)(Item)
