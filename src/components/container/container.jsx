@@ -42,7 +42,7 @@ export class Container extends Component {
     }
 
     handleItemClick = option => {
-        if (option === 'Delete') {
+        if (option === 'Delete from all snapshots') {
             this.props.deleteContainer(this.props.container._id)
         }
     }
@@ -50,7 +50,7 @@ export class Container extends Component {
     render () {
         const { classes } = this.props
         const options = [
-            'Delete'
+            'Delete from all snapshots'
         ]
         const items = this.getItems(this.props.items, this.props.container._id)
 
