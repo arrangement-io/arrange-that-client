@@ -51,7 +51,7 @@ class NavAppBar extends Component {
             owner: this.props.account.user.googleId,
             snapshots: [{
                 _id: uuid("snapshot"),
-                name: "Version 1",
+                name: "Snapshot 1",
                 snapshot: {}, // TO REMOVE after it is removed on backend
                 snapshotContainers: [],
                 unassigned: []

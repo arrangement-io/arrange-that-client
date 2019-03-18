@@ -22,7 +22,7 @@ const styles = theme => ({
 
 export class Item extends Component {
     handleItemClick = option => {
-        if (option === 'Delete') {
+        if (option === 'Delete from all snapshots') {
             this.props.deleteItem(this.props.item._id)
         }
     }
@@ -31,7 +31,7 @@ export class Item extends Component {
         const { classes } = this.props;
 
         const options = [
-            'Delete'
+            'Delete from all snapshots'
         ]
         
         return (
@@ -51,7 +51,7 @@ export class Item extends Component {
                             this.props.getDragItemColor(this.props.containerId, snapshot.draggingOver)
                         )}
                     >
-                        <Card className={classes.card}>
+                        <Card className={classes.card} raised={snapshot.isDragging}>
                             <CardHeader
                                 className={classes.cardHeader}
                                 title={
