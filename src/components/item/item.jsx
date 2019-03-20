@@ -1,25 +1,91 @@
 import React, { Component } from 'react'
+
+import { connect } from 'react-redux'
+
 import PropTypes from 'prop-types'
-import { Grid, Typography } from '@material-ui/core'
+import { Card, CardHeader, Typography } from '@material-ui/core'
 import MoreMenu from 'components/moremenu/moremenu'
 
 import { Draggable } from 'react-beautiful-dnd'
+import { withStyles } from '@material-ui/core/styles'
+
+import { renameItem } from 'actions/item/item'
 
 import { getItemStyle } from 'utils'
+import EditItem from 'components/editItem/editItem'
+
+const styles = theme => ({
+    card: {
+        maxHeight: 40
+    },
+    cardHeader: {
+        paddingLeft: 10,
+        paddingTop: 0,
+        paddingBottom: 0,
+        paddingRight: 10
+    }
+})
 
 export class Item extends Component {
+    constructor (props) {
+        super(props)
+        this.state = {
+            isEdit: false,
+            name: ''
+        }
+        this.handleEditItemChange = this.handleEditItemChange.bind(this)
+        this.handleEditItemSubmit = this.handleEditItemSubmit.bind(this)
+        this.handleEditItemEscKey = this.handleEditItemEscKey.bind(this)
+    }
+
     handleItemClick = option => {
-        if (option === 'Delete') {
+        if (option === 'Delete from all snapshots') {
             this.props.deleteItem(this.props.item._id)
+        }
+        else if (option === 'Rename Item') {
+            this.setState({
+                ...this.state,
+                isEdit: true
+            })
         }
     }
 
-    render () {
+    handleEditItemSubmit = () => {
+
+        this.props.renameItem({
+            ...this.props.item,
+            name: this.state.name
+        })
+        this.setState({
+            ...this.state,
+            isEdit: false
+        })
+
+    }
+    
+    handleEditItemChange = (e) => {
+        this.setState({
+            ...this.state,
+            name: e.target.value
+        })
+    }
+
+    handleEditItemEscKey = () => {
+        this.setState({
+            isEdit: false
+        })
+    }
+
+    render = () => {
+        const { classes } = this.props;
+        console.log(this.props)
+
         const options = [
-            'Delete'
+            'Delete from all snapshots',
+            'Rename Item'
         ]
         
-        return (
+        const item = (
             <Draggable
                 key={this.props.item._id}
                 draggableId={this.props.item._id}
@@ -35,23 +101,39 @@ export class Item extends Component {
                             provided.draggableProps.style,
                             this.props.getDragItemColor(this.props.containerId, snapshot.draggingOver)
                         )}
-                        className="item"
                     >
-                        <Grid container alignItems="center" spacing={8}>
-                            <Grid item xs={1} />
-                            <Grid item xs={7}>
-                                <Typography variant="body1" align="left">
-                                    {this.props.item.name}
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <MoreMenu options = {options} handleItemClick = {this.handleItemClick} />
-                            </Grid>
-                        </Grid>
+                        <Card className={classes.card} raised={snapshot.isDragging}>
+                            <CardHeader
+                                className={classes.cardHeader}
+                                title={
+                                    <Typography variant="body1" align="left">
+                                        {this.props.item.name}
+                                    </Typography>
+                                }
+                                action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
+                            />
+                        </Card>
                     </div>
                 )}
             </Draggable>
+        );
+
+        const editItem = (
+            <EditItem
+                name={this.props.item.name}
+                handleChange={this.handleEditItemChange}
+                handleEnter={this.handleEditItemSubmit}
+                handleEsc={this.handleEditItemEscKey}
+            />
         )
+            
+
+        if(!this.state.isEdit){
+            return(item)
+        }
+        else {
+            return(editItem)
+        }
     }
 }
 
@@ -66,4 +148,24 @@ Item.propTypes = {
     containerId: PropTypes.string
 }
 
-export default Item
+const mapStateToProps = (state, ownProps) => {
+    const {
+        real
+    } = state
+    return {
+        real
+    }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        renameItem: (item) => {
+            dispatch(renameItem(item))
+        }
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+) (withStyles(styles)(Item))

@@ -1,6 +1,24 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Typography, TextField } from '@material-ui/core'
+import { Card, CardHeader, Typography, TextField } from '@material-ui/core'
+
+import { withStyles } from '@material-ui/core/styles'
+
+const ENTER_KEY = 'Enter';
+const ESC_KEY = 27;
+const TAB_KEY = 9;
+
+const styles = theme => ({
+    card: {
+        maxHeight: 40
+    },
+    cardHeader: {
+        paddingLeft: 10,
+        paddingTop: 0,
+        paddingBottom: 0,
+        paddingRight: 10
+    }
+})
 
 export class EditItem extends Component {
     constructor (props) {
@@ -11,18 +29,28 @@ export class EditItem extends Component {
     }
 
     handleKeyPress (event) {
-        if (event.key === 'Enter') {
-            this.props.handleEnter()
+        switch (event.key) {
+            case ENTER_KEY:
+                this.props.handleEnter(event.key)
+                break;
+            //TODO add handler for tab key
+            // case 'Tab':
+            //     this.props.handleEnter(event.key)
+            //     break;
+            default:
+                break;
         }
     }
 
     escFunction (event) {
-        if(event.keyCode === 27) {
+        console.log(event.keyCode)
+        if(event.keyCode === ESC_KEY) {
             this.props.handleEsc()
         }
     }
 
     componentDidMount(){
+        // TODO Add event listener for tab key in order to do the tab thing
         document.addEventListener("keydown", this.escFunction, false);
     }
 
@@ -31,18 +59,27 @@ export class EditItem extends Component {
     }
   
     render () {
+        const { classes } = this.props;
+
         return (
-            <div className="item">
-                <Typography variant="headline" align="center">
-                    <TextField
-                        autoFocus={true}
-                        onKeyPress={this.handleKeyPress}
-                        onChange={this.props.handleChange}
-                        onBlur={this.props.handleEsc}
-                        val={this.props.name}
-                        label="Name"
+            <div>
+                <Card className={classes.card}>
+                    <CardHeader 
+                        className={classes.cardHeader}
+                        title={
+                            <Typography variant="headline" align="center">
+                                <TextField
+                                    autoFocus={true}
+                                    onKeyPress={this.handleKeyPress}
+                                    onChange={this.props.handleChange}
+                                    onBlur={this.props.handleEnter}
+                                    defaultValue={this.props.name}
+                                    placeholder="Name"
+                                />
+                            </Typography>
+                        }
                     />
-                </Typography>
+                </Card>
             </div>
         )
     }
@@ -52,7 +89,7 @@ EditItem.propTypes = {
     name: PropTypes.string,
     handleChange: PropTypes.func,
     handleEnter: PropTypes.func,
-    handleEsc: PropTypes.func
+    handleEsc: PropTypes.func,
 }
 
-export default EditItem
+export default withStyles(styles)(EditItem)

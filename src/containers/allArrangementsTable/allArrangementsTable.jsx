@@ -3,18 +3,53 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { withSnackbar } from 'notistack';
+import Timestamp from 'react-timestamp'
+
+import { updateArrangement } from 'services/arrangementService'
+import { setArrangements } from 'actions/arrangements/arrangements'
 
 class AllArrangementsTable extends Component {
+    constructor(props) {
+        super(props);
+    }
+
     handleCellClick (id) {
         return () => {
-            // console.log(id)
-            // console.log(this.props)
             this.props.history.push('/arrangement/' + id)
         }
     }
 
+    // Figure out why it doesn't rerender
+    handleDeleteArrangement = (arrangement) => {
+        return () => {
+            const deletedArrangement = {
+                ...arrangement,
+                is_deleted: true
+            }
+            updateArrangement(deletedArrangement)
+                .then(response => {
+                    console.log("deleted arrangement")
+                    this.props.setArrangements(this.props.arrangements.filter(a => a._id !== deletedArrangement._id))
+                    this.props.enqueueSnackbar('Deleted Arrangement')
+                    Promise.resolve()
+                })
+                .catch(err => {
+                    Promise.reject(err)
+                })
+        }
+    }
+
+    getNameFromGoogleId = (id) => {
+        const user = this.props.users.filter(u => u.googleId === id)
+        if (user.length === 1) {
+            return user[0].name
+        }
+        return id
+    }
+
     render () {
-        // console.log(this.props.arrangements)
         return (
             <Table>
                 <TableHead>
@@ -22,16 +57,18 @@ class AllArrangementsTable extends Component {
                         <TableCell>Arrangement Name</TableCell>
                         <TableCell align="right">Owner</TableCell>
                         <TableCell align="right">Last Modified</TableCell>
+                        <TableCell align="right"></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {this.props.arrangements.map(row => (
-                        <TableRow hover={true} onClick={this.handleCellClick(row._id)} key={row._id}>
-                            <TableCell component="th" scope="row">
+                    {this.props.arrangements.filter(row => !row.is_deleted).map(row => (
+                        <TableRow hover={true} key={row._id}>
+                            <TableCell component="th" scope="row" onClick={this.handleCellClick(row._id)} >
                                 {row.name}
                             </TableCell>
-                            <TableCell align="right">{row.owner}</TableCell>
-                            <TableCell align="right">{row.modified_timestamp}</TableCell>
+                            <TableCell align="right">{this.getNameFromGoogleId(row.owner)}</TableCell>
+                            <TableCell align="right"><Timestamp time={row.modified_timestamp} format="full" /></TableCell>
+                            <TableCell align="right"><DeleteIcon onClick={this.handleDeleteArrangement(row)}/></TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
@@ -42,19 +79,24 @@ class AllArrangementsTable extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     const {
-        arrangements
+        arrangements,
+        users
     } = state
     return {
-        arrangements
+        arrangements,
+        users
     }
 }
   
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        setArrangements: (arrangements) => {
+            dispatch(setArrangements(arrangements))
+        }
     }
 }
   
-export default withRouter(connect(
+export default withSnackbar(withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-) (AllArrangementsTable))
+) (AllArrangementsTable)))

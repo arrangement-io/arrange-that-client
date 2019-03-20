@@ -22,13 +22,20 @@ export class EditArrangementTitle extends Component {
         });
     };
     
-    handleKeyPress (event) {
+    handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             this.setState({
                 name: this.state.name
             });
             this.props.handleEnter(this.state.name)
         }
+    }
+
+    handleBlur = () => {
+        this.setState({
+            name: this.state.name
+        });
+        this.props.handleEnter(this.state.name)
     }
 
     escFunction (event) {
@@ -54,10 +61,10 @@ export class EditArrangementTitle extends Component {
                     value={this.state.name}
                     onChange={this.handleChange('name')}
                     onKeyPress={this.handleKeyPress}
-                    onBlur={this.props.handleEsc}
+                    onBlur={this.handleBlur}
                     margin="normal"
                     variant="outlined"
-                    autoFocus="true"/>
+                    autoFocus={true} />
             </Typography>
         )
     }

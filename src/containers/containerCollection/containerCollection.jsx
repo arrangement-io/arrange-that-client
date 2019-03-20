@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Typography, Snackbar } from '@material-ui/core'
+import { Grid, Typography, Snackbar, Card, CardHeader, CardContent } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 
@@ -13,8 +13,21 @@ import EditContainer from 'components/editContainer/editContainer'
 import { addContainer, deleteContainer } from 'actions/container/container'
 
 import { deleteItem } from 'actions/item/item'
+import { withStyles } from '@material-ui/core/styles'
 
 import { uuid } from 'utils'
+
+const styles = theme => ({
+    card: {
+        background:"#fafafa"
+    },
+    cardHeader: {
+        paddingLeft: 10,
+        paddingTop: 10,
+        paddingBottom: 0,
+        paddingRight: 10
+    }
+})
 
 export class ContainerCollection extends Component {
     constructor (props) {
@@ -73,6 +86,7 @@ export class ContainerCollection extends Component {
         const container1 = this.props.real.containers.find(ele => ele._id === this.state._id)
         const container2 = this.props.real.containers.find(ele => ele.name === this.state.name)
         if (typeof container1 === 'undefined' && typeof container2 === 'undefined') {
+            //Duplicates not found
             this.setState({
                 isEdit: false,
                 name: '',
@@ -83,14 +97,22 @@ export class ContainerCollection extends Component {
 
             this.props.addContainer(container)
             return
+        } else { // duplicates found
+            if (this.state.size === '') { // user inputed size
+                this.setState({
+                    isEdit: false,
+                    name: '',
+                    _id: '',
+                    size: 1,
+                    isAlert: true
+                })
+            } else {
+                this.setState({
+                    ...this.state,
+                    isAlert: true
+                })
+            }
         }
-        this.setState({
-            isEdit: false,
-            name: '',
-            _id: '',
-            size: 1,
-            isAlert: true
-        })
     }
 
     handleEditContainerEscKey () {
@@ -120,69 +142,77 @@ export class ContainerCollection extends Component {
         }
     }
 
-  handleClose = (event, reason) => {
-      this.setState({
-          ...this.state,
-          isAlert: false
-      });
-  };
+    handleClose = (event, reason) => {
+        this.setState({
+            ...this.state,
+            isAlert: false
+        });
+    };
 
-  render () {
-      return (
-          <div className="containercollection">
-              <Grid container spacing={8}>
-                  {
-                      this.props.containers.map((container) => {
-                          return (
-                              <Grid item xs={12} sm={6} md={3} lg={2} key={container._id}>
-                                  <Container 
-                                      container={container}
-                                      snapshot={this.props.snapshot} 
-                                      items={this.props.items} 
-                                      deleteItem={this.props.deleteItem} 
-                                      deleteContainer={this.props.deleteContainer}
-                                      getDragItemColor={this.props.getDragItemColor}
-                                  />
-                              </Grid>
-                          )
-                      })
-                  }
-                  { this.displayEditContainer() }
-                  <Grid item xs={12} sm={6} md={3} lg={2}>
-                      <div className="container" onClick={this.addEditContainer}>
-                          <Typography variant="headline" align="center">
-                +
-                          </Typography>
-                      </div>
-                  </Grid>
-              </Grid>
-              <Snackbar
-                  anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
-                  }}
-                  open={this.state.isAlert}
-                  autoHideDuration={6000}
-                  onClose={this.handleClose}
-                  ContentProps={{
-                      'aria-describedby': 'container-duplicated',
-                  }}
-                  message={<span id="container-duplicated">Container duplicated</span>}
-                  action={[
-                      <IconButton
-                          key="close"
-                          aria-label="Close"
-                          color="inherit"
-                          className=""
-                          onClick={this.handleClose}
-                      >
-                          <CloseIcon />
-                      </IconButton>,
-                  ]}
-              />
-          </div>
-      )
-  }
+    render () {
+        const { classes } = this.props;
+
+        return (
+            <div>
+            <Card className={classes.card}>
+                <CardHeader className={classes.cardHeader} title="Spaces"/>
+                <CardContent className={classes.CardContent}>
+                    <Grid container spacing={8}>
+                        {
+                            this.props.containers.map((container) => {
+                                return (
+                                    <Grid item xs={12} sm={6} md={3} lg={2} key={container._id}>
+                                        <Container 
+                                            container={container}
+                                            snapshot={this.props.snapshot} 
+                                            items={this.props.items} 
+                                            deleteItem={this.props.deleteItem} 
+                                            deleteContainer={this.props.deleteContainer}
+                                            getDragItemColor={this.props.getDragItemColor}
+                                        />
+                                    </Grid>
+                                )
+                            
+                            })
+                        }
+                        { this.displayEditContainer() }
+                        <Grid item xs={12} sm={6} md={3} lg={2}>
+                            <div className="container" onClick={this.addEditContainer}>
+                                <Typography variant="headline" align="center">
+                                    +
+                                </Typography>
+                            </div>
+                        </Grid>
+                    </Grid>        
+                </CardContent>
+            </Card>
+            <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.isAlert}
+                    autoHideDuration={6000}
+                    onClose={this.handleClose}
+                    ContentProps={{
+                        'aria-describedby': 'container-duplicated',
+                    }}
+                    message={<span id="container-duplicated">Container duplicated</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            className=""
+                            onClick={this.handleClose}
+                        >
+                            <CloseIcon />
+                        </IconButton>,
+                    ]}
+                />
+            </div>
+        )
+    }
 }
 
 ContainerCollection.propTypes = {
@@ -230,4 +260,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-) (ContainerCollection)
+) (withStyles(styles)(ContainerCollection))

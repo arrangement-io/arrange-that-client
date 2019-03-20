@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 
 import Background from 'static/space.jpg'
 
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 var style = {
     height: `100vh`,
     backgroundImage: `url(${Background})`,
@@ -12,15 +14,28 @@ var style = {
 }
 
 class HomePage extends Component {
+    constructor (props) {
+        super(props)
+
+        this.state = {
+            loading: false
+        }
+    }
+
     componentDidMount () {
         if (this.props.account.isAuthenticated) {
-            this.props.history.push("/all_arrangements")
+            this.setState({loading: true})
+            setTimeout(function() {
+                this.props.history.push("/all_arrangements")
+            }.bind(this), 100)
         }
     }
 
     render() {
+        const loadingComponent = this.state.loading ? <LinearProgress /> : null
         return (
             <div style={style}>
+                {loadingComponent}
             </div>
         );
     }
