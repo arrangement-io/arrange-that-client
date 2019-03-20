@@ -6,6 +6,8 @@
 
 For the Front-end side, we use React and Redux and uses create-react-app, Webpack, HMR, PostCSS & Express. This project also uses a boilerplate CSS theme for bootstrap known as [Material UI ](https://material-ui.com/).
 
+Proverbs 16:3 English Standard Version (ESV) - Commit your work to the Lord, and your plans will be established.
+
 ### Development
 ```
 npm install

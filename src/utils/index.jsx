@@ -19,6 +19,20 @@ export function uuid (type) {
     return text
 }
 
+// Validates whether an item name is valid. 
+// Currently, this entails a null check and checking that it is not all whitespace
+export function validateName (name) {
+    return name !== null && (typeof name) === 'string' && name.match(/^\s*$/) === null
+}
+
+//Checks for duplicates in a list.
+// Assumes item has the fields name and _id and that allItems is a list of items
+export function checkDuplicate (item, allItems) {
+    var nameDuplicated = allItems.find((ele) => (ele.name === item.name))
+    var idDuplicated = allItems.find((ele) => (ele._id === item._id))
+    return (typeof nameDuplicated === 'undefined' && typeof idDuplicated === 'undefined')
+}
+
 export function getListStyle (isDraggingOver, isOwn, isFull) {
     let color = 'white'
     if (isDraggingOver) {

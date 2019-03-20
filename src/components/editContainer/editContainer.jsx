@@ -50,6 +50,11 @@ export class EditContainer extends Component {
             this.props.handleEsc()
         }
     }
+    
+    handlePasteText = (e) => {
+        var pastedText = e.clipboardData.getData('Text')
+        this.props.handlePaste(pastedText)
+    }
 
     escFunction = (event) => {
         if(event.keyCode === 27) {
@@ -81,6 +86,7 @@ export class EditContainer extends Component {
                                     inputRef={field => this.inputSize = field}
                                     onKeyPress={this.handleSizeKeyPress}
                                     onChange={this.props.handleSizeChange}
+                                    onPaste={this.handlePasteText}
                                     val={this.props.size}
                                     autoFocus={true}
                                     placeholder="Size"
