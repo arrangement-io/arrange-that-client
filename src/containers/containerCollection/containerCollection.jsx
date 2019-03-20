@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import PropTypes from 'prop-types'
-import { Grid, Typography, Snackbar, Card, CardHeader, CardContent } from '@material-ui/core'
-import IconButton from '@material-ui/core/IconButton'
-import CloseIcon from '@material-ui/icons/Close'
+import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core'
 
 import { connect } from 'react-redux'
 
@@ -56,7 +54,6 @@ export class ContainerCollection extends Component {
             _id: uuid('container'),
             name: '',
             size: 0,
-            isAlert: false
         })
     }
 
@@ -92,7 +89,6 @@ export class ContainerCollection extends Component {
                 name: '',
                 _id: '',
                 size: 0,
-                isAlert: false
             })
 
             this.props.addContainer(container)
@@ -104,13 +100,11 @@ export class ContainerCollection extends Component {
                     name: '',
                     _id: '',
                     size: 1,
-                    isAlert: false
                 })
                 this.props.enqueueSnackbar('Duplicated name: ' + container.name)
             } else {
                 this.setState({
                     ...this.state,
-                    isAlert: false
                 })
                 this.props.enqueueSnackbar('Duplicated name: ' + container.name)
             }
@@ -143,7 +137,6 @@ export class ContainerCollection extends Component {
                     name: '',
                     _id: '',
                     size: 0,
-                    isAlert: false
                 })
 
                 this.props.addContainer(container)
@@ -157,7 +150,6 @@ export class ContainerCollection extends Component {
             name: '',
             _id: '',
             size: 0,
-            isAlert: false
         })
     }
 
@@ -167,7 +159,6 @@ export class ContainerCollection extends Component {
             name: '',
             _id: '',
             size: 0,
-            isAlert: false
         })
     }
 
@@ -192,7 +183,6 @@ export class ContainerCollection extends Component {
     handleClose = (event, reason) => {
         this.setState({
             ...this.state,
-            isAlert: false
         });
     };
 
@@ -233,30 +223,6 @@ export class ContainerCollection extends Component {
                         </Grid>        
                     </CardContent>
                 </Card>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                    open={this.state.isAlert}
-                    autoHideDuration={6000}
-                    onClose={this.handleClose}
-                    ContentProps={{
-                        'aria-describedby': 'container-duplicated',
-                    }}
-                    message={<span id="container-duplicated">Container duplicated</span>}
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            className=""
-                            onClick={this.handleClose}
-                        >
-                            <CloseIcon />
-                        </IconButton>,
-                    ]}
-                />
             </div>
         )
     }

@@ -8,7 +8,13 @@ import './App.css'
 class App extends Component {
     render() {
         return (
-            <SnackbarProvider maxSnack={3}>
+            <SnackbarProvider 
+                maxSnack="3" preventDuplicate 
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+            >
                 <Provider store={store}>
                     <div className="App">
                         { router }

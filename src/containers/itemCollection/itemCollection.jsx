@@ -3,9 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
 import PropTypes from 'prop-types'
-import { Grid, Typography, Snackbar, Card, CardHeader, CardContent } from '@material-ui/core'
-import IconButton from '@material-ui/core/IconButton'
-import CloseIcon from '@material-ui/icons/Close'
+import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core'
 
 import Item from 'components/item/item'
 import EditItem from 'components/editItem/editItem'
@@ -54,7 +52,6 @@ export class ItemCollection extends Component {
             _id: uuid('item'),
             name: '',
             size: 1,
-            isAlert: false
         })
     }
 
@@ -90,7 +87,6 @@ export class ItemCollection extends Component {
                     name: '',
                     _id: '',
                     size: 1,
-                    isAlert: false
                 })
     
                 this.props.addItem(item)
@@ -103,7 +99,6 @@ export class ItemCollection extends Component {
             name: '',
             _id: '',
             size: 1,
-            isAlert: false
         })
     }
 
@@ -121,7 +116,6 @@ export class ItemCollection extends Component {
                 name: '',
                 _id: '',
                 size: 1,
-                isAlert: false
             })
             return;
         }
@@ -133,7 +127,6 @@ export class ItemCollection extends Component {
                 name: '',
                 _id: '',
                 size: 1,
-                isAlert: false
             })
   
             this.props.addItem(item)
@@ -144,13 +137,8 @@ export class ItemCollection extends Component {
                 name: '',
                 _id: '',
                 size: 1,
-                isAlert: false
             })
             this.props.enqueueSnackbar("Duplicated name: " + item.name)
-            // this.setState({
-            //     ...this.state,
-            //     isAlert: true
-            // })
         }
     }
 
@@ -160,14 +148,12 @@ export class ItemCollection extends Component {
             name: '',
             _id: '',
             size: 1,
-            isAlert: false
         })
     }
 
     handleClose = (event, reason) => {
         this.setState({
             ...this.state,
-            isAlert: false
         });
     };
 
@@ -226,30 +212,6 @@ export class ItemCollection extends Component {
                         </div>
                     )}
                 </Droppable>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                    open={this.state.isAlert}
-                    autoHideDuration={6000}
-                    onClose={this.handleClose}
-                    ContentProps={{
-                        'aria-describedby': 'item-duplicated',
-                    }}
-                    message={<span id="item-duplicated">Item duplicated</span>}
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            className=""
-                            onClick={this.handleClose}
-                        >
-                            <CloseIcon />
-                        </IconButton>,
-                    ]}
-                />
             </div>
         )
     }
