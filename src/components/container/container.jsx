@@ -11,7 +11,7 @@ import { getListStyle, getSnapshotContainer } from 'utils'
 import { Droppable } from 'react-beautiful-dnd'
 
 const styles = theme => ({
-        card: {
+    card: {
         background:"#fcfcfc"
     },
     cardHeader: {

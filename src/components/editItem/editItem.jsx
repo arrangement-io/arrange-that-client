@@ -13,7 +13,7 @@ export class EditItem extends Component {
         this.escFunction = this.escFunction.bind(this);
     }
 
-    handleKeyPress (event) {
+    handleKeyPress = (event) => {
         switch (event.key) {
             case ENTER_KEY:
                 this.props.handleEnter(event.key)
@@ -27,7 +27,12 @@ export class EditItem extends Component {
         }
     }
 
-    escFunction (event) {
+    handlePasteText = (e) => {
+        var pastedText = e.clipboardData.getData('Text')
+        this.props.handlePaste(pastedText)
+    }
+
+    escFunction = (event) => {
         if(event.keyCode === ESC_KEY) {
             this.props.handleEsc()
         }
@@ -50,7 +55,8 @@ export class EditItem extends Component {
                         autoFocus={true}
                         onKeyPress={this.handleKeyPress}
                         onChange={this.props.handleChange}
-                        onBlur={this.props.handleEnter}
+                        onBlur={() => this.props.handleEnter(null)}
+                        onPaste={this.handlePasteText}
                         val={this.props.name}
                         label="Name"
                     />

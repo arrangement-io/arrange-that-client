@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
-
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 
 import PropTypes from 'prop-types'
-import { Grid, Typography, Snackbar, Card, CardHeader, CardContent } from '@material-ui/core'
-import IconButton from '@material-ui/core/IconButton'
-import CloseIcon from '@material-ui/icons/Close'
+import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core'
 
 import Item from 'components/item/item'
 import EditItem from 'components/editItem/editItem'
@@ -15,7 +13,8 @@ import { addItem, deleteItem } from 'actions/item/item'
 import { Droppable } from 'react-beautiful-dnd'
 import { withStyles } from '@material-ui/core/styles'
 
-import { uuid, getListStyle } from 'utils'
+import { uuid, getListStyle, validateName, checkDuplicate } from 'utils'
+import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
     card: {
@@ -53,7 +52,6 @@ export class ItemCollection extends Component {
             _id: uuid('item'),
             name: '',
             size: 1,
-            isAlert: false
         })
     }
 
@@ -64,51 +62,83 @@ export class ItemCollection extends Component {
         })
     }
 
-    handleEditItemSubmit () {
+    // This function splits a string by tabs/newlines and individually
+    // submits each item and then adds another edit item.
+    handleEditItemPaste = (pasteString) => {
+        //TODO does this work on Windows? Does it need to check for carriage return?
+        var splitStrings = pasteString.split(/[\t\n]/)
+
+        for (let itemName of splitStrings) {
+            const item = {
+                _id: uuid('item'),
+                name: itemName,
+                size: 1
+            }
+    
+            // Prevent the addition of an empty item, null item, or all whitespace item
+            if (!validateName(item.name)) {
+                continue;
+            }
+
+            // Check for duplicates. In this case, duplicates are not found, so add the item.
+            if (checkDuplicate(item, this.props.real.items)) {
+                this.setState({
+                    isEdit: false,
+                    name: '',
+                    _id: '',
+                    size: 1,
+                })
+    
+                this.props.addItem(item)
+            } else { //duplicates are found, notify user through snackbar
+                this.props.enqueueSnackbar('Duplicated name: ' + itemName)
+            }
+        }
+        this.setState({
+            isEdit: false,
+            name: '',
+            _id: '',
+            size: 1,
+        })
+    }
+
+    handleEditItemSubmit (event) {
         const item = {
             _id: this.state._id,
             name: this.state.name,
             size: this.state.size
         }
 
-        // Prevent the addition of an empty item.
-        if (item.name === '') {
+        // Prevent the addition of an empty item, null item, or all whitespace item
+        if (!validateName(item.name)) {
             this.setState({
                 isEdit: false,
                 name: '',
                 _id: '',
                 size: 1,
-                isAlert: false
             })
             return;
         }
 
-        const item1 = this.props.real.items.find(ele => ele._id === this.state._id)
-        const item2 = this.props.real.items.find(ele => ele.name === this.state.name)
         // Check for duplicates. In this case, duplicates are not found, so add the item.
-        if (typeof item1 === 'undefined' && typeof item2 === 'undefined') {
+        if (checkDuplicate(item, this.props.real.items)) {
             this.setState({
                 isEdit: false,
                 name: '',
                 _id: '',
                 size: 1,
-                isAlert: false
             })
   
             this.props.addItem(item)
         } else {
             // In this case, there is a duplicate, so we send an alert
             this.setState({
-                isEdit: false,
+                isEdit: event !== null, //if user hit enter
                 name: '',
                 _id: '',
                 size: 1,
-                isAlert: true
             })
-            // this.setState({
-            //     ...this.state,
-            //     isAlert: true
-            // })
+            this.props.enqueueSnackbar("Duplicated name: " + item.name)
         }
     }
 
@@ -118,14 +148,12 @@ export class ItemCollection extends Component {
             name: '',
             _id: '',
             size: 1,
-            isAlert: false
         })
     }
 
     handleClose = (event, reason) => {
         this.setState({
             ...this.state,
-            isAlert: false
         });
     };
 
@@ -135,9 +163,11 @@ export class ItemCollection extends Component {
                 <Grid item xs={12}>
                     <EditItem 
                         name={this.state.name}
+                        handleAddItem={this.addEditItem}
                         handleChange={this.handleEditItemChange}
                         handleEnter={this.handleEditItemSubmit}
                         handleEsc={this.handleEditItemEscKey}
+                        handlePaste={this.handleEditItemPaste}
                     />
                 </Grid>
             )
@@ -182,30 +212,6 @@ export class ItemCollection extends Component {
                         </div>
                     )}
                 </Droppable>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                    open={this.state.isAlert}
-                    autoHideDuration={6000}
-                    onClose={this.handleClose}
-                    ContentProps={{
-                        'aria-describedby': 'item-duplicated',
-                    }}
-                    message={<span id="item-duplicated">Item duplicated</span>}
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            className=""
-                            onClick={this.handleClose}
-                        >
-                            <CloseIcon />
-                        </IconButton>,
-                    ]}
-                />
             </div>
         )
     }
@@ -241,7 +247,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 }
 
-export default connect(
+export default withSnackbar(withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-) (withStyles(styles)(ItemCollection))
+) (withStyles(styles)(ItemCollection))))
