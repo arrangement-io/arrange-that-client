@@ -1,10 +1,25 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Typography, TextField } from '@material-ui/core'
+import { Card, CardHeader, Typography, TextField } from '@material-ui/core'
+
+import { withStyles } from '@material-ui/core/styles'
 
 const ENTER_KEY = 'Enter';
-const ESC_KEY = 'Escape';
-// const TAB_KEY = 'Tab';
+const ESC_KEY = 27;
+const TAB_KEY = 9;
+
+const styles = theme => ({
+    card: {
+        maxHeight: 40
+    },
+    cardHeader: {
+        paddingLeft: 10,
+        paddingTop: 0,
+        paddingBottom: 0,
+        paddingRight: 10
+    }
+})
+
 export class EditItem extends Component {
     constructor (props) {
         super(props)
@@ -48,19 +63,28 @@ export class EditItem extends Component {
     }
   
     render () {
+        const { classes } = this.props;
+
         return (
-            <div className="item">
-                <Typography variant="headline" align="center">
-                    <TextField
-                        autoFocus={true}
-                        onKeyPress={this.handleKeyPress}
-                        onChange={this.props.handleChange}
-                        onBlur={() => this.props.handleEnter(null)}
-                        onPaste={this.handlePasteText}
-                        val={this.props.name}
-                        label="Name"
+            <div>
+                <Card className={classes.card}>
+                    <CardHeader 
+                        className={classes.cardHeader}
+                        title={
+                            <Typography variant="headline" align="center">
+                                <TextField
+                                    autoFocus={true}
+                                    onKeyPress={this.handleKeyPress}
+                                    onChange={this.props.handleChange}
+                                    onBlur={() => this.props.handleEnter(null)}
+                                    onPaste={this.handlePasteText}
+                                    defaultValue={this.props.name}
+                                    placeholder="Name"
+                                />
+                            </Typography>
+                        }
                     />
-                </Typography>
+                </Card>
             </div>
         )
     }
@@ -73,4 +97,4 @@ EditItem.propTypes = {
     handleEsc: PropTypes.func,
 }
 
-export default EditItem
+export default withStyles(styles)(EditItem)
