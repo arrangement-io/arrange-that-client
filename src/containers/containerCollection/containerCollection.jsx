@@ -128,7 +128,7 @@ export class ContainerCollection extends Component {
     displayEditContainer () {
         if (this.state.isEdit) {
             return (
-                <Grid item xs={12} sm={4} md={3}>
+                <Grid item xs={12} sm={6} md={3} lg={2}>
                     <EditContainer 
                         name={this.state.name}
                         size={this.state.size}

@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Typography, TextField, Grid } from '@material-ui/core'
+import { Typography, TextField, Grid, Card, CardHeader } from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles'
+
+const styles = theme => ({
+    sizeField: {
+        width: 40
+    }
+})
 
 export class EditContainer extends Component {
     constructor (props) {
@@ -61,39 +68,41 @@ export class EditContainer extends Component {
     }
   
     render () {
+        const { classes } = this.props
         return (
-            <div className="container" ref={containerRef => this.containerRef = containerRef}>
-                <Grid container spacing={24}>
-                    <Grid item xs={12}>
-                        <Typography variant="headline" align="center">
-                            <TextField
-                                inputRef={field => this.inputName = field}
-                                onKeyPress={this.handleNameKeyPress}
-                                onChange={this.props.handleNameChange}
-                                // onBlur={this.handleBlur}
-                                val={this.props.name}
-                                autoFocus={true}
-                                label="Name"
-                            />
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="headline" align="center">
-                            <TextField
-                                type="number"
-                                inputRef={field => this.inputSize = field}
-                                onKeyPress={this.handleSizeKeyPress}
-                                onChange={this.props.handleSizeChange}
-                                // onBlur={this.handleBlur}
-                                val={this.props.size}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                label="Size"
-                            />
-                        </Typography>
-                    </Grid>
-                </Grid>
+            <div ref={containerRef => this.containerRef = containerRef}>
+                <Card ref={containerRef => this.containerRef = containerRef}>
+                    <CardHeader
+                        avatar={
+                            <Typography variant="headline" align="center">
+                                <TextField
+                                    type="number"
+                                    className={classes.sizeField}
+                                    inputRef={field => this.inputSize = field}
+                                    onKeyPress={this.handleSizeKeyPress}
+                                    onChange={this.props.handleSizeChange}
+                                    val={this.props.size}
+                                    autoFocus={true}
+                                    placeholder="Size"
+                                    defaultValue={this.props.size > 0 ? this.props.size : ""}
+                                />
+                            </Typography>
+                        }
+                        
+                        title={
+                            <Typography variant="headline" align="center">
+                                <TextField
+                                    inputRef={field => this.inputName = field}
+                                    onKeyPress={this.handleNameKeyPress}
+                                    onChange={this.props.handleNameChange}
+                                    val={this.props.name}
+                                    placeholder="Name"
+                                    defaultValue={this.props.name}
+                                />
+                            </Typography>
+                        }
+                    />
+                </Card>
             </div>
         )
     }
@@ -108,4 +117,4 @@ EditContainer.propTypes = {
     handleEsc: PropTypes.func
 }
 
-export default EditContainer
+export default withStyles(styles)(EditContainer)

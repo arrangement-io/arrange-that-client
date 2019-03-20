@@ -4,7 +4,7 @@ import {
     ITEM_RENAME,
     CONTAINER_ADD,
     CONTAINER_DELETE,
-    CONTAINER_RENAME,
+    CONTAINER_EDIT,
     SET_REAL_DATA,
     ARRANGEMENT_RENAME,
     SET_UNASSIGNED_ITEMS,
@@ -143,18 +143,13 @@ const realReducer = (state = initialState, action) => {
             return deleteContainerState
         }
             
-        case CONTAINER_RENAME: {
-            let containers = state.containers
-            let container = containers.find(ele => ele._id === action.container._id)
+        case CONTAINER_EDIT: {
+            const container = state.containers.find(ele => ele && ele._id === action.container._id)
             container.name = action.container.name
-            containers = containers.filter(ele => ele._id !== action.containers._id)
+            container.size = action.container.size
             
             const resultContainerRename = {
-                ...state,
-                containers: [
-                    ...containers,
-                    container
-                ]
+                ...state
             }
             exportState(resultContainerRename)
             return resultContainerRename
