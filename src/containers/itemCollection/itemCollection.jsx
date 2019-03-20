@@ -30,6 +30,12 @@ const styles = theme => ({
     }
 })
 
+function checkDuplicateIDOrName (item, allItems) {
+    var nameDuplicated = allItems.find((ele) => (ele.name === item.name))
+    var idDuplicated = allItems.find((ele) => (ele._id === item._id))
+    return (typeof nameDuplicated === 'undefined' && typeof idDuplicated === 'undefined')
+};
+
 export class ItemCollection extends Component {
     constructor (props) {
         super(props)
@@ -84,10 +90,8 @@ export class ItemCollection extends Component {
                 continue;
             }
 
-            const item1 = this.props.real.items.find(ele => ele._id === item._id)
-            const item2 = this.props.real.items.find(ele => ele.name === item.name)
             // Check for duplicates. In this case, duplicates are not found, so add the item.
-            if (typeof item1 === 'undefined' && typeof item2 === 'undefined') {
+            if (checkDuplicateIDOrName(item, this.props.real.items)) {
                 this.setState({
                     isEdit: false,
                     name: '',
@@ -129,10 +133,8 @@ export class ItemCollection extends Component {
             return;
         }
 
-        const item1 = this.props.real.items.find(ele => ele._id === this.state._id)
-        const item2 = this.props.real.items.find(ele => ele.name === this.state.name)
         // Check for duplicates. In this case, duplicates are not found, so add the item.
-        if (typeof item1 === 'undefined' && typeof item2 === 'undefined') {
+        if (checkDuplicateIDOrName(item, this.props.real.items)) {
             this.setState({
                 isEdit: false,
                 name: '',

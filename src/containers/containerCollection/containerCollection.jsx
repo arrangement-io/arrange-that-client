@@ -31,6 +31,12 @@ const styles = theme => ({
     }
 })
 
+function checkDuplicateIDOrName (item, allItems) {
+    var nameDuplicated = allItems.find((ele) => (ele.name === item.name))
+    var idDuplicated = allItems.find((ele) => (ele._id === item._id))
+    return (typeof nameDuplicated === 'undefined' && typeof idDuplicated === 'undefined')
+};
+
 export class ContainerCollection extends Component {
     constructor (props) {
         super(props)
@@ -85,9 +91,7 @@ export class ContainerCollection extends Component {
             size: this.state.size
         }
 
-        const container1 = this.props.real.containers.find(ele => ele._id === this.state._id)
-        const container2 = this.props.real.containers.find(ele => ele.name === this.state.name)
-        if (typeof container1 === 'undefined' && typeof container2 === 'undefined') {
+        if (checkDuplicateIDOrName(container, this.props.real.containers)) {
             //Duplicates not found
             this.setState({
                 isEdit: false,
@@ -139,9 +143,7 @@ export class ContainerCollection extends Component {
                 continue;
             }
 
-            const container1 = this.props.real.containers.find(ele => ele._id === container._id)
-            const container2 = this.props.real.containers.find(ele => ele.name === container.name)
-            if (typeof container1 === 'undefined' && typeof container2 === 'undefined') {
+            if (checkDuplicateIDOrName(container, this.props.real.containers)) {
                 //Duplicates not found
                 this.setState({
                     isEdit: false,
@@ -152,6 +154,9 @@ export class ContainerCollection extends Component {
                 })
 
                 this.props.addContainer(container)
+            } else {
+                //Duplicates found
+                this.props.enqueueSnackbar('Duplicated name: ' + container.name)
             }
         }
         this.setState({
