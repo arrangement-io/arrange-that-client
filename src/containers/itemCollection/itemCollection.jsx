@@ -132,12 +132,6 @@ export class ItemCollection extends Component {
             this.props.addItem(item)
         } else {
             // In this case, there is a duplicate, so we send an alert
-            this.setState({
-                isEdit: event !== null, //if user hit enter
-                name: '',
-                _id: '',
-                size: 1,
-            })
             this.props.enqueueSnackbar("Duplicated name: " + item.name)
         }
     }
