@@ -19,6 +19,12 @@ export function uuid (type) {
     return text
 }
 
+// Validates whether an item name is valid. 
+// Currently, this entails a null check and checking that it is not all whitespace
+export function validateName (name) {
+    return name !== null && (typeof name) === 'string' && name.match(/^\s*$/) === null
+}
+
 export function getListStyle (isDraggingOver, isOwn, isFull) {
     let color = 'white'
     if (isDraggingOver) {

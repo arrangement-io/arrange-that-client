@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
 
 import PropTypes from 'prop-types'
 import { Grid, Typography, Snackbar, Card, CardHeader, CardContent } from '@material-ui/core'
@@ -15,7 +15,8 @@ import { addItem, deleteItem } from 'actions/item/item'
 import { Droppable } from 'react-beautiful-dnd'
 import { withStyles } from '@material-ui/core/styles'
 
-import { uuid, getListStyle } from 'utils'
+import { uuid, getListStyle, validateName } from 'utils'
+import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
     card: {
@@ -79,7 +80,7 @@ export class ItemCollection extends Component {
             }
     
             // Prevent the addition of an empty item, null item, or all whitespace item
-            if (item.name === null || item.name.match(/^\s*$/) !== null) {
+            if (!validateName(item.name)) {
                 continue;
             }
 
@@ -96,7 +97,9 @@ export class ItemCollection extends Component {
                 })
     
                 this.props.addItem(item)
-            } 
+            } else { //duplicates are found, notify user through snackbar
+                this.props.enqueueSnackbar('Duplicated name: ' + itemName)
+            }
         }
         this.setState({
             isEdit: false,
@@ -107,7 +110,7 @@ export class ItemCollection extends Component {
         })
     }
 
-    handleEditItemSubmit () {
+    handleEditItemSubmit (event) {
         const item = {
             _id: this.state._id,
             name: this.state.name,
@@ -115,7 +118,7 @@ export class ItemCollection extends Component {
         }
 
         // Prevent the addition of an empty item, null item, or all whitespace item
-        if (item.name === null || item.name.match(/^\s*$/) !== null) {
+        if (!validateName(item.name)) {
             this.setState({
                 isEdit: false,
                 name: '',
@@ -142,12 +145,13 @@ export class ItemCollection extends Component {
         } else {
             // In this case, there is a duplicate, so we send an alert
             this.setState({
-                isEdit: false,
+                isEdit: event !== null, //if user hit enter
                 name: '',
                 _id: '',
                 size: 1,
-                isAlert: true
+                isAlert: false
             })
+            this.props.enqueueSnackbar("Duplicated name: " + item.name)
             // this.setState({
             //     ...this.state,
             //     isAlert: true
@@ -178,6 +182,7 @@ export class ItemCollection extends Component {
                 <Grid item xs={12}>
                     <EditItem 
                         name={this.state.name}
+                        handleAddItem={this.addEditItem}
                         handleChange={this.handleEditItemChange}
                         handleEnter={this.handleEditItemSubmit}
                         handleEsc={this.handleEditItemEscKey}
@@ -285,7 +290,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 }
 
-export default connect(
+export default withSnackbar(withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-) (withStyles(styles)(ItemCollection))
+) (withStyles(styles)(ItemCollection))))

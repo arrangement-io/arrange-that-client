@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router'
 import PropTypes from 'prop-types'
 import { Grid, Typography, Snackbar, Card, CardHeader, CardContent } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
@@ -15,7 +16,8 @@ import { addContainer, deleteContainer } from 'actions/container/container'
 import { deleteItem } from 'actions/item/item'
 import { withStyles } from '@material-ui/core/styles'
 
-import { uuid } from 'utils'
+import { uuid, validateName } from 'utils'
+import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
     card: {
@@ -104,13 +106,15 @@ export class ContainerCollection extends Component {
                     name: '',
                     _id: '',
                     size: 1,
-                    isAlert: true
+                    isAlert: false
                 })
+                this.props.enqueueSnackbar('Duplicated name: ' + container.name)
             } else {
                 this.setState({
                     ...this.state,
-                    isAlert: true
+                    isAlert: false
                 })
+                this.props.enqueueSnackbar('Duplicated name: ' + container.name)
             }
         }
     }
@@ -131,7 +135,7 @@ export class ContainerCollection extends Component {
             }
     
             // Prevent the addition of an empty item, null item, or all whitespace item
-            if (container.name === null || container.name.match(/^\s*$/) !== null) {
+            if (!validateName(container.name)) {
                 continue;
             }
 
@@ -302,7 +306,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 }
 
-export default connect(
+export default withSnackbar(withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-) (withStyles(styles)(ContainerCollection))
+) (withStyles(styles)(ContainerCollection))))
