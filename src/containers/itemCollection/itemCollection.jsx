@@ -72,7 +72,6 @@ export class ItemCollection extends Component {
         var splitStrings = pasteString.split(/[\t\n]/)
 
         for (let itemName of splitStrings) {
-            //TODO Need to double check whether this logic of interacting with other functions is correct
             const item = {
                 _id: uuid('item'),
                 name: itemName,

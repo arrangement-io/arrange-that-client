@@ -125,7 +125,6 @@ export class ContainerCollection extends Component {
         var splitStrings = pasteString.split(/[\t\n]/)
 
         for (let containerName of splitStrings) {
-            //TODO Need to double check whether this logic of interacting with other functions is correct
             const container = {
                 _id: uuid('container'),
                 name: containerName,
