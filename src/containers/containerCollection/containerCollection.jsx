@@ -16,7 +16,7 @@ import { addContainer, deleteContainer } from 'actions/container/container'
 import { deleteItem } from 'actions/item/item'
 import { withStyles } from '@material-ui/core/styles'
 
-import { uuid, validateName } from 'utils'
+import { uuid, validateName, checkDuplicate } from 'utils'
 import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
@@ -30,12 +30,6 @@ const styles = theme => ({
         paddingRight: 10
     }
 })
-
-function checkDuplicateIDOrName (item, allItems) {
-    var nameDuplicated = allItems.find((ele) => (ele.name === item.name))
-    var idDuplicated = allItems.find((ele) => (ele._id === item._id))
-    return (typeof nameDuplicated === 'undefined' && typeof idDuplicated === 'undefined')
-};
 
 export class ContainerCollection extends Component {
     constructor (props) {
@@ -91,7 +85,7 @@ export class ContainerCollection extends Component {
             size: this.state.size
         }
 
-        if (checkDuplicateIDOrName(container, this.props.real.containers)) {
+        if (checkDuplicate(container, this.props.real.containers)) {
             //Duplicates not found
             this.setState({
                 isEdit: false,
@@ -143,7 +137,7 @@ export class ContainerCollection extends Component {
                 continue;
             }
 
-            if (checkDuplicateIDOrName(container, this.props.real.containers)) {
+            if (checkDuplicate(container, this.props.real.containers)) {
                 //Duplicates not found
                 this.setState({
                     isEdit: false,

@@ -15,7 +15,7 @@ import { addItem, deleteItem } from 'actions/item/item'
 import { Droppable } from 'react-beautiful-dnd'
 import { withStyles } from '@material-ui/core/styles'
 
-import { uuid, getListStyle, validateName } from 'utils'
+import { uuid, getListStyle, validateName, checkDuplicate } from 'utils'
 import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
@@ -29,12 +29,6 @@ const styles = theme => ({
         paddingRight: 10
     }
 })
-
-function checkDuplicateIDOrName (item, allItems) {
-    var nameDuplicated = allItems.find((ele) => (ele.name === item.name))
-    var idDuplicated = allItems.find((ele) => (ele._id === item._id))
-    return (typeof nameDuplicated === 'undefined' && typeof idDuplicated === 'undefined')
-};
 
 export class ItemCollection extends Component {
     constructor (props) {
@@ -91,7 +85,7 @@ export class ItemCollection extends Component {
             }
 
             // Check for duplicates. In this case, duplicates are not found, so add the item.
-            if (checkDuplicateIDOrName(item, this.props.real.items)) {
+            if (checkDuplicate(item, this.props.real.items)) {
                 this.setState({
                     isEdit: false,
                     name: '',
@@ -134,7 +128,7 @@ export class ItemCollection extends Component {
         }
 
         // Check for duplicates. In this case, duplicates are not found, so add the item.
-        if (checkDuplicateIDOrName(item, this.props.real.items)) {
+        if (checkDuplicate(item, this.props.real.items)) {
             this.setState({
                 isEdit: false,
                 name: '',
