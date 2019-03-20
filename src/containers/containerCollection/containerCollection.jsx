@@ -122,8 +122,8 @@ export class ContainerCollection extends Component {
                 continue;
             }
 
-            const container1 = this.props.real.containers.find(ele => ele._id === this.state._id)
-            const container2 = this.props.real.containers.find(ele => ele.name === this.state.name)
+            const container1 = this.props.real.containers.find(ele => ele._id === container._id)
+            const container2 = this.props.real.containers.find(ele => ele.name === container.name)
             if (typeof container1 === 'undefined' && typeof container2 === 'undefined') {
                 //Duplicates not found
                 this.setState({

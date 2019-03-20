@@ -70,8 +70,8 @@ export class ItemCollection extends Component {
                 continue;
             }
 
-            const item1 = this.props.real.items.find(ele => ele._id === this.state._id)
-            const item2 = this.props.real.items.find(ele => ele.name === this.state.name)
+            const item1 = this.props.real.items.find(ele => ele._id === item._id)
+            const item2 = this.props.real.items.find(ele => ele.name === item.name)
             // Check for duplicates. In this case, duplicates are not found, so add the item.
             if (typeof item1 === 'undefined' && typeof item2 === 'undefined') {
                 this.setState({
