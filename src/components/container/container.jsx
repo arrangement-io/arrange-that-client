@@ -2,12 +2,15 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core'
 import MoreMenu from 'components/moremenu/moremenu'
+import { connect } from 'react-redux'
 
 import Item from 'components/item/item'
+import EditContainer from 'components/editContainer/editContainer'
 import OccupancyDisplay from 'components/container/occupancyDisplay'
+import { editContainer } from 'actions/container/container'
 
 import { withStyles } from '@material-ui/core/styles'
-import { getListStyle, getSnapshotContainer } from 'utils'
+import { getSnapshotContainer } from 'utils'
 import { Droppable } from 'react-beautiful-dnd'
 
 const styles = theme => ({
@@ -29,6 +32,54 @@ const styles = theme => ({
 })
 
 export class Container extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            isEdit: false,
+            editName: this.props.container.name,
+            editSize: this.props.container.size
+        }
+    }
+
+    handleEditContainerNameChange = (e) => {
+        this.setState({
+            ...this.state,
+            editName: e.target.value
+        })
+    }
+
+    handleEditContainerSizeChange = (e) => {
+        let val = parseInt(e.target.value)
+        if (isNaN(val)) {
+            val = 0
+        }
+        this.setState({
+            ...this.state,
+            editSize: val
+        })
+    }
+
+    handleSaveEditContainer = () => {
+        this.setState({
+            ...this.state,
+            isEdit: false
+        })
+        this.props.editContainer({
+            ...this.props.container,
+            name: this.state.editName,
+            size: this.state.editSize
+        })
+    }
+
+    handleEditContainerEscKey = () => {
+        this.setState({
+            isEdit: false,
+            editName: this.props.container.name,
+            editSize: this.props.container.size
+        })
+    }
+
     getItemIds = (containerId) => {
         return getSnapshotContainer(this.props.snapshot, containerId).items
     }
@@ -45,16 +96,23 @@ export class Container extends Component {
         if (option === 'Delete from all snapshots') {
             this.props.deleteContainer(this.props.container._id)
         }
+        else if (option === "Edit") {
+            this.setState({
+                ...this.state,
+                isEdit: true
+            })
+        }
     }
 
     render () {
         const { classes } = this.props
         const options = [
+            'Edit',
             'Delete from all snapshots'
         ]
         const items = this.getItems(this.props.items, this.props.container._id)
 
-        return (
+        const containerCard = (
             <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true}>
                 {(provided, snapshot) => (
                     <div ref={provided.innerRef}>
@@ -88,6 +146,23 @@ export class Container extends Component {
                 )}
             </Droppable>
         )
+
+        const editContainer = (
+            <EditContainer 
+                name={this.props.container.name}
+                size={this.props.container.size}
+                handleNameChange={this.handleEditContainerNameChange}
+                handleSizeChange={this.handleEditContainerSizeChange}
+                handleEnter={this.handleSaveEditContainer}
+                handleEsc={this.handleEditContainerEscKey}
+            />
+        )
+
+
+        if (this.state.isEdit) {
+            return editContainer
+        }
+        return containerCard
     }
 }
 
@@ -112,4 +187,24 @@ Container.propTypes = {
     getDragItemColor: PropTypes.func
 }
 
-export default withStyles(styles)(Container)
+const mapStateToProps = (state, ownProps) => {
+    const {
+        real
+    } = state
+    return {
+        real
+    }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        editContainer: (container) => {
+            dispatch(editContainer(container))
+        }
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+) (withStyles(styles)(Container))

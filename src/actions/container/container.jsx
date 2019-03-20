@@ -1,7 +1,7 @@
 import {
     CONTAINER_ADD,
     CONTAINER_DELETE,
-    CONTAINER_RENAME
+    CONTAINER_EDIT
 } from 'actions/actionTypes'
 
 export const addContainer = (container) => ({
@@ -14,7 +14,7 @@ export const deleteContainer = (id) => ({
     id
 })
 
-export const renameContainer = (container) => ({
-    type: CONTAINER_RENAME,
+export const editContainer = (container) => ({
+    type: CONTAINER_EDIT,
     container
 })
