@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Typography, Snackbar } from '@material-ui/core'
+import { Grid, Typography, Snackbar, Card, CardHeader, CardContent } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 
@@ -13,8 +13,21 @@ import EditContainer from 'components/editContainer/editContainer'
 import { addContainer, deleteContainer } from 'actions/container/container'
 
 import { deleteItem } from 'actions/item/item'
+import { withStyles } from '@material-ui/core/styles'
 
 import { uuid } from 'utils'
+
+const styles = theme => ({
+    card: {
+        background:"#fafafa"
+    },
+    cardHeader: {
+        paddingLeft: 10,
+        paddingTop: 10,
+        paddingBottom: 0,
+        paddingRight: 10
+    }
+})
 
 export class ContainerCollection extends Component {
     constructor (props) {
@@ -182,36 +195,43 @@ export class ContainerCollection extends Component {
     };
 
     render () {
+        const { classes } = this.props;
+
         return (
-            <div className="containercollection">
-                <Grid container spacing={8}>
-                    {
-                        this.props.containers.map((container) => {
-                            return (
-                                <Grid item xs={12} sm={6} md={3} lg={2} key={container._id}>
-                                    <Container 
-                                        container={container}
-                                        snapshot={this.props.snapshot} 
-                                        items={this.props.items} 
-                                        deleteItem={this.props.deleteItem} 
-                                        deleteContainer={this.props.deleteContainer}
-                                        getDragItemColor={this.props.getDragItemColor}
-                                    />
-                                </Grid>
-                            )
-                        
-                        })
-                    }
-                    { this.displayEditContainer() }
-                    <Grid item xs={12} sm={6} md={3} lg={2}>
-                        <div className="container" onClick={this.addEditContainer}>
-                            <Typography variant="headline" align="center">
-                                +
-                            </Typography>
-                        </div>
-                    </Grid>
-                </Grid>
-                <Snackbar
+            <div>
+            <Card className={classes.card}>
+                <CardHeader className={classes.cardHeader} title="Spaces"/>
+                <CardContent className={classes.CardContent}>
+                    <Grid container spacing={8}>
+                        {
+                            this.props.containers.map((container) => {
+                                return (
+                                    <Grid item xs={12} sm={6} md={3} lg={2} key={container._id}>
+                                        <Container 
+                                            container={container}
+                                            snapshot={this.props.snapshot} 
+                                            items={this.props.items} 
+                                            deleteItem={this.props.deleteItem} 
+                                            deleteContainer={this.props.deleteContainer}
+                                            getDragItemColor={this.props.getDragItemColor}
+                                        />
+                                    </Grid>
+                                )
+                            
+                            })
+                        }
+                        { this.displayEditContainer() }
+                        <Grid item xs={12} sm={6} md={3} lg={2}>
+                            <div className="container" onClick={this.addEditContainer}>
+                                <Typography variant="headline" align="center">
+                                    +
+                                </Typography>
+                            </div>
+                        </Grid>
+                    </Grid>        
+                </CardContent>
+            </Card>
+            <Snackbar
                     anchorOrigin={{
                         vertical: 'bottom',
                         horizontal: 'left',
@@ -285,4 +305,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-) (ContainerCollection)
+) (withStyles(styles)(ContainerCollection))

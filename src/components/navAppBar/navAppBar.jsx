@@ -8,7 +8,11 @@ import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { setAccount, logout } from 'actions/account/account'
+import { setRealData } from 'actions/real/real'
+import { uuid } from 'utils'
 import config from 'config.json'
+import { withSnackbar } from 'notistack';
+
 
 const styles = {
     root: {
@@ -29,21 +33,45 @@ class NavAppBar extends Component {
         this.props.history.push("/")
     }
 
-    goToNewArrangement = () => {
-        this.props.history.push("/addarrangement")
-    }
-
     goToViewAllArrangements = () => {
         this.props.history.push("/all_arrangements")
     }
 
+    createNewArrangement = () => {
+        var d = new Date()
+        const arrangement_id = uuid("arrangement")
+        let real = {
+            user: this.props.account.user.googleId,
+            _id: arrangement_id,
+            containers: [],
+            is_deleted: false,
+            items: [],
+            name: "Untitled Arrangement",
+            users: [this.props.account.user.googleId],
+            owner: this.props.account.user.googleId,
+            snapshots: [{
+                _id: uuid("snapshot"),
+                name: "Snapshot 1",
+                snapshot: {}, // TO REMOVE after it is removed on backend
+                snapshotContainers: [],
+                unassigned: []
+            }],
+            timestamp: d.getTime() / 1000,
+            modified_timestamp: d.getTime() / 1000
+        }
+
+        this.props.setRealData(real)
+        this.props.history.push('/arrangement/' + arrangement_id)
+    }
+
     onFailure = (error) => {
-        alert(error);
+        this.props.enqueueSnackbar('Could not login')
     }
 
     googleResponse = (response) => {
         const data = {
-            access_token: response.accessToken
+            access_token: response.accessToken,
+            user_data: response.profileObj
         }
         post({
             url: '/login',
@@ -65,13 +93,12 @@ class NavAppBar extends Component {
 
     render () {
         const classes = this.props.classes
-        console.log(this.props)
         let buttons = null
 
         if (this.props.account.isAuthenticated) {
             buttons = (
                 <div>
-                    <Button onClick={this.goToNewArrangement} color="inherit">
+                    <Button onClick={this.createNewArrangement} color="inherit">
                         New
                     </Button>
                     <Button onClick={this.goToViewAllArrangements} color="inherit">
@@ -132,11 +159,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         setAccount: (account) => {
             dispatch(setAccount(account))
+        },
+        setRealData: (data) => {
+            dispatch(setRealData(data))
         }
     }
 }
 
-const MyNavAppBar = withStyles(styles)(NavAppBar)
+const MyNavAppBar = withSnackbar(withStyles(styles)(NavAppBar))
 export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps)(MyNavAppBar))
