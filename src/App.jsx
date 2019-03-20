@@ -9,7 +9,7 @@ class App extends Component {
     render() {
         return (
             <SnackbarProvider 
-                maxSnack="3" preventDuplicate 
+                maxSnack={3} preventDuplicate 
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'right',

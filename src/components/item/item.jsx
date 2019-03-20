@@ -42,7 +42,7 @@ export class Item extends Component {
         if (option === 'Delete from all snapshots') {
             this.props.deleteItem(this.props.item._id)
         }
-        else if (option === 'Rename Item') {
+        else if (option === 'Edit') {
             this.setState({
                 ...this.state,
                 isEdit: true
@@ -78,11 +78,10 @@ export class Item extends Component {
 
     render = () => {
         const { classes } = this.props;
-        console.log(this.props)
 
         const options = [
-            'Delete from all snapshots',
-            'Rename Item'
+            'Edit',
+            'Delete from all snapshots'
         ]
         
         const item = (
