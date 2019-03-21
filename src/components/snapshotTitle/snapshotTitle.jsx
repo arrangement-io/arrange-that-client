@@ -3,10 +3,8 @@ import React, { Component } from 'react'
 import MoreMenu from 'components/moremenu/moremenu'
 
 import PropTypes from 'prop-types'
-import { Typography } from '@material-ui/core';
+import { Typography, TextField } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles'
-
-import { TextField } from '@material-ui/core'
 
 const ENTER_KEY = 13;
 const ESC_KEY = 27;
@@ -71,6 +69,7 @@ class SnapshotTitle extends Component {
                     isEdit: false,
                     newName: this.props.snapshot.name
                 })
+                break;
             default:
                 break;
         }    
