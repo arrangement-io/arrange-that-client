@@ -6,11 +6,12 @@ import { Grid, Typography } from '@material-ui/core'
 import Snapshot from 'containers/snapshot/snapshot'
 
 import ExportButton from 'components/exportbutton/exportbutton'
+import SnapshotTitle from 'components/snapshotTitle/snapshotTitle'
 
 import { getArrangement } from 'services/arrangementService'
 
 import { setRealData, arrangementRename } from 'actions/real/real'
-import { snapshotAdd } from 'actions/snapshot/snapshot'
+import { snapshotAdd, snapshotDelete, snapshotRename } from 'actions/snapshot/snapshot'
 import { uuid } from 'utils'
 
 import Tabs, { Tab } from 'react-awesome-tabs';
@@ -31,13 +32,24 @@ export class Arrange extends Component {
         this.setState({activeTab: active})
     }
 
-    handleTabAdd() {
+    handleTabAdd = () => {
         const numberOfCurrentSnapshots = this.props.real.snapshots.length
         this.props.snapshotAdd(this.createNewSnapshot())
 
         this.setState({
             activeTab: numberOfCurrentSnapshots
         });
+    }
+    
+    deleteSnapshot = (snapshotId) => {
+        this.props.snapshotDelete(snapshotId)
+        const numberOfCurrentSnapshots = this.props.real.snapshots.length
+        console.log(numberOfCurrentSnapshots)
+        this.setState({
+            ...this.state,
+            activeTab: numberOfCurrentSnapshots-1,
+        });
+        console.log(this.state)
     }
 
     handleArrangementTitleEnter = (name) => {
@@ -129,6 +141,7 @@ export class Arrange extends Component {
     }
     
     render () {
+        console.log(this.state)
         return (
             <div>
                 <Grid container spacing={8} className="arrange">
@@ -147,13 +160,17 @@ export class Arrange extends Component {
                 </Grid>
                 <Tabs 
                     active={this.state.activeTab} 
-                    onTabSwitch={this.handleTabSwitch.bind(this)}
-                    onTabAdd={this.handleTabAdd.bind(this)}
+                    onTabSwitch={this.handleTabSwitch}
+                    onTabAdd={this.handleTabAdd}
                     showAdd={true}
                 >
                     {this.props.real.snapshots.map((snapshot, index) => {
                         return (
-                            <Tab key={index} title={snapshot.name}>
+                            <Tab key={index} title={
+                                <SnapshotTitle 
+                                    snapshot={snapshot} 
+                                    onDelete={this.deleteSnapshot} 
+                                    onSave={this.props.snapshotRename} /> }>
                                 <Snapshot snapshotId={snapshot._id} />
                             </Tab>
                         )
@@ -179,6 +196,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         snapshotAdd: (snapshot) => {
             dispatch(snapshotAdd(snapshot))
+        },
+        snapshotDelete: (snapshotId) => {
+            dispatch(snapshotDelete(snapshotId))
+        },
+        snapshotRename: (snapshotId, name) => {
+            dispatch(snapshotRename(snapshotId, name))
         }
     }
 }
