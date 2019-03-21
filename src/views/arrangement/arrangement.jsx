@@ -44,12 +44,10 @@ export class Arrange extends Component {
     deleteSnapshot = (snapshotId) => {
         this.props.snapshotDelete(snapshotId)
         const numberOfCurrentSnapshots = this.props.real.snapshots.length
-        console.log(numberOfCurrentSnapshots)
         this.setState({
             ...this.state,
             activeTab: numberOfCurrentSnapshots-1,
         });
-        console.log(this.state)
     }
 
     handleArrangementTitleEnter = (name) => {
@@ -141,7 +139,6 @@ export class Arrange extends Component {
     }
     
     render () {
-        console.log(this.state)
         return (
             <div>
                 <Grid container spacing={8} className="arrange">
