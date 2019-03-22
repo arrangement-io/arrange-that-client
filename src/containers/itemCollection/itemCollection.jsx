@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
 import PropTypes from 'prop-types'
-import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core'
+import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Button } from '@material-ui/core'
 
 import Item from 'components/item/item'
 import EditItem from 'components/editItem/editItem'
@@ -195,13 +195,15 @@ export class ItemCollection extends Component {
                                         }
                                         { this.displayEditItem() }
                                         {provided.placeholder}
-                                        <Grid item xs={12}>
-                                            <div className="item" onClick={this.addEditItem}>
-                                                <Typography variant="headline" align="center">+</Typography>
-                                            </div>
-                                        </Grid>
                                     </Grid>
                                 </CardContent>
+                                <CardActions>
+                                    <Button variant="text" color="default" onClick={this.addEditItem}>
+                                        <Typography variant="body1" align="left">
+                                            + add a person
+                                        </Typography>
+                                    </Button>
+                                </CardActions>
                             </Card>
                         </div>
                     )}
