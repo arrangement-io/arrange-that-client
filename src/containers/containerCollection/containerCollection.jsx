@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import PropTypes from 'prop-types'
-import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core'
+import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Button } from '@material-ui/core'
 
 import { connect } from 'react-redux'
 
@@ -208,20 +208,19 @@ export class ContainerCollection extends Component {
                                                 getDragItemColor={this.props.getDragItemColor}
                                             />
                                         </Grid>
-                                    )
-                            
+                                    )  
                                 })
                             }
                             { this.displayEditContainer() }
-                            <Grid item xs={12} sm={6} md={3} lg={2}>
-                                <div className="container" onClick={this.addEditContainer}>
-                                    <Typography variant="headline" align="center">
-                                    +
-                                    </Typography>
-                                </div>
-                            </Grid>
                         </Grid>        
                     </CardContent>
+                    <CardActions>
+                        <Button variant="text" color="default" onClick={this.addEditContainer}>
+                            <Typography variant="body1" align="left">
+                                + add a space
+                            </Typography>
+                        </Button>
+                    </CardActions>
                 </Card>
             </div>
         )
