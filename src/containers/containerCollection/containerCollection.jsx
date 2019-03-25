@@ -169,6 +169,7 @@ export class ContainerCollection extends Component {
                     <EditContainer 
                         name={this.state.name}
                         size={this.state.size}
+                        handleAddContainer={this.addEditContainer}
                         handleNameChange={this.handleEditContainerNameChange}
                         handleSizeChange={this.handleEditContainerSizeChange}
                         handleEnter={this.handleEditContainerEnterKey}

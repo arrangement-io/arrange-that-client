@@ -32,6 +32,7 @@ export class EditItem extends Component {
         switch (event.key) {
             case ENTER_KEY:
                 this.props.handleEnter(event.key)
+                this.props.handleAddItem()
                 break;
             //TODO add handler for tab key
             // case 'Tab':
@@ -79,6 +80,7 @@ export class EditItem extends Component {
                                     onBlur={() => this.props.handleEnter(null)}
                                     onPaste={this.handlePasteText}
                                     defaultValue={this.props.name}
+                                    value={this.props.name}
                                     placeholder="Name"
                                 />
                             </Typography>

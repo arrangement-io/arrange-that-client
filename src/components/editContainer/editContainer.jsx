@@ -26,6 +26,8 @@ export class EditContainer extends Component {
                 this.inputSize.focus()
             } else {
                 this.props.handleEnter()
+                this.inputSize.focus()
+                this.props.handleAddContainer()
             }
         }
     }
@@ -36,6 +38,7 @@ export class EditContainer extends Component {
                 this.inputName.focus()
             } else {
                 this.props.handleEnter()
+                this.props.handleAddContainer()
             }
         }
     }
@@ -91,6 +94,7 @@ export class EditContainer extends Component {
                                     autoFocus={true}
                                     placeholder="Size"
                                     defaultValue={this.props.size > 0 ? this.props.size : ""}
+                                    value={this.props.size > 0 ? this.props.size : ""}
                                 />
                             </Typography>
                         }
@@ -104,6 +108,7 @@ export class EditContainer extends Component {
                                     val={this.props.name}
                                     placeholder="Name"
                                     defaultValue={this.props.name}
+                                    value={this.props.name}
                                 />
                             </Typography>
                         }
