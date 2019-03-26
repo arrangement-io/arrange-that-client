@@ -43,6 +43,9 @@ class SnapshotTitle extends Component {
         if (option === 'Delete') {
             this.props.onDelete(this.props.snapshot._id)
         }
+        else if (option === "Clone") {
+            this.props.onClone(this.props.snapshot._id)
+        }
         else if (option === 'Edit') {
             this.setState({
                 ...this.state,
@@ -87,6 +90,7 @@ class SnapshotTitle extends Component {
         const { classes } = this.props
         const options = [
             'Edit',
+            'Clone',
             'Delete'
         ]
 
@@ -117,7 +121,10 @@ class SnapshotTitle extends Component {
 }
 
 SnapshotTitle.propTypes = {
-    snapshot: PropTypes.object
+    snapshot: PropTypes.object,
+    onDelete: PropTypes.func,
+    onSave: PropTypes.func,
+    onClone: PropTypes.func
 }
 
 export default withStyles(styles)(SnapshotTitle)
