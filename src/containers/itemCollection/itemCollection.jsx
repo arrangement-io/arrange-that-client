@@ -44,7 +44,6 @@ export class ItemCollection extends Component {
         this.handleEditItemChange = this.handleEditItemChange.bind(this)
         this.handleEditItemSubmit = this.handleEditItemSubmit.bind(this)
         this.handleEditItemEscKey = this.handleEditItemEscKey.bind(this)
-        this.getItemProps         = this.getItemProps.bind(this)
     }
 
     addEditItem () {
