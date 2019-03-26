@@ -79,6 +79,7 @@ export class EditItem extends Component {
                                     onBlur={() => this.props.handleEnter(null)}
                                     onPaste={this.handlePasteText}
                                     defaultValue={this.props.name}
+                                    value={this.props.name}
                                     placeholder="Name"
                                 />
                             </Typography>

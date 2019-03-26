@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Typography, TextField, Grid, Card, CardHeader } from '@material-ui/core'
+import { Typography, TextField, Card, CardHeader } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({
@@ -25,7 +25,8 @@ export class EditContainer extends Component {
             if (this.props.size === '' || this.props.size === 0) {
                 this.inputSize.focus()
             } else {
-                this.props.handleEnter()
+                this.props.handleEnter(e.key)
+                this.inputSize.focus()
             }
         }
     }
@@ -35,7 +36,7 @@ export class EditContainer extends Component {
             if (this.props.name === '') {
                 this.inputName.focus()
             } else {
-                this.props.handleEnter()
+                this.props.handleEnter(e)
             }
         }
     }
@@ -74,6 +75,7 @@ export class EditContainer extends Component {
   
     render () {
         const { classes } = this.props
+        var focusSize = this.props.size === 0 || this.props.size === "" || this.props.size === undefined
         return (
             <div ref={containerRef => this.containerRef = containerRef}>
                 <Card ref={containerRef => this.containerRef = containerRef}>
@@ -87,8 +89,8 @@ export class EditContainer extends Component {
                                     onKeyPress={this.handleSizeKeyPress}
                                     onChange={this.props.handleSizeChange}
                                     onPaste={this.handlePasteText}
-                                    val={this.props.size}
-                                    autoFocus={true}
+                                    value={this.props.size > 0 ? this.props.size : ""}
+                                    autoFocus={focusSize}
                                     placeholder="Size"
                                     defaultValue={this.props.size > 0 ? this.props.size : ""}
                                 />
@@ -101,9 +103,10 @@ export class EditContainer extends Component {
                                     inputRef={field => this.inputName = field}
                                     onKeyPress={this.handleNameKeyPress}
                                     onChange={this.props.handleNameChange}
-                                    val={this.props.name}
+                                    value={this.props.name}
                                     placeholder="Name"
                                     defaultValue={this.props.name}
+                                    autoFocus={!focusSize}
                                 />
                             </Typography>
                         }

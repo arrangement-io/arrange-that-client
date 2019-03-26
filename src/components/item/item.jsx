@@ -45,7 +45,8 @@ export class Item extends Component {
         else if (option === 'Edit') {
             this.setState({
                 ...this.state,
-                isEdit: true
+                isEdit: true,
+                name: this.props.item.name,
             })
         }
     }
@@ -119,7 +120,7 @@ export class Item extends Component {
 
         const editItem = (
             <EditItem
-                name={this.props.item.name}
+                name={this.state.name}
                 handleChange={this.handleEditItemChange}
                 handleEnter={this.handleEditItemSubmit}
                 handleEsc={this.handleEditItemEscKey}

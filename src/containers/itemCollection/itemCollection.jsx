@@ -39,8 +39,8 @@ export class ItemCollection extends Component {
             isAlert: false
         }
 
-        this.addEditItem = this.addEditItem.bind(this)
-        this.displayEditItem = this.displayEditItem.bind(this)
+        this.addEditItem          = this.addEditItem.bind(this)
+        this.displayEditItem      = this.displayEditItem.bind(this)
         this.handleEditItemChange = this.handleEditItemChange.bind(this)
         this.handleEditItemSubmit = this.handleEditItemSubmit.bind(this)
         this.handleEditItemEscKey = this.handleEditItemEscKey.bind(this)
@@ -130,6 +130,13 @@ export class ItemCollection extends Component {
             })
   
             this.props.addItem(item)
+            // If user presses enter, add another item
+            if (event === 'Enter') {
+                this.setState({
+                    isEdit: true,
+                    _id: uuid('item'),
+                })
+            }
         } else {
             // In this case, there is a duplicate, so we send an alert
             this.props.enqueueSnackbar("Duplicated name: " + item.name)
@@ -157,14 +164,19 @@ export class ItemCollection extends Component {
                 <Grid item xs={12}>
                     <EditItem 
                         name={this.state.name}
-                        handleAddItem={this.addEditItem}
-                        handleChange={this.handleEditItemChange}
-                        handleEnter={this.handleEditItemSubmit}
-                        handleEsc={this.handleEditItemEscKey}
-                        handlePaste={this.handleEditItemPaste}
+                        {...this.getEditItemProps()}
                     />
                 </Grid>
             )
+        }
+    }
+
+    getEditItemProps () {
+        return {
+            handleChange: this.handleEditItemChange,
+            handleEnter:  this.handleEditItemSubmit,
+            handleEsc:    this.handleEditItemEscKey,
+            handlePaste:  this.handleEditItemPaste,
         }
     }
 
@@ -188,7 +200,13 @@ export class ItemCollection extends Component {
                                             this.props.unsnapshot_items.map((id, index) => {
                                                 return (
                                                     <Grid item xs = {12} key = {id}>
-                                                        <Item item = {this.props.items.find(ele => ele._id === id)} deleteItem = {this.props.deleteItem} index={index} getDragItemColor={this.props.getDragItemColor} containerId="itemcollection" />
+                                                        <Item 
+                                                            item = {this.props.items.find(ele => ele._id === id)}
+                                                            deleteItem = {this.props.deleteItem} 
+                                                            index={index} 
+                                                            getDragItemColor={this.props.getDragItemColor} 
+                                                            containerId="itemcollection"
+                                                        />
                                                     </Grid>
                                                 )
                                             })

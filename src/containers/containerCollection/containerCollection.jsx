@@ -75,7 +75,7 @@ export class ContainerCollection extends Component {
         })
     }
 
-    handleEditContainerEnterKey () {
+    handleEditContainerEnterKey (event) {
         const container = {
             _id: this.state._id,
             name: this.state.name,
@@ -92,6 +92,13 @@ export class ContainerCollection extends Component {
             })
 
             this.props.addContainer(container)
+            // If user presses enter, add another container
+            if (event.key === 'Enter') {
+                this.setState({
+                    isEdit: true,
+                    _id: uuid('container'),
+                })
+            }
             return
         } else { // duplicates found
             if (this.state.size === '') { // user inputed size
