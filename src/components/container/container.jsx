@@ -100,8 +100,8 @@ export class Container extends Component {
             this.setState({
                 ...this.state,
                 isEdit: true,
-                name: this.props.container.name,
-                size: this.props.container.size,
+                editName: this.props.container.name,
+                editSize: this.props.container.size,
             })
         }
     }
@@ -151,8 +151,8 @@ export class Container extends Component {
 
         const editContainer = (
             <EditContainer 
-                name={this.state.name}
-                size={this.state.size}
+                name={this.state.editName}
+                size={this.state.editSize}
                 handleNameChange={this.handleEditContainerNameChange}
                 handleSizeChange={this.handleEditContainerSizeChange}
                 handleEnter={this.handleSaveEditContainer}

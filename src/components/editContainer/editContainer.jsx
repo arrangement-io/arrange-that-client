@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Typography, TextField, Grid, Card, CardHeader } from '@material-ui/core'
+import { Typography, TextField, Card, CardHeader } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({
@@ -88,11 +88,10 @@ export class EditContainer extends Component {
                                     onKeyPress={this.handleSizeKeyPress}
                                     onChange={this.props.handleSizeChange}
                                     onPaste={this.handlePasteText}
-                                    val={this.props.size}
+                                    value={this.props.size}
                                     autoFocus={true}
                                     placeholder="Size"
                                     defaultValue={this.props.size > 0 ? this.props.size : ""}
-                                    value={this.props.size > 0 ? this.props.size : ""}
                                 />
                             </Typography>
                         }
@@ -103,10 +102,9 @@ export class EditContainer extends Component {
                                     inputRef={field => this.inputName = field}
                                     onKeyPress={this.handleNameKeyPress}
                                     onChange={this.props.handleNameChange}
-                                    val={this.props.name}
+                                    value={this.props.name}
                                     placeholder="Name"
                                     defaultValue={this.props.name}
-                                    value={this.props.name}
                                 />
                             </Typography>
                         }
