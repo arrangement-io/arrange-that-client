@@ -36,7 +36,7 @@ export class EditContainer extends Component {
             if (this.props.name === '') {
                 this.inputName.focus()
             } else {
-                this.props.handleEnter(e.key)
+                this.props.handleEnter(e)
             }
         }
     }
@@ -75,6 +75,7 @@ export class EditContainer extends Component {
   
     render () {
         const { classes } = this.props
+        var focusSize = this.props.size === 0 || this.props.size === "" || this.props.size === undefined
         return (
             <div ref={containerRef => this.containerRef = containerRef}>
                 <Card ref={containerRef => this.containerRef = containerRef}>
@@ -89,7 +90,7 @@ export class EditContainer extends Component {
                                     onChange={this.props.handleSizeChange}
                                     onPaste={this.handlePasteText}
                                     value={this.props.size > 0 ? this.props.size : ""}
-                                    autoFocus={true}
+                                    autoFocus={focusSize}
                                     placeholder="Size"
                                     defaultValue={this.props.size > 0 ? this.props.size : ""}
                                 />
@@ -105,6 +106,7 @@ export class EditContainer extends Component {
                                     value={this.props.name}
                                     placeholder="Name"
                                     defaultValue={this.props.name}
+                                    autoFocus={!focusSize}
                                 />
                             </Typography>
                         }
