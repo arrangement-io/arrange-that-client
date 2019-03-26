@@ -32,7 +32,6 @@ export class EditItem extends Component {
         switch (event.key) {
             case ENTER_KEY:
                 this.props.handleEnter(event.key)
-                this.props.handleAddItem()
                 break;
             //TODO add handler for tab key
             // case 'Tab':
