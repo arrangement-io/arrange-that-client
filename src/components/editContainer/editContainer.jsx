@@ -88,7 +88,7 @@ export class EditContainer extends Component {
                                     onKeyPress={this.handleSizeKeyPress}
                                     onChange={this.props.handleSizeChange}
                                     onPaste={this.handlePasteText}
-                                    value={this.props.size}
+                                    value={this.props.size > 0 ? this.props.size : ""}
                                     autoFocus={true}
                                     placeholder="Size"
                                     defaultValue={this.props.size > 0 ? this.props.size : ""}
