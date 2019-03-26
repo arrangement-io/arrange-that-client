@@ -33,10 +33,26 @@ export class Item extends Component {
             isEdit: false,
             name: ''
         }
+        this.handleEditItemChange = this.handleEditItemChange.bind(this)
         this.handleEditItemSubmit = this.handleEditItemSubmit.bind(this)
+        this.handleEditItemEscKey = this.handleEditItemEscKey.bind(this)
+    }
+
+    handleItemClick = option => {
+        if (option === 'Delete from all snapshots') {
+            this.props.deleteItem(this.props.item._id)
+        }
+        else if (option === 'Edit') {
+            this.setState({
+                ...this.state,
+                isEdit: true,
+                name: this.props.item.name,
+            })
+        }
     }
 
     handleEditItemSubmit = () => {
+
         this.props.renameItem({
             ...this.props.item,
             name: this.state.name
@@ -45,20 +61,20 @@ export class Item extends Component {
             ...this.state,
             isEdit: false
         })
+
+    }
+    
+    handleEditItemChange = (e) => {
+        this.setState({
+            ...this.state,
+            name: e.target.value
+        })
     }
 
-    handleItemClick = option => { 
-        if (option === 'Delete from all snapshots') {
-            this.props.deleteItem(this.props.item._id)
-        }
-        else if (option === 'Edit') {
-            this.setState({
-                ...this.state,
-                name: this.props.item.name,
-                isEdit: true
-            })
-            this.props.handleChange({target: this.props.item.name})
-        }
+    handleEditItemEscKey = () => {
+        this.setState({
+            isEdit: false
+        })
     }
 
     render = () => {
@@ -101,23 +117,22 @@ export class Item extends Component {
                 )}
             </Draggable>
         );
+
+        const editItem = (
+            <EditItem
+                name={this.state.name}
+                handleChange={this.handleEditItemChange}
+                handleEnter={this.handleEditItemSubmit}
+                handleEsc={this.handleEditItemEscKey}
+            />
+        )
             
+
         if(!this.state.isEdit){
             return(item)
         }
         else {
-            var zzz = this.state;
-            debugger;
-
-            return(
-                <EditItem
-                    name={this.state.name}
-                    handleChange={this.props.handleChange}
-                    handleEnter={this.handleEditItemSubmit}
-                    handleEsc={this.props.handleEsc}
-                    handlePaste={this.props.handlePaste}
-                />
-            )
+            return(editItem)
         }
     }
 }

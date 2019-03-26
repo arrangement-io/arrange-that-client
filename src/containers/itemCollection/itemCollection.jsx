@@ -57,10 +57,6 @@ export class ItemCollection extends Component {
     }
 
     handleEditItemChange (e) {
-        var x = this.state;
-        var y = e.target.value;
-        this.state = {...this.state, name:e.target.value}
-        debugger;
         this.setState({
             ...this.state,
             name: e.target.value
@@ -169,14 +165,14 @@ export class ItemCollection extends Component {
                 <Grid item xs={12}>
                     <EditItem 
                         name={this.state.name}
-                        {...this.getItemProps()}
+                        {...this.getEditItemProps()}
                     />
                 </Grid>
             )
         }
     }
 
-    getItemProps () {
+    getEditItemProps () {
         return {
             handleChange: this.handleEditItemChange,
             handleEnter:  this.handleEditItemSubmit,
@@ -207,12 +203,10 @@ export class ItemCollection extends Component {
                                                     <Grid item xs = {12} key = {id}>
                                                         <Item 
                                                             item = {this.props.items.find(ele => ele._id === id)}
-                                                            editName = {this.state.name}
                                                             deleteItem = {this.props.deleteItem} 
                                                             index={index} 
                                                             getDragItemColor={this.props.getDragItemColor} 
                                                             containerId="itemcollection"
-                                                            {...this.getItemProps()}
                                                         />
                                                     </Grid>
                                                 )
