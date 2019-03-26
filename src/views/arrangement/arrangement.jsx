@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
+import cloneDeep from 'lodash/cloneDeep';
 
 import { Grid, Typography } from '@material-ui/core'
 import Snapshot from 'containers/snapshot/snapshot'
 
+import EditArrangementTitle from 'components/editArrangementTitle/editArrangementTitle'
 import ExportButton from 'components/exportbutton/exportbutton'
 import SnapshotTitle from 'components/snapshotTitle/snapshotTitle'
 
@@ -15,8 +17,6 @@ import { snapshotAdd, snapshotDelete, snapshotRename } from 'actions/snapshot/sn
 import { uuid } from 'utils'
 
 import Tabs, { Tab } from 'react-awesome-tabs';
-
-import EditArrangementTitle from 'components/editArrangementTitle/editArrangementTitle'
 
 export class Arrange extends Component {
     constructor(props) {
@@ -114,6 +114,21 @@ export class Arrange extends Component {
         return newSnapshot
     }
 
+    cloneSnapshot = (snapshotId) => {
+        const numberOfCurrentSnapshots = this.props.real.snapshots.length
+        const snapshotToClone = this.props.real.snapshots.find(s => s._id === snapshotId)
+        const clone = {...cloneDeep(snapshotToClone),
+            _id: uuid("snapshot"),
+            name: "Clone of " + snapshotToClone.name
+        }
+
+        this.props.snapshotAdd(clone)
+
+        this.setState({
+            activeTab: numberOfCurrentSnapshots
+        });
+    }
+
     // Loads the state from the backend given the arrangement_id in the url param
     loadState () {
         const id = this.props.match.params.arrangement_id
@@ -167,6 +182,7 @@ export class Arrange extends Component {
                                 <SnapshotTitle 
                                     snapshot={snapshot} 
                                     onDelete={this.deleteSnapshot} 
+                                    onClone={this.cloneSnapshot}
                                     onSave={this.props.snapshotRename} /> }>
                                 <Snapshot snapshotId={snapshot._id} />
                             </Tab>
