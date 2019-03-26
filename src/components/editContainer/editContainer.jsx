@@ -25,9 +25,8 @@ export class EditContainer extends Component {
             if (this.props.size === '' || this.props.size === 0) {
                 this.inputSize.focus()
             } else {
-                this.props.handleEnter()
+                this.props.handleEnter(e.key)
                 this.inputSize.focus()
-                this.props.handleAddContainer()
             }
         }
     }
@@ -37,8 +36,7 @@ export class EditContainer extends Component {
             if (this.props.name === '') {
                 this.inputName.focus()
             } else {
-                this.props.handleEnter()
-                this.props.handleAddContainer()
+                this.props.handleEnter(e.key)
             }
         }
     }

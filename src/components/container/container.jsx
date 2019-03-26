@@ -99,7 +99,9 @@ export class Container extends Component {
         else if (option === "Edit") {
             this.setState({
                 ...this.state,
-                isEdit: true
+                isEdit: true,
+                name: this.props.container.name,
+                size: this.props.container.size,
             })
         }
     }
@@ -149,8 +151,8 @@ export class Container extends Component {
 
         const editContainer = (
             <EditContainer 
-                name={this.props.container.name}
-                size={this.props.container.size}
+                name={this.state.name}
+                size={this.state.size}
                 handleNameChange={this.handleEditContainerNameChange}
                 handleSizeChange={this.handleEditContainerSizeChange}
                 handleEnter={this.handleSaveEditContainer}
