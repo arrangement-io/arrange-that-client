@@ -37,6 +37,10 @@ class NavAppBar extends Component {
         this.props.history.push("/all_arrangements")
     }
 
+    goToFeedback = () => {
+        this.props.history.push("/feedback")
+    }
+
     createNewArrangement = () => {
         var d = new Date()
         const arrangement_id = uuid("arrangement")
@@ -103,6 +107,9 @@ class NavAppBar extends Component {
                     </Button>
                     <Button onClick={this.goToViewAllArrangements} color="inherit">
                         View All
+                    </Button>
+                    <Button onClick={this.goToFeedback} color="inherit">
+                        Feedback
                     </Button>
                     <Button onClick={this.logout} color="inherit">
                         Logout
