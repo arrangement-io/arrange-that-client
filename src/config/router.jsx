@@ -9,6 +9,7 @@ import Layout from 'layout'
 import HomePage from 'views/homePage/homePage'
 import Arrangement from 'views/arrangement/arrangement'
 import AllArrangements from 'views/allArrangements/allArrangements'
+import Feedback from 'views/feedback/feedback'
 
 const history = createHistory()
 
@@ -19,6 +20,7 @@ const router = (
                 <Route exact path='/' component={HomePage} />
                 <PrivateRoute exact path='/arrangement/:arrangement_id' component={Arrangement} />
                 <PrivateRoute exact path='/all_arrangements' component={AllArrangements} />
+                <PrivateRoute exact path='/feedback' component={Feedback} />
             </Switch>
         </Layout>
     </Router>
