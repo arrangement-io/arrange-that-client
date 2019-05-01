@@ -106,6 +106,15 @@ export class Container extends Component {
         }
     }
 
+    handleContainerDoubleClick = () => {
+        this.setState({
+            ...this.state,
+            isEdit: true,
+            editName: this.props.container.name,
+            editSize: this.props.container.size,
+        })
+    }
+
     render () {
         const { classes } = this.props
         const options = [
@@ -126,6 +135,7 @@ export class Container extends Component {
                                         <b>{this.props.container.name}</b>
                                     </Typography>
                                 }
+                                onDoubleClick={this.handleContainerDoubleClick}
                                 action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
                                 avatar={<OccupancyDisplay total={this.props.container.size} count={items.length} />}
                             />

@@ -51,6 +51,14 @@ export class Item extends Component {
         }
     }
 
+    handleItemDoubleClick = () => {
+        this.setState({
+            ...this.state,
+            isEdit: true,
+            name: this.props.item.name,
+        })
+    }
+
     handleEditItemSubmit = () => {
 
         this.props.renameItem({
@@ -110,6 +118,7 @@ export class Item extends Component {
                                         {this.props.item.name}
                                     </Typography>
                                 }
+                                onDoubleClick={this.handleItemDoubleClick}
                                 action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
                             />
                         </Card>
