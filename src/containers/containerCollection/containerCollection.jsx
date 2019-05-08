@@ -195,11 +195,13 @@ export class ContainerCollection extends Component {
 
     render () {
         const { classes } = this.props;
-
+        const totalSpaces = this.props.containers.reduce((total, container) => total + container.size, 0)
         return (
             <div>
                 <Card className={classes.card}>
                     <CardHeader className={classes.cardHeader} title="Spaces"/>
+                    <CardContent>Free space: {totalSpaces - (this.props.items.length - this.props.snapshot.unassigned.length)}/{totalSpaces}</CardContent>
+                    <CardContent>Total number of containers: {this.props.containers.length}</CardContent>
                     <CardContent className={classes.CardContent}>
                         <Grid container spacing={8}>
                             {
