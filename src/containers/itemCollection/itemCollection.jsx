@@ -194,6 +194,8 @@ export class ItemCollection extends Component {
                         >
                             <Card className={classes.card}>
                                 <CardHeader className={classes.cardHeader} title="People"/>
+                                <CardContent>Total number of people: {this.props.items.length}</CardContent>
+                                <CardContent>Total number of unassigned people: {this.props.unsnapshot_items.length}</CardContent>
                                 <CardContent className={classes.CardContent}>
                                     <Grid container spacing={0}>
                                         {
