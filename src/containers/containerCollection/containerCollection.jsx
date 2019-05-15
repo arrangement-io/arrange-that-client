@@ -193,15 +193,28 @@ export class ContainerCollection extends Component {
         });
     };
 
+    totalAvailableSpaces = (props) => {
+        return props.containers.reduce((total, container) => total + container.size, 0)
+    }
+
+    numberUsedSpaces = (props) => {
+        return props.items.length - props.snapshot.unassigned.length
+    }
+
     render () {
         const { classes } = this.props;
-        const totalSpaces = this.props.containers.reduce((total, container) => total + container.size, 0)
+        const totalAvailableSpaces = this.totalAvailableSpaces(this.props);
+        const numberUsedSpaces = this.numberUsedSpaces(this.props)
         return (
             <div>
                 <Card className={classes.card}>
                     <CardHeader className={classes.cardHeader} title="Spaces"/>
-                    <CardContent>Free space: {totalSpaces - (this.props.items.length - this.props.snapshot.unassigned.length)}/{totalSpaces}</CardContent>
-                    <CardContent>Total number of containers: {this.props.containers.length}</CardContent>
+                    <CardContent>
+                        <Grid container spacing={8}>
+                            <Grid item xs>Free space: {totalAvailableSpaces - numberUsedSpaces}/{totalAvailableSpaces}</Grid>
+                            <Grid item xs>Total number of containers: {this.props.containers.length}</Grid>
+                        </Grid>
+                    </CardContent>
                     <CardContent className={classes.CardContent}>
                         <Grid container spacing={8}>
                             {
