@@ -1,8 +1,8 @@
 import { USERS } from 'services/serviceTypes'
-import { get } from 'services/request'
+import { getAuthenticated } from 'services/request'
 
 export const getAllUsers = () => {
-    return get({url: USERS})
+    return getAuthenticated({url: USERS})
 }
 
 export default getAllUsers

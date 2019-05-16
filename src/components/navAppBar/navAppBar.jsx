@@ -12,7 +12,7 @@ import { setRealData } from 'actions/real/real'
 import { uuid } from 'utils'
 import config from 'config.json'
 import { withSnackbar } from 'notistack';
-
+import { isAuthenticated } from 'services/authService'
 
 const styles = {
     root: {
@@ -73,17 +73,21 @@ class NavAppBar extends Component {
     }
 
     googleResponse = (response) => {
+        console.log(response)
         const data = {
             access_token: response.accessToken,
             user_data: response.profileObj
         }
         post({
             url: '/login',
+            headers: {"Authorization": "Bearer " + response.tokenId},
             data: data
         })
             .then(res => {
                 const account = {
-                    user: response.profileObj, token: response.accessToken, isAuthenticated: true
+                    user: response.profileObj, 
+                    token: response.accessToken, 
+                    tokenId: response.tokenId
                 }
                 this.props.setAccount(account)
                 this.goToViewAllArrangements()
@@ -99,7 +103,7 @@ class NavAppBar extends Component {
         const classes = this.props.classes
         let buttons = null
 
-        if (this.props.account.isAuthenticated) {
+        if (isAuthenticated()) {
             buttons = (
                 <div>
                     <Button onClick={this.createNewArrangement} color="inherit">
@@ -126,6 +130,7 @@ class NavAppBar extends Component {
                         onSuccess={this.googleResponse}
                         onFailure={this.onFailure}
                         requestTokenUrl="https://www.googleapis.com/oauth2/v1/userinfo"
+                        accessType="offline"
                     />
                 </div>
             )

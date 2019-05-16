@@ -138,8 +138,8 @@ export class Arrange extends Component {
                     console.log("no arrangement found")
                 }
                 else {
-                    console.log(response.data.arrangement)
-                    this.props.setRealData(response.data.arrangement)
+                    console.log(response.data)
+                    this.props.setRealData(response.data)
                 }
                 Promise.resolve()
             })

@@ -1,18 +1,12 @@
-import { SET_ACCOUNT } from 'actions/actionTypes'
+import { SET_ACCOUNT, LOGOUT } from 'actions/actionTypes'
 import Cookies from 'universal-cookie'
+import { authenticate, logout, getUser, getAccessToken } from 'services/authService'
 
-const cookies = new Cookies();
 
-// TODO FIX!
-// Temporary fix so that we can stay authenticated
-const previousToken = cookies.get('token')
-const previousUser = cookies.get('user')
+const previousUser = getUser()
+const previousToken = getAccessToken()
 
 const initialState = {
-    isAuthenticated: (previousToken === "" 
-        || previousToken === undefined 
-        || previousUser === "" 
-        || previousUser === undefined) ? false : true,
     user: previousUser,
     token: previousToken
 }
@@ -20,9 +14,17 @@ const initialState = {
 const accountReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_ACCOUNT:
-            cookies.set('token', action.account.token, {path: '/'})
-            cookies.set('user', action.account.user, {path: '/'})
+            authenticate(
+                action.account.token, 
+                action.account.tokenId,
+                action.account.user);
             return action.account
+        case LOGOUT:
+            logout()
+            return {
+                user: "",
+                token: ""
+            }
         default:
             return state
     }

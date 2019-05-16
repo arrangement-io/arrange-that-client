@@ -1,5 +1,6 @@
 import {
-    SET_ACCOUNT
+    SET_ACCOUNT,
+    LOGOUT
 } from 'actions/actionTypes'
 
 export const setAccount = (account) => ({
@@ -8,10 +9,5 @@ export const setAccount = (account) => ({
 })
 
 export const logout = () => ({
-    type: SET_ACCOUNT,
-    account: {
-        isAuthenticated: false,
-        token: "",
-        user: ""
-    }
+    type: LOGOUT
 })
