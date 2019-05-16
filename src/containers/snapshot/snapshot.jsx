@@ -78,19 +78,21 @@ class Snapshot extends Component {
         const snap = this.getSnapshot(snapshotId)
         // make sure no undefined items in unassigned
         let clean_unassigned = snap.unassigned.filter(n => n)
+        // make sure all unassigned items exist
+        clean_unassigned = clean_unassigned.filter(n => this.props.real.items.find(i => i._id == n))
         // make a set of all items
         let unassigned_set = new Set(this.props.real.items.map(item => item._id))
         for (let container of snap.snapshotContainers) {
+            // delete items from unassigned if they are assigned to container
             container.items.map(item => unassigned_set.delete(item))
         }
-
         clean_unassigned.map(item => unassigned_set.delete(item)) // Removed the items that are already in unassigned.
         // Self healing. If there are missing unassigned items, add them back into unassigned.
         if (unassigned_set.size > 0) {
             console.log("there are some missing unassigned")
             Array.from(unassigned_set).map(item => clean_unassigned.push(item))
-            this.props.setUnassignedItems(snapshotId, clean_unassigned)
         }
+        this.props.setUnassignedItems(snapshotId, clean_unassigned)
     }
 
     healSnapshotContainers = (snapshotId) => {

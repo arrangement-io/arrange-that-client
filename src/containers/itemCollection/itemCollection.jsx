@@ -199,17 +199,23 @@ export class ItemCollection extends Component {
                                     <Grid container spacing={0}>
                                         {
                                             this.props.unsnapshot_items.map((id, index) => {
-                                                return (
-                                                    <Grid item xs = {12} key = {id}>
-                                                        <Item 
-                                                            item = {this.props.items.find(ele => ele._id === id)}
-                                                            deleteItem = {this.props.deleteItem} 
-                                                            index={index} 
-                                                            getDragItemColor={this.props.getDragItemColor} 
-                                                            containerId="itemcollection"
-                                                        />
-                                                    </Grid>
-                                                )
+                                                const item = this.props.items.find(ele => ele._id === id)
+                                                // Check for null items
+                                                if (item) {
+                                                    return (
+                                                        <Grid item xs = {12} key = {id}>
+                                                            <Item 
+                                                                item = {item}
+                                                                deleteItem = {this.props.deleteItem} 
+                                                                index={index} 
+                                                                getDragItemColor={this.props.getDragItemColor} 
+                                                                containerId="itemcollection"
+                                                            />
+                                                        </Grid>
+                                                    )
+                                                }
+                                                console.log("attempted to render null item")
+                                                return
                                             })
                                         }
                                         { this.displayEditItem() }
