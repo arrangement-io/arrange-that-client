@@ -82,7 +82,6 @@ class NavAppBar extends Component {
 
 
     googleResponse = (response) => {
-        console.log(response)
         const data = {
             access_token: response.accessToken,
             user_data: response.profileObj

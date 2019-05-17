@@ -7,7 +7,8 @@ import * as serviceWorker from './serviceWorker';
 
 
 function handleChange () {
-    console.log(store.getState())
+    // handle change
+    // console.log(store.getState())
 }
 
 store.subscribe(handleChange)
