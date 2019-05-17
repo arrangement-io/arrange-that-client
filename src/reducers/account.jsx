@@ -1,5 +1,4 @@
 import { SET_ACCOUNT, LOGOUT } from 'actions/actionTypes'
-import Cookies from 'universal-cookie'
 import { authenticate, logout, getUser, getAccessToken } from 'services/authService'
 
 

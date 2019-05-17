@@ -30,7 +30,14 @@ const styles = {
 class NavAppBar extends Component {
     logout = () => {
         this.props.logout()
-        this.props.history.push("/")
+    }
+
+    navigateHomeIfLoggedOut = () => {
+        if (!isAuthenticated() && this.props.history.location.pathname !== "/") {
+            // If not on root page, go to root page
+            this.props.history.push("/");
+            this.props.enqueueSnackbar('Logged Out');
+        }
     }
 
     goToViewAllArrangements = () => {
@@ -72,6 +79,8 @@ class NavAppBar extends Component {
         this.props.enqueueSnackbar('Could not login')
     }
 
+
+
     googleResponse = (response) => {
         console.log(response)
         const data = {
@@ -102,6 +111,8 @@ class NavAppBar extends Component {
     render () {
         const classes = this.props.classes
         let buttons = null
+
+        this.navigateHomeIfLoggedOut();
 
         if (isAuthenticated()) {
             buttons = (
