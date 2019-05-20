@@ -11,6 +11,7 @@ export const SNAPSHOT_DELETE = "SNAPSHOT_DELETE"
 export const SNAPSHOT_RENAME = "SNAPSHOT_RENAME"
 
 export const SET_ACCOUNT = "SET_ACCOUNT"
+export const LOGOUT = "LOGOUT"
 
 export const SET_USERS = "SET_USERS"
 

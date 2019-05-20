@@ -1,13 +1,39 @@
 import Cookies from 'universal-cookie'
 
-export const isLoggedIn = () => {
+const ACCESS_TOKEN = 'accessToken'
+const TOKEN_ID = "tokenId"
+const USER = "user"
+
+export const getAccessToken = () => {
     const cookies = new Cookies();
-    // TODO FIX!
-    // Temporary fix so that we can stay authenticated
-    const previousToken = cookies.get('token')
-    const previousUser = cookies.get('user')
+    return cookies.get(ACCESS_TOKEN)
+}
 
-    return (previousToken === "" || previousUser === "" || previousToken === undefined || previousUser === undefined) ? false : true
-};
+export const getBearer = () => {
+    const cookies = new Cookies();
+    return cookies.get(TOKEN_ID);
+}
 
-export default isLoggedIn
+export const getUser = () => {
+    const cookies = new Cookies();
+    return cookies.get(USER);
+}
+
+export const isAuthenticated = () => !!getAccessToken()
+
+export const authenticate = (accessToken, tokenId, user) => {
+    const cookies = new Cookies();      
+    cookies.set(ACCESS_TOKEN, accessToken, {path: '/'})
+    cookies.set(TOKEN_ID, tokenId, {path: '/'})
+    cookies.set(USER, user, {path: '/'})
+    return true
+}
+
+export const logout = () => {
+    const cookies = new Cookies();
+    cookies.remove(ACCESS_TOKEN)
+    cookies.remove(TOKEN_ID)
+    cookies.remove(USER)
+}
+
+export default isAuthenticated

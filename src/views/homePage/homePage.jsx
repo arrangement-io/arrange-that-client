@@ -5,6 +5,8 @@ import Background from 'static/space.jpg'
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+import isAuthenticated from 'services/authService'
+
 var style = {
     height: `100vh`,
     backgroundImage: `url(${Background})`,
@@ -23,7 +25,7 @@ class HomePage extends Component {
     }
 
     componentDidMount () {
-        if (this.props.account.isAuthenticated) {
+        if (isAuthenticated()) {
             this.setState({loading: true})
             setTimeout(function() {
                 this.props.history.push("/all_arrangements")

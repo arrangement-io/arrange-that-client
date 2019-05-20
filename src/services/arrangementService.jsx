@@ -1,5 +1,5 @@
-import { ARRANGEMENT, ARRANGEMENTS, EXPORT_ARRANGEMENT } from 'services/serviceTypes'
-import { get, post } from 'services/request'
+import { ARRANGEMENT, ARRANGEMENTS, EXPORT_ARRANGEMENT, USERS } from 'services/serviceTypes'
+import { postAuthenticated, getAuthenticated } from 'services/request'
 import * as ArrangementSchema from 'schema/arrangementSchema.json'
 import * as Ajv from 'ajv'
 
@@ -7,15 +7,17 @@ let ajv = new Ajv()
 const arrangementValidation = ajv.compile(ArrangementSchema)
 
 export const getArrangement = (arrangementId) => {
-    return get({url: ARRANGEMENT + "/" + arrangementId})
+    return getAuthenticated({
+        url: ARRANGEMENT + "/" + arrangementId
+    })
 }
 
 export const updateArrangement = (arrangement) => {
     // Test arrangement based on json validation
     let valid = arrangementValidation(arrangement)
     if (valid) {
-        return post({
-            url: EXPORT_ARRANGEMENT,
+        return postAuthenticated({
+            url: ARRANGEMENT + "/" + arrangement._id,
             data: arrangement
         })
     }
@@ -23,7 +25,15 @@ export const updateArrangement = (arrangement) => {
 }
 
 export const getAllArrangements = (googleId) => {
-    return get({url: ARRANGEMENTS + "/" + googleId});
+    return getAuthenticated({
+        url: USERS + "/" + googleId + ARRANGEMENTS,
+    });
+}
+
+export const getExportArrangement = (arrangement, type) => {
+    return getAuthenticated({
+        url: `${ARRANGEMENT}/${arrangement._id}/export/${type}`
+    })
 }
 
 export default getArrangement;

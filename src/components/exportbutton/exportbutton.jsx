@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button, Modal, TextField, List, ListItem, ListItemText} from '@material-ui/core'
 import { get } from 'services/request'
 import { setTSVExport } from 'actions/exportData/exportData'
-import { EXPORT_ARRANGEMENT } from 'services/serviceTypes'
+import { getExportArrangement } from 'services/arrangementService'
 
 const styles = theme => ({
     paper: {
@@ -31,9 +31,7 @@ class SimpleModal extends React.Component {
     }
 
     exportToTSV() {
-        get({
-            url: `${EXPORT_ARRANGEMENT}/${this.props.real._id}/tsv`
-        })
+        getExportArrangement(this.props.real, "tsv")
             .then(response => {
                 this.props.setTSVExport(response.data);
                 this.setState({
