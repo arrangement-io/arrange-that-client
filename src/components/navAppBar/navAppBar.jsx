@@ -12,7 +12,7 @@ import { setRealData } from 'actions/real/real'
 import { uuid } from 'utils'
 import config from 'config.json'
 import { withSnackbar } from 'notistack';
-
+import { isAuthenticated } from 'services/authService'
 
 const styles = {
     root: {
@@ -30,7 +30,14 @@ const styles = {
 class NavAppBar extends Component {
     logout = () => {
         this.props.logout()
-        this.props.history.push("/")
+    }
+
+    navigateHomeIfLoggedOut = () => {
+        if (!isAuthenticated() && this.props.history.location.pathname !== "/") {
+            // If not on root page, go to root page
+            this.props.history.push("/");
+            this.props.enqueueSnackbar('Logged Out');
+        }
     }
 
     goToViewAllArrangements = () => {
@@ -72,6 +79,8 @@ class NavAppBar extends Component {
         this.props.enqueueSnackbar('Could not login')
     }
 
+
+
     googleResponse = (response) => {
         const data = {
             access_token: response.accessToken,
@@ -79,11 +88,14 @@ class NavAppBar extends Component {
         }
         post({
             url: '/login',
+            headers: {"Authorization": "Bearer " + response.tokenId},
             data: data
         })
             .then(res => {
                 const account = {
-                    user: response.profileObj, token: response.accessToken, isAuthenticated: true
+                    user: response.profileObj, 
+                    token: response.accessToken, 
+                    tokenId: response.tokenId
                 }
                 this.props.setAccount(account)
                 this.goToViewAllArrangements()
@@ -99,7 +111,9 @@ class NavAppBar extends Component {
         const classes = this.props.classes
         let buttons = null
 
-        if (this.props.account.isAuthenticated) {
+        this.navigateHomeIfLoggedOut();
+
+        if (isAuthenticated()) {
             buttons = (
                 <div>
                     <Button onClick={this.createNewArrangement} color="inherit">
@@ -126,6 +140,7 @@ class NavAppBar extends Component {
                         onSuccess={this.googleResponse}
                         onFailure={this.onFailure}
                         requestTokenUrl="https://www.googleapis.com/oauth2/v1/userinfo"
+                        accessType="offline"
                     />
                 </div>
             )

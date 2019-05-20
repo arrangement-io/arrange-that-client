@@ -4,13 +4,13 @@
 // If they are: they proceed to the page
 // If not: they are redirected to the login page.
 import React from 'react'
-import isLoggedIn from 'services/authService'
+import isAuthenticated from 'services/authService'
 import { Redirect, Route } from 'react-router-dom'
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
 
     // Add your own authentication on the below line.
-    const loggedIn = isLoggedIn()
+    const loggedIn = isAuthenticated()
 
     return (
         <Route

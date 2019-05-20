@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getBearer } from 'services/authService'
 
 import { base_url } from './serviceTypes';
 
@@ -39,12 +40,33 @@ export const del = (opts) => {
     });
 };
 
+export const getAuthenticated = (opts) => {
+    return request({
+        ...defaultOpts,
+        ...opts,
+        method: 'GET',
+        headers: {"Authorization": "Bearer " + getBearer()}
+    })
+}
+
+export const postAuthenticated = (opts) => {
+    return request({
+        ...defaultOpts,
+        ...opts,
+        method: 'POST',
+        headers: {"Authorization": "Bearer " + getBearer()}
+    })
+}
+
 const request = (opts) => {
-    return axios({
+    const payload = {
         ...opts,
         url: base_url() + opts.url
-    })
-        .then(response => Promise.resolve(response))
+    }
+    return axios(payload)
+        .then(response => {
+            return Promise.resolve(response)
+        })
         .catch(err => {
             if (err && err.response) {
                 return Promise.reject(err.response);
