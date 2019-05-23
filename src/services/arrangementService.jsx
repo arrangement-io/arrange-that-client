@@ -1,4 +1,4 @@
-import { ARRANGEMENT, ARRANGEMENTS, EXPORT_ARRANGEMENT, USERS } from 'services/serviceTypes'
+import { ARRANGEMENT, ARRANGEMENTS, USERS } from 'services/serviceTypes'
 import { postAuthenticated, getAuthenticated } from 'services/request'
 import * as ArrangementSchema from 'schema/arrangementSchema.json'
 import * as Ajv from 'ajv'
