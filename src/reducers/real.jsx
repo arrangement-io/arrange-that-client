@@ -1,3 +1,5 @@
+import cloneDeep from 'lodash/cloneDeep';
+
 import {
     ITEM_ADD,
     ITEM_DELETE,
@@ -39,7 +41,6 @@ function exportState (real) {
     // Test arrangement based on json validation
     updateArrangement(arrangement)
         .then(response => {
-            console.log(response.data)
             Promise.resolve()
         })
         .catch(err => {
@@ -61,7 +62,7 @@ const realReducer = (state = initialState, action) => {
             }
 
             // Add item to all snapshot unassigned
-            for (let snapshot of addItemState.snapshots) {
+            for (const snapshot of addItemState.snapshots) {
                 snapshot.unassigned.push(action.item._id)
             }
             exportState(addItemState)
@@ -69,21 +70,19 @@ const realReducer = (state = initialState, action) => {
         }
                 
         case ITEM_DELETE: {
-            const deleteItemState = {
-                ...state
-            }
+            const deleteItemState = cloneDeep(state);
 
             // Remove item from global items list
             deleteItemState.items = deleteItemState.items.filter(ele => ele._id !== action.id)
 
             // Remove item from all snapshots
-            for (let snapshot of deleteItemState.snapshots) {
-            // Remove item from all containers in snapshot
-                for (let container of snapshot.snapshotContainers) {
-                    container = container.items.filter(ele => ele !== action.id)
+            for (const snapshotItemDelete of deleteItemState.snapshots) {
+                // Remove item from all containers in snapshot
+                for (const containerItemDelete of snapshotItemDelete.snapshotContainers) {
+                    containerItemDelete.items = containerItemDelete.items.filter(ele => ele !== action.id);
                 }
                 // Remove item from unassigned in snapshot
-                snapshot.unassigned = snapshot.unassigned.filter(ele => ele !== action.id)
+                snapshotItemDelete.unassigned = snapshotItemDelete.unassigned.filter(ele => ele !== action.id);
             }
             exportState(deleteItemState)
             return deleteItemState
@@ -156,7 +155,7 @@ const realReducer = (state = initialState, action) => {
 
         case SET_REAL_DATA: {
             exportState(action.data)
-            return action.data
+            return cloneDeep(action.data)
         }
         
 

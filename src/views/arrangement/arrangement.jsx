@@ -130,7 +130,7 @@ export class Arrange extends Component {
     }
 
     // Loads the state from the backend given the arrangement_id in the url param
-    loadState () {
+    loadState = () => {
         const id = this.props.match.params.arrangement_id
         return getArrangement(id)
             .then(response => {

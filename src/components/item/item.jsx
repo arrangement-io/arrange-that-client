@@ -9,10 +9,12 @@ import MoreMenu from 'components/moremenu/moremenu'
 import { Draggable } from 'react-beautiful-dnd'
 import { withStyles } from '@material-ui/core/styles'
 
-import { renameItem } from 'actions/item/item'
+import { renameItem, deleteItem } from 'actions/item/item'
 
-import { getItemStyle } from 'utils'
 import EditItem from 'components/editItem/editItem'
+
+const EDIT = 'Edit'
+const DELETE_FROM_ALL_SNAPSHOTS = 'Delete from all snapshots'
 
 const styles = theme => ({
     card: {
@@ -39,10 +41,10 @@ export class Item extends Component {
     }
 
     handleItemClick = option => {
-        if (option === 'Delete from all snapshots') {
+        if (option === DELETE_FROM_ALL_SNAPSHOTS) {
             this.props.deleteItem(this.props.item._id)
         }
-        else if (option === 'Edit') {
+        else if (option === EDIT) {
             this.setState({
                 ...this.state,
                 isEdit: true,
@@ -89,8 +91,8 @@ export class Item extends Component {
         const { classes } = this.props;
 
         const options = [
-            'Edit',
-            'Delete from all snapshots'
+            EDIT,
+            DELETE_FROM_ALL_SNAPSHOTS
         ]
         
         const item = (
@@ -104,11 +106,6 @@ export class Item extends Component {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        style={getItemStyle(
-                            snapshot.isDragging,
-                            provided.draggableProps.style,
-                            this.props.getDragItemColor(this.props.containerId, snapshot.draggingOver)
-                        )}
                     >
                         <Card className={classes.card} raised={snapshot.isDragging}>
                             <CardHeader
@@ -152,7 +149,6 @@ Item.propTypes = {
         name: PropTypes.string,
         size: PropTypes.number
     }),
-    deleteItem: PropTypes.func,
     getDragItemColor: PropTypes.func,
     containerId: PropTypes.string
 }
@@ -170,6 +166,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         renameItem: (item) => {
             dispatch(renameItem(item))
+        },
+        deleteItem: (item) => {
+            dispatch(deleteItem(item))
         }
     }
 }

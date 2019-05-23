@@ -8,7 +8,7 @@ import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Button } 
 import Item from 'components/item/item'
 import EditItem from 'components/editItem/editItem'
 
-import { addItem, deleteItem } from 'actions/item/item'
+import { addItem } from 'actions/item/item'
 
 import { Droppable } from 'react-beautiful-dnd'
 import { withStyles } from '@material-ui/core/styles'
@@ -206,7 +206,6 @@ export class ItemCollection extends Component {
                                                         <Grid item xs = {12} key = {id}>
                                                             <Item 
                                                                 item = {item}
-                                                                deleteItem = {this.props.deleteItem} 
                                                                 index={index} 
                                                                 getDragItemColor={this.props.getDragItemColor} 
                                                                 containerId="itemcollection"
@@ -261,9 +260,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         addItem: (item) => {
             dispatch(addItem(item))
-        },
-        deleteItem: (id) => {
-            dispatch(deleteItem(id))
         }
     }
 }
