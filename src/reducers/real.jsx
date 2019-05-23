@@ -165,6 +165,7 @@ const realReducer = (state = initialState, action) => {
             }
             const index = getSnapshotIndex(setUnassignedState, action.snapshotId)
             setUnassignedState.snapshots[index].unassigned = action.unassigned
+            console.log(setUnassignedState)
             
             exportState(setUnassignedState)
             return setUnassignedState

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { Grid, Typography } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import ItemCollection from 'containers/itemCollection/itemCollection'
 import ContainerCollection from 'containers/containerCollection/containerCollection'
 import { DragDropContext } from 'react-beautiful-dnd'
@@ -79,7 +79,7 @@ class Snapshot extends Component {
         // make sure no undefined items in unassigned
         let clean_unassigned = snap.unassigned.filter(n => n)
         // make sure all unassigned items exist
-        clean_unassigned = clean_unassigned.filter(n => this.props.real.items.includes(n))
+        clean_unassigned = clean_unassigned.filter(n => this.props.real.items.find(i => i._id === n))
         // make a set of all items
         let unassigned_set = new Set(this.props.real.items.map(item => item._id))
         for (let container of snap.snapshotContainers) {
@@ -104,7 +104,7 @@ class Snapshot extends Component {
         }
         // Delete items in snapshot that are no longer in items
         for (let container of snap.snapshotContainers) {
-            container.items = container.items.filter(n => this.props.real.items.includes(n))
+            container.items = container.items.filter(n => this.props.real.items.find(i => i._id === n))
         }
         this.props.setRealData(this.props.real);
     }
