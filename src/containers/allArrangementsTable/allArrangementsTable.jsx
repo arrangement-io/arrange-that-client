@@ -1,18 +1,31 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
+import cloneDeep from 'lodash/cloneDeep';
 
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 import { withSnackbar } from 'notistack';
 import Timestamp from 'react-timestamp'
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
 
-import { updateArrangement } from 'services/arrangementService'
+import { updateArrangement, getAllArrangements } from 'services/arrangementService'
 import { setArrangements } from 'actions/arrangements/arrangements'
+import { uuid } from 'utils'
 
 class AllArrangementsTable extends Component {
-    constructor(props) {
-        super(props);
+    loadArrangements = () => {
+        return getAllArrangements(this.props.account.user.googleId)
+            .then(response => {
+                this.props.setArrangements(response.data)
+                Promise.resolve()
+            })
+            .catch(err => {
+                console.log(err)
+                Promise.reject(err)
+            })
     }
 
     handleCellClick (id) {
@@ -21,7 +34,6 @@ class AllArrangementsTable extends Component {
         }
     }
 
-    // Figure out why it doesn't rerender
     handleDeleteArrangement = (arrangement) => {
         return () => {
             const deletedArrangement = {
@@ -30,9 +42,33 @@ class AllArrangementsTable extends Component {
             }
             updateArrangement(deletedArrangement)
                 .then(response => {
-                    console.log("deleted arrangement")
-                    this.props.setArrangements(this.props.arrangements.filter(a => a._id !== deletedArrangement._id))
                     this.props.enqueueSnackbar('Deleted Arrangement')
+                    this.loadArrangements()
+                    Promise.resolve()
+                })
+                .catch(err => {
+                    Promise.reject(err)
+                })
+        }
+    }
+
+    handleCopyArrangement = (arrangement) => {
+        var d = new Date();
+
+        return () => {
+            const clonedArrangement = {
+                ...cloneDeep(arrangement),
+                _id: uuid("arrangement"),
+                users: [this.props.account.user.googleId],
+                owner: this.props.account.user.googleId,
+                name: arrangement.name + " copy",
+                timestamp: d.getTime() / 1000,
+                modified_timestamp: d.getTime() / 1000
+            }
+            updateArrangement(clonedArrangement)
+                .then(response => {
+                    this.props.enqueueSnackbar('Copied Arrangement')
+                    this.loadArrangements()
                     Promise.resolve()
                 })
                 .catch(err => {
@@ -49,6 +85,10 @@ class AllArrangementsTable extends Component {
         return id
     }
 
+    componentDidMount () {
+        this.loadArrangements()
+    }
+
     render () {
         return (
             <Table>
@@ -57,6 +97,7 @@ class AllArrangementsTable extends Component {
                         <TableCell>Arrangement Name</TableCell>
                         <TableCell align="right">Owner</TableCell>
                         <TableCell align="right">Last Modified</TableCell>
+                        <TableCell align="right"></TableCell>
                         <TableCell align="right"></TableCell>
                     </TableRow>
                 </TableHead>
@@ -68,7 +109,20 @@ class AllArrangementsTable extends Component {
                             </TableCell>
                             <TableCell align="right">{this.getNameFromGoogleId(row.owner)}</TableCell>
                             <TableCell align="right"><Timestamp time={row.modified_timestamp} format="full" /></TableCell>
-                            <TableCell align="right"><DeleteIcon onClick={this.handleDeleteArrangement(row)}/></TableCell>
+                            <TableCell align="right">
+                                <Tooltip title="Delete">
+                                    <IconButton onClick={this.handleDeleteArrangement(row)}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </TableCell>
+                            <TableCell align="right">
+                                <Tooltip title="Copy">
+                                    <IconButton onClick={this.handleCopyArrangement(row)}>
+                                        <FileCopyIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
@@ -80,11 +134,13 @@ class AllArrangementsTable extends Component {
 const mapStateToProps = (state, ownProps) => {
     const {
         arrangements,
-        users
+        users,
+        account
     } = state
     return {
         arrangements,
-        users
+        users,
+        account
     }
 }
   
