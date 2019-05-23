@@ -19,7 +19,7 @@ class AllArrangementsTable extends Component {
     loadArrangements = () => {
         return getAllArrangements(this.props.account.user.googleId)
             .then(response => {
-                this.props.setArrangements(response.data.arrangements)
+                this.props.setArrangements(response.data)
                 Promise.resolve()
             })
             .catch(err => {

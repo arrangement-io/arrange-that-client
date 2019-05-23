@@ -8,18 +8,6 @@ import { setUsers } from 'actions/users/users'
 import AllArrangementsTable from 'containers/allArrangementsTable/allArrangementsTable'
 
 class AllArrangements extends Component {
-    loadArrangements () {
-        return getAllArrangements(this.props.account.user.googleId)
-            .then(response => {
-                this.props.setArrangements(response.data)
-                Promise.resolve()
-            })
-            .catch(err => {
-                console.log(err)
-                Promise.reject(err)
-            })
-    }
-
     loadUsers = () => {
         return getAllUsers()
             .then(response => {
