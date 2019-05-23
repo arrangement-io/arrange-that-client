@@ -79,7 +79,7 @@ class Snapshot extends Component {
         // make sure no undefined items in unassigned
         let clean_unassigned = snap.unassigned.filter(n => n)
         // make sure all unassigned items exist
-        clean_unassigned = clean_unassigned.filter(n => this.props.real.items.find(i => i._id == n))
+        clean_unassigned = clean_unassigned.filter(n => this.props.real.items.includes(n))
         // make a set of all items
         let unassigned_set = new Set(this.props.real.items.map(item => item._id))
         for (let container of snap.snapshotContainers) {
@@ -101,8 +101,12 @@ class Snapshot extends Component {
         let cleanSnapshotContainers = snap.snapshotContainers.filter(n => n)
         if (cleanSnapshotContainers.length !== snap.snapshotContainers.length) {
             snap.snapshotContainers = cleanSnapshotContainers
-            this.props.setRealData(this.props.real)
         }
+        // Delete items in snapshot that are no longer in items
+        for (let container of snap.snapshotContainers) {
+            container.items = container.items.filter(n => this.props.real.items.includes(n))
+        }
+        this.props.setRealData(this.props.real);
     }
 
     getSnapshot = (snapshotId) => {

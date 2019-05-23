@@ -13,6 +13,9 @@ import { withStyles } from '@material-ui/core/styles'
 import { getSnapshotContainer } from 'utils'
 import { Droppable } from 'react-beautiful-dnd'
 
+const EDIT = "Edit"
+const DELETE_FROM_ALL_SNAPSHOTS = "Delete from all snapshots"
+
 const styles = theme => ({
     card: {
         background:"#fcfcfc"
@@ -87,16 +90,20 @@ export class Container extends Component {
     getItems = (items, containerId) => {
         const itemsInContainer = []
         for (let itemId of this.getItemIds(containerId)) {
-            itemsInContainer.push(items.find(ele => ele._id === itemId))
+            const item = items.find(ele => ele._id === itemId)
+            // Check if item exists
+            if (item) {
+                itemsInContainer.push(item)
+            }
         }
         return itemsInContainer
     }
 
     handleItemClick = option => {
-        if (option === 'Delete from all snapshots') {
+        if (option === DELETE_FROM_ALL_SNAPSHOTS) {
             this.props.deleteContainer(this.props.container._id)
         }
-        else if (option === "Edit") {
+        else if (option === EDIT) {
             this.setState({
                 ...this.state,
                 isEdit: true,
@@ -118,8 +125,8 @@ export class Container extends Component {
     render () {
         const { classes } = this.props
         const options = [
-            'Edit',
-            'Delete from all snapshots'
+            EDIT,
+            DELETE_FROM_ALL_SNAPSHOTS
         ]
         const items = this.getItems(this.props.items, this.props.container._id)
 
@@ -145,7 +152,11 @@ export class Container extends Component {
                                         if (typeof item !== 'undefined')
                                             return (
                                                 <Grid item xs={12} key={item._id}>
-                                                    <Item item={item} deleteItem = {this.props.deleteItem} index={index} getDragItemColor={this.props.getDragItemColor} containerId={this.props.container._id} />
+                                                    <Item 
+                                                        item={item} 
+                                                        index={index} 
+                                                        getDragItemColor={this.props.getDragItemColor} 
+                                                        containerId={this.props.container._id} />
                                                 </Grid>
                                             )
                                         return {}
@@ -194,7 +205,6 @@ Container.propTypes = {
         name: PropTypes.string,
         size: PropTypes.number
     }),
-    deleteItem: PropTypes.func,
     deleteContainer: PropTypes.func,
     getDragItemColor: PropTypes.func
 }

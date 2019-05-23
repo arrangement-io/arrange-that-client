@@ -11,7 +11,6 @@ import EditContainer from 'components/editContainer/editContainer'
 
 import { addContainer, deleteContainer } from 'actions/container/container'
 
-import { deleteItem } from 'actions/item/item'
 import { withStyles } from '@material-ui/core/styles'
 
 import { uuid, validateName, checkDuplicate } from 'utils'
@@ -225,7 +224,6 @@ export class ContainerCollection extends Component {
                                                 container={container}
                                                 snapshot={this.props.snapshot} 
                                                 items={this.props.items} 
-                                                deleteItem={this.props.deleteItem} 
                                                 deleteContainer={this.props.deleteContainer}
                                                 getDragItemColor={this.props.getDragItemColor}
                                             />
@@ -281,9 +279,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         addContainer: (container) => {
             dispatch(addContainer(container))
-        },
-        deleteItem: (id) => {
-            dispatch(deleteItem(id))
         },
         deleteContainer: (id) => {
             dispatch(deleteContainer(id))
