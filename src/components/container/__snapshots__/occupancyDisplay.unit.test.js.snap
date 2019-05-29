@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Shows default occupancy display 1`] = `
+<div>
+  <div
+    class="MuiChip-root-3 OccupancyDisplay-chip-2"
+    role="button"
+    tabindex="-1"
+  >
+    <span
+      class="MuiChip-label-22"
+    >
+      7/8
+    </span>
+  </div>
+</div>
+`;
+
+exports[`Shows over occupancy display 1`] = `
+<div>
+  <div
+    class="MuiChip-root-3 MuiChip-colorSecondary-5 OccupancyDisplay-chip-2"
+    role="button"
+    tabindex="-1"
+    title="Over the size limit"
+  >
+    <span
+      class="MuiChip-label-22"
+    >
+      <svg
+        aria-hidden="true"
+        class="MuiSvgIcon-root-35"
+        focusable="false"
+        role="presentation"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M0 0h24v24H0z"
+          fill="none"
+        />
+        <path
+          d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;
