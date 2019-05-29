@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Typography, TextField } from '@material-ui/core'
 
 const ESC_KEY = 27
+const ENTER = 'Enter'
 
 export class EditArrangementTitle extends Component {
     constructor (props) {
@@ -23,7 +24,7 @@ export class EditArrangementTitle extends Component {
     };
     
     handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
+        if (event.key === ENTER) {
             this.setState({
                 name: this.state.name
             });

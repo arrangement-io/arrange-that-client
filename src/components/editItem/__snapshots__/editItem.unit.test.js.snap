@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditItem renders 1`] = `
+<div>
+  <div
+    class="MuiPaper-root-4 MuiPaper-elevation1-7 MuiPaper-rounded-5 MuiCard-root-3 EditItem-card-1"
+  >
+    <div
+      class="MuiCardHeader-root-31 EditItem-cardHeader-2"
+    >
+      <div
+        class="MuiCardHeader-content-34"
+      >
+        <h1
+          class="MuiTypography-root-37 MuiTypography-headline-42 MuiTypography-alignCenter-51"
+        >
+          <div
+            class="MuiFormControl-root-63"
+          >
+            <div
+              class="MuiInputBase-root-80 MuiInput-root-67 MuiInput-underline-71 MuiInputBase-formControl-81 MuiInput-formControl-68"
+            >
+              <input
+                aria-invalid="false"
+                autofocus=""
+                class="MuiInputBase-input-90 MuiInput-input-75"
+                placeholder="Name"
+                type="text"
+                value="person"
+              />
+            </div>
+          </div>
+        </h1>
+      </div>
+    </div>
+  </div>
+</div>
+`;
