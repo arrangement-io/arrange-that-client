@@ -97,7 +97,6 @@ export class EditContainer extends Component {
                                     value={this.props.size > 0 ? this.props.size : ""}
                                     autoFocus={focusSize}
                                     placeholder="Size"
-                                    defaultValue={this.props.size > 0 ? this.props.size : ""}
                                 />
                             </Typography>
                         }
@@ -110,7 +109,6 @@ export class EditContainer extends Component {
                                     onChange={this.props.handleNameChange}
                                     value={this.props.name}
                                     placeholder="Name"
-                                    defaultValue={this.props.name}
                                     autoFocus={!focusSize}
                                 />
                             </Typography>

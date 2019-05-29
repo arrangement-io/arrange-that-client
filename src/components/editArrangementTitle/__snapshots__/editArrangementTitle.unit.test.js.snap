@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditArrangementTitle renders 1`] = `
+<h1
+  class="MuiTypography-root-1 MuiTypography-headline-6 MuiTypography-alignLeft-14"
+>
+  <div
+    class="MuiFormControl-root-27 MuiFormControl-marginNormal-28"
+  >
+    <label
+      class="MuiFormLabel-root-38 MuiFormLabel-filled-42 MuiInputLabel-root-31 MuiInputLabel-formControl-32 MuiInputLabel-animated-35 MuiInputLabel-shrink-34 MuiInputLabel-outlined-37"
+      data-shrink="true"
+      for="outlined-name"
+    >
+      Arrangement Name
+    </label>
+    <div
+      class="MuiInputBase-root-58 MuiOutlinedInput-root-45 MuiInputBase-formControl-59"
+    >
+      <fieldset
+        aria-hidden="true"
+        class="MuiNotchedOutline-root-75 MuiOutlinedInput-notchedOutline-52"
+        style="padding-left:8px"
+      >
+        <legend
+          class="MuiNotchedOutline-legend-76"
+          style="width:0"
+        />
+      </fieldset>
+      <input
+        aria-invalid="false"
+        autofocus=""
+        class="MuiInputBase-input-68 MuiOutlinedInput-input-53"
+        id="outlined-name"
+        type="text"
+        value="First arrangement"
+      />
+    </div>
+  </div>
+</h1>
+`;

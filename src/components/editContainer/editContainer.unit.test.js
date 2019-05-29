@@ -7,8 +7,7 @@ import EditContainer from './editContainer';
 
 Enzyme.configure({adapter: new Adapter()});
 
-it('NavAppBar is consistent', () => {
-    // Render a NavAppBar
+it('EditContainer renders', () => {
     const editContainer = render(<EditContainer 
         name='van'
         size={8}

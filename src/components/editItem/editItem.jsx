@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles'
 
 const ENTER_KEY = 'Enter';
 const ESC_KEY = 27;
-const TAB_KEY = 9;
+const KEYDOWN = 'keydown';
 
 const styles = theme => ({
     card: {
@@ -31,31 +31,26 @@ export class EditItem extends Component {
     handleKeyPress = (event) => {
         switch (event.key) {
             case ENTER_KEY:
-                this.props.handleEnter(event.key)
+                this.props.handleEnter(event.key);
                 break;
-            //TODO add handler for tab key
-            // case 'Tab':
-            //     this.props.handleEnter(event.key)
-            //     break;
             default:
                 break;
         }
     }
 
     handlePasteText = (e) => {
-        var pastedText = e.clipboardData.getData('Text')
-        this.props.handlePaste(pastedText)
+        var pastedText = e.clipboardData.getData('Text');
+        this.props.handlePaste(pastedText);
     }
 
     escFunction = (event) => {
         if(event.keyCode === ESC_KEY) {
-            this.props.handleEsc()
+            this.props.handleEsc();
         }
     }
 
     componentDidMount(){
-        // TODO Add event listener for tab key in order to do the tab thing
-        document.addEventListener("keydown", this.escFunction, false);
+        document.addEventListener(KEYDOWN, this.escFunction, false);
     }
 
     componentWillUnmount(){
@@ -78,7 +73,6 @@ export class EditItem extends Component {
                                     onChange={this.props.handleChange}
                                     onBlur={() => this.props.handleEnter(null)}
                                     onPaste={this.handlePasteText}
-                                    defaultValue={this.props.name}
                                     value={this.props.name}
                                     placeholder="Name"
                                 />
