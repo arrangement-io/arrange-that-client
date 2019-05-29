@@ -3,8 +3,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep';
 
-import { Grid, Typography } from '@material-ui/core'
+import { Grid, Typography, List } from '@material-ui/core'
 import Snapshot from 'containers/snapshot/snapshot'
+import ListView from 'containers/listView'
 
 import EditArrangementTitle from 'components/editArrangementTitle/editArrangementTitle'
 import ExportButton from 'components/exportbutton/exportbutton'
@@ -27,7 +28,7 @@ export class Arrange extends Component {
             activeTab: 0,
             isEdit: false,
             name: this.props.real.name,
-            isListView: false
+            isListView: true
         };
     }
 
@@ -201,7 +202,7 @@ export class Arrange extends Component {
                                     onClone={this.cloneSnapshot}
                                     onSave={this.props.snapshotRename} /> }>
                                 {this.state.isListView ? (
-                                    null 
+                                    <ListView snapshotId={snapshot._id} />
                                 ) : (
                                     <Snapshot snapshotId={snapshot._id} />
                                 )}

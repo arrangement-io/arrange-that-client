@@ -89,17 +89,9 @@ const realReducer = (state = initialState, action) => {
         }
 
         case ITEM_RENAME: {
-            let items = state.items
-            let item = items.find(ele => ele._id === action.item._id)
+            const resultItemRename = cloneDeep(state);
+            const item = resultItemRename.items.find(ele => ele._id === action.item._id)
             item.name = action.item.name
-            items = items.filter(ele => ele._id !== action.item._id)
-            const resultItemRename = {
-                ...state,
-                items: [
-                    ...items,
-                    item
-                ]
-            }
             exportState(resultItemRename)
             return resultItemRename
         }
