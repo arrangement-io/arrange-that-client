@@ -3,6 +3,11 @@ import PropTypes from 'prop-types'
 import { Typography, TextField, Card, CardHeader } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 
+const ENTER = "Enter";
+const KEYDOWN = "keydown"
+const MOUSEDOWN = "mousedown"
+const ESCAPE = 27
+
 const styles = theme => ({
     sizeField: {
         width: 40
@@ -21,7 +26,7 @@ export class EditContainer extends Component {
     }
 
     handleNameKeyPress = (e) => {
-        if (e.key === 'Enter' && this.props.name !== '') {
+        if (e.key === ENTER && this.props.name !== '') {
             if (this.props.size === '' || this.props.size === 0) {
                 this.inputSize.focus()
             } else {
@@ -32,7 +37,7 @@ export class EditContainer extends Component {
     }
 
     handleSizeKeyPress = (e) => {
-        if (e.key === 'Enter' && this.props.size !== 0 && this.props.size !== '') {
+        if (e.key === ENTER && this.props.size !== 0 && this.props.size !== '') {
             if (this.props.name === '') {
                 this.inputName.focus()
             } else {
@@ -58,19 +63,19 @@ export class EditContainer extends Component {
     }
 
     escFunction = (event) => {
-        if(event.keyCode === 27) {
+        if(event.keyCode === ESCAPE) {
             this.props.handleEsc()
         }
     }
 
     componentDidMount(){
-        document.addEventListener("keydown", this.escFunction, false);
-        document.addEventListener("mousedown", this.handleClick, false);
+        document.addEventListener(KEYDOWN, this.escFunction, false);
+        document.addEventListener(MOUSEDOWN, this.handleClick, false);
     }
 
     componentWillUnmount(){
-        document.removeEventListener("keydown", this.escFunction, false);
-        document.removeEventListener("mousedown", this.handleClick, false);
+        document.removeEventListener(KEYDOWN, this.escFunction, false);
+        document.removeEventListener(MOUSEDOWN, this.handleClick, false);
     }
   
     render () {
