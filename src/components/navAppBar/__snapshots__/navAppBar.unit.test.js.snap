@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NavAppBar is consistent 1`] = `
+<Route>
+  <Component />
+</Route>
+`;

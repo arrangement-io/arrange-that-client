@@ -136,7 +136,7 @@ class NavAppBar extends Component {
                 <div>
                     <GoogleLogin
                         clientId={config.GOOGLE_CLIENT_ID}
-                        buttonText="Login"
+                        buttonText="gpmail"
                         onSuccess={this.googleResponse}
                         onFailure={this.onFailure}
                         requestTokenUrl="https://www.googleapis.com/oauth2/v1/userinfo"

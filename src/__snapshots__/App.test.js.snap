@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders without crashing 1`] = `
+<SnackbarProvider
+  anchorOrigin={
+    Object {
+      "horizontal": "right",
+      "vertical": "bottom",
+    }
+  }
+  dense={false}
+  maxSnack={3}
+  preventDuplicate={true}
+>
+  <Provider
+    store={
+      Object {
+        "dispatch": [Function],
+        "getState": [Function],
+        "replaceReducer": [Function],
+        "subscribe": [Function],
+        Symbol(observable): [Function],
+      }
+    }
+  >
+    <div
+      className="App"
+    >
+      <Router
+        history={
+          Object {
+            "action": "POP",
+            "block": [Function],
+            "createHref": [Function],
+            "go": [Function],
+            "goBack": [Function],
+            "goForward": [Function],
+            "length": 1,
+            "listen": [Function],
+            "location": Object {
+              "hash": "",
+              "pathname": "/",
+              "search": "",
+              "state": undefined,
+            },
+            "push": [Function],
+            "replace": [Function],
+          }
+        }
+      >
+        <Default>
+          <Switch>
+            <Route
+              component={[Function]}
+              exact={true}
+              path="/"
+            />
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
+              path="/arrangement/:arrangement_id"
+            />
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
+              path="/all_arrangements"
+            />
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
+              path="/feedback"
+            />
+          </Switch>
+        </Default>
+      </Router>
+    </div>
+  </Provider>
+</SnackbarProvider>
+`;

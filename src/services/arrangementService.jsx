@@ -1,7 +1,7 @@
 import { ARRANGEMENT, ARRANGEMENTS, USERS } from 'services/serviceTypes'
 import { postAuthenticated, getAuthenticated } from 'services/request'
 import * as ArrangementSchema from 'schema/arrangementSchema.json'
-import * as Ajv from 'ajv'
+import Ajv from 'ajv'
 
 let ajv = new Ajv()
 const arrangementValidation = ajv.compile(ArrangementSchema)
