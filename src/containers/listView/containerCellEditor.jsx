@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import Paper from '@material-ui/core/Paper';
 import Input from '@material-ui/core/Input';
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
-import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
 
 export class ContainerCellEditor extends Component {
@@ -13,8 +10,8 @@ export class ContainerCellEditor extends Component {
             containerId: (this.props.value) ? this.props.value._id : "",
             open: false
         }
-        console.log(this.props.value); // This is the currently selected value
-        console.log(this.props.values); // This is the possible values
+        // this.props.value is the currently selected value
+        // this.props.values are the possible values
     }
 
     handleChange = (event) => {
@@ -23,24 +20,9 @@ export class ContainerCellEditor extends Component {
             containerId: event.target.value,
             open: false
         },
+        // Stop editing and send Ag Grid the data
         () => this.props.api.stopEditing()
         );
-    }
-
-    onKeyPress(event) {
-        if (!isNumeric(event.nativeEvent)) {
-            event.preventDefault();
-        }
-
-        function isNumeric(event) {
-            return /\d/.test(event.key);
-        }
-    }
-
-    onKeyDown(event) {
-        // if (event.keyCode === 39 || event.keyCode === 37) {
-        //     event.stopPropagation();
-        // }
     }
 
     afterGuiAttached() {
@@ -50,13 +32,10 @@ export class ContainerCellEditor extends Component {
         })
     }
 
+    // Returns the value to to be rendered by Ag Grid
     getValue = () => {
         return this.props.values.find(obj => obj._id === this.state.containerId);
     };
-
-    componentDidMount() {
-        // this.textInput.current.addEventListener('keydown', this.onKeyDown);
-    }
 
     render() {
         const options = this.props.values.map(container => 

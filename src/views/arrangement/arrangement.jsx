@@ -28,7 +28,7 @@ export class Arrange extends Component {
             activeTab: 0,
             isEdit: false,
             name: this.props.real.name,
-            isListView: true
+            isListView: true,
         };
     }
 

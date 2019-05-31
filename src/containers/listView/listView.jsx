@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { AgGridReact } from 'ag-grid-react';
+import { AgGridColumn, AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 
@@ -9,8 +9,6 @@ import { setRealData, setUnassignedItems, setContainerItems } from 'actions/real
 import { renameItem } from 'actions/item/item'
 import { ContainerFormatter } from './containerFormatter';
 import { ContainerCellEditor } from './containerCellEditor';
-
-
 
 const NAME_HEADER = "Name";
 const NAME_FIELD = "name";
@@ -23,18 +21,56 @@ const SPACE_FIELD = "container";
 // https://material-ui.com/components/menus/
 
 class ListView extends Component {
-    generateItemList = (snapshotId) => {
-        const itemList = [];
-        const snapshot = this.getSnapshot(snapshotId);
-        this.props.real.items.map(item => 
-            itemList.push({
-                name: item.name,
-                container: this.getContainerForItem(snapshot, item._id)}))
-        return itemList;
+    constructor(props) {
+        super(props);
+        this.state = {
+            columnDefs: this.generateColumnDefs(),
+            rowData: this.generateItemList(this.props.snapshotId),
+            frameworkComponents: {
+                'containerFormatter': ContainerFormatter,
+                'containerCellEditor': ContainerCellEditor
+            }
+        }
     }
 
-    generateContainerList = () => {
-        return this.props.real.containers;
+    // To update the row data if props changes, flushing out old data
+    componentDidUpdate(oldProps) {
+        const newProps = this.props
+        if(oldProps.real !== newProps.real) {
+            this.setState({ ...this.state,
+                rowData: this.generateItemList(this.props.snapshotId),
+                columnDefs: this.generateColumnDefs()
+            })
+        }
+        this.api.sizeColumnsToFit();
+    }
+
+    generateColumnDefs = () => {
+        return [{
+            headerName: NAME_HEADER,
+            field: NAME_FIELD,
+            sortable: true,
+            filter: true,
+            resizable: true,
+            editable: true
+        }, {
+            headerName: SPACE_HEADER,
+            field: SPACE_FIELD,
+            editable: true,
+            resizable: true,
+            cellEditor: 'containerCellEditor',
+            cellEditorParams: {
+                values: this.props.real.containers
+            },
+            cellRenderer: 'containerFormatter'
+        }]
+    }
+    
+    generateItemList = (snapshotId) => {
+        const snapshot = this.getSnapshot(snapshotId);
+        return this.props.real.items.map(item => {
+            return {name: item.name,container: this.getContainerForItem(snapshot, item._id)};
+        });
     }
 
     getSnapshot = (snapshotId) => {
@@ -46,7 +82,6 @@ class ListView extends Component {
     }
 
     getContainerForItem = (snapshot, itemId) => {
-        console.log(snapshot);
         if (snapshot.unassigned.includes(itemId)) {
             return null;
         }
@@ -110,21 +145,17 @@ class ListView extends Component {
         }
     }
 
-    onCellValueChanged = (params) => {
-        console.log(params);
+    onCellValueChanged = (params) => {    
         if (params.colDef.field === NAME_FIELD) {
+            // Renaming the item
             const itemChanged = this.props.real.items[parseInt(params.node.id)];
-            console.log(itemChanged);
-            console.log(params.value);
             this.props.renameItem({
                 ...itemChanged,
                 name: params.value
             })
         }
         if (params.colDef.field === SPACE_FIELD) {
-            console.log(params);
-            console.log(params.value);
-            console.log(params.oldValue);
+            // Changing the container
             const itemChanged = this.props.real.items[parseInt(params.node.id)];
             if (params.value && params.oldValue) {
                 if (params.value._id === params.oldValue._id) {
@@ -156,34 +187,6 @@ class ListView extends Component {
         this.api.setRowData(this.state.rowData);
     }
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            columnDefs: [{
-                headerName: NAME_HEADER, 
-                field: NAME_FIELD, 
-                sortable: true, 
-                filter: true, 
-                editable: true
-            }, {
-                headerName: SPACE_HEADER,
-                field: SPACE_FIELD,
-                editable: true,
-                cellEditor: 'containerCellEditor',
-                cellEditorParams: {
-                    values: this.generateContainerList()
-                },
-                cellRenderer: 'containerFormatter'
-            }],
-            rowData: this.generateItemList(this.props.snapshotId),
-            frameworkComponents: {
-                'containerFormatter': ContainerFormatter,
-                'containerCellEditor': ContainerCellEditor
-            }
-        }
-        console.log(this.props.real)
-    }
-    
     render() {
         console.log(this.props);
         return (
@@ -206,8 +209,8 @@ class ListView extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const { real } = state
-    return { real }
+    const { real } = state;
+    return { real };
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
