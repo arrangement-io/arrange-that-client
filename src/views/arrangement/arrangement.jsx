@@ -5,7 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import { Grid, Typography, List } from '@material-ui/core'
 import Snapshot from 'containers/snapshot/snapshot'
-import ListView from 'containers/listView'
+import ListView from 'containers/listView/listView'
 
 import EditArrangementTitle from 'components/editArrangementTitle/editArrangementTitle'
 import ExportButton from 'components/exportbutton/exportbutton'
