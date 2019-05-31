@@ -29,8 +29,18 @@ export class OccupancyDisplay extends Component {
         const color = this.isOverOccupancy() ? "secondary" : "default"
         const label = this.isOverOccupancy() ? (<Warning/>) : this.props.count + "/" + this.props.total
         const chip = this.isOverOccupancy() 
-            ? (<Tooltip title="Over the size limit" placement="left"><Chip label={label} className={classes.chip} color={color} /></Tooltip>)
-            : <Chip label={label} className={classes.chip} color={color} />
+            ? ( <Tooltip title="Over the size limit" placement="left">
+                <Chip 
+                    style={this.props.style} 
+                    label={label} 
+                    className={classes.chip} 
+                    color={color} />
+            </Tooltip>)
+            :   <Chip 
+                style={this.props.style} 
+                label={label} 
+                className={classes.chip} 
+                color={color} />
         return (
             <div>
                 {chip}

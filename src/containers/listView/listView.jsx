@@ -59,8 +59,9 @@ class ListView extends Component {
     }
 
     onGridReady = (params) => {
-        params.api.sizeColumnsToFit();
-        console.log("onGridReady");
+        this.api = params.api;
+        this.columnApi = params.columnApi;
+        this.api.sizeColumnsToFit();
     };
 
     removeItemFromContainer = (itemId, containerId) => {
@@ -151,8 +152,8 @@ class ListView extends Component {
                 // Do nothing
                 console.log("remain unassigned");
             }
-            
         }
+        this.api.setRowData(this.state.rowData);
     }
 
     constructor(props) {
@@ -188,8 +189,8 @@ class ListView extends Component {
         return (
             <div className="ag-theme-material"
                 style={{ 
-                    height: '400px', 
-                    width: '600px' }}>
+                    height: '100vh', 
+                    width: '100vw' }}>
                 <AgGridReact
                     columnDefs={this.state.columnDefs}
                     rowData={this.state.rowData}
