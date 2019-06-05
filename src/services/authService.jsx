@@ -31,9 +31,9 @@ export const authenticate = (accessToken, tokenId, user) => {
 
 export const logout = () => {
     const cookies = new Cookies();
-    cookies.remove(ACCESS_TOKEN)
-    cookies.remove(TOKEN_ID)
-    cookies.remove(USER)
+    cookies.remove(ACCESS_TOKEN, {path: '/'})
+    cookies.remove(TOKEN_ID, {path: '/'})
+    cookies.remove(USER, {path: '/'})
 }
 
 export default isAuthenticated
