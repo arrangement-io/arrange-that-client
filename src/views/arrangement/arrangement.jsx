@@ -3,12 +3,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep';
 
-import { Grid, Typography } from '@material-ui/core'
+import { Grid, Typography, List } from '@material-ui/core'
 import Snapshot from 'containers/snapshot/snapshot'
+import ListView from 'containers/listView/listView'
 
 import EditArrangementTitle from 'components/editArrangementTitle/editArrangementTitle'
 import ExportButton from 'components/exportbutton/exportbutton'
 import SnapshotTitle from 'components/snapshotTitle/snapshotTitle'
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { getArrangement } from 'services/arrangementService'
 
@@ -24,9 +27,15 @@ export class Arrange extends Component {
         this.state = {
             activeTab: 0,
             isEdit: false,
-            name: this.props.real.name
+            name: this.props.real.name,
+            isListView: false,
         };
     }
+
+    handleActivateListView = () => event => {
+        this.setState({isListView: event.target.checked});
+    }
+        
 
     handleTabSwitch = (active) => {
         this.setState({activeTab: active})
@@ -167,6 +176,15 @@ export class Arrange extends Component {
                         </Typography>
                     </Grid>
                     <Grid item xs={12} sm={4}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={this.state.isListView}
+                                    onChange={this.handleActivateListView()}
+                                />
+                            }
+                            label="List View"
+                        />
                     </Grid>
                 </Grid>
                 <Tabs 
@@ -183,7 +201,11 @@ export class Arrange extends Component {
                                     onDelete={this.deleteSnapshot} 
                                     onClone={this.cloneSnapshot}
                                     onSave={this.props.snapshotRename} /> }>
-                                <Snapshot snapshotId={snapshot._id} />
+                                {this.state.isListView ? (
+                                    <ListView snapshotId={snapshot._id} />
+                                ) : (
+                                    <Snapshot snapshotId={snapshot._id} />
+                                )}
                             </Tab>
                         )
                     })}
