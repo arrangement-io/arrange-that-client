@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Typography, Card, CardHeader, CardContent, TextField } from '@material-ui/core'
+import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core'
 import MoreMenu from 'components/moremenu/moremenu'
 import { connect } from 'react-redux'
 
 import Item from 'components/item/item'
 import EditContainer from 'components/editContainer/editContainer'
 import OccupancyDisplay from 'components/container/occupancyDisplay'
-import { editContainer } from 'actions/container/container'
+import { editContainer, editContainerNote } from 'actions/container/container'
+import EditContainerNote from 'components/container/editContainerNote'
 
 import { withStyles } from '@material-ui/core/styles'
 import { getSnapshotContainer } from 'utils'
@@ -129,9 +130,28 @@ export class Container extends Component {
         })
     }
 
-    handleEditNoteEnter = () => {
+    handleEditNoteSubmit = () => {
+        this.props.editContainerNote({
+            ...this.props.snapshot,
+            containerNote: this.state.Note,
+            containerId: this.props.container._id
+        })
         this.setState({
+            ...this.state,
+        })
+    }
 
+    handleEditNoteChange = (e) => {
+        this.setState({
+            ...this.state,
+            containerNote: e.target.value
+        })
+    }
+
+    handleEditNoteEsc = () => {
+        this.setState({
+            ...this.state,
+            containerNote: ""
         })
     }
 
@@ -144,6 +164,16 @@ export class Container extends Component {
         ]
         const items = this.getItems(this.props.items, this.props.container._id)
 
+        const notes = (this.state.isEditNote 
+            ? (
+                <EditContainerNote 
+                    containerNote={this.state.containerNote}
+                    handleNoteChange={this.handleEditNoteChange}
+                    handleNoteEsc={this.handleEditNoteEsc}
+                    handleNoteEnter={this.handleEditNoteSubmit}
+                />
+            ) 
+            : null)
 
         const containerCard = (
             <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true}>
@@ -161,7 +191,7 @@ export class Container extends Component {
                                 action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
                                 avatar={<OccupancyDisplay total={this.props.container.size} count={items.length} />}
                             />
-                            {(this.state.isEditNote ? (<TextField multiline margin="none" variant="filled" placeholder="Add Note here" />) : null)}
+                            {notes}
                             <CardContent className={classes.cardContent}>
                                 {
                                     items.map((item, index) => {
@@ -238,6 +268,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         editContainer: (container) => {
             dispatch(editContainer(container))
+        },
+        editContainerNote: (snapshot) => {
+            dispatch(editContainerNote(snapshot))
         }
     }
 }
