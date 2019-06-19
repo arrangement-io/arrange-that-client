@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core'
+import { Grid, Typography, Card, CardHeader, CardContent, TextField } from '@material-ui/core'
 import MoreMenu from 'components/moremenu/moremenu'
 import { connect } from 'react-redux'
 
@@ -15,6 +15,7 @@ import { Droppable } from 'react-beautiful-dnd'
 
 const EDIT = "Edit"
 const DELETE_FROM_ALL_SNAPSHOTS = "Delete from all snapshots"
+const ADD_NOTE = "Add Note"
 
 const styles = theme => ({
     card: {
@@ -111,6 +112,12 @@ export class Container extends Component {
                 editSize: this.props.container.size,
             })
         }
+        else if (option === ADD_NOTE) {
+            this.setState({
+                ...this.state,
+                isEditNote: true,
+            })
+        }
     }
 
     handleContainerDoubleClick = () => {
@@ -122,13 +129,21 @@ export class Container extends Component {
         })
     }
 
+    handleEditNoteEnter = () => {
+        this.setState({
+
+        })
+    }
+
     render () {
         const { classes } = this.props
         const options = [
             EDIT,
-            DELETE_FROM_ALL_SNAPSHOTS
+            ADD_NOTE,
+            DELETE_FROM_ALL_SNAPSHOTS,
         ]
         const items = this.getItems(this.props.items, this.props.container._id)
+
 
         const containerCard = (
             <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true}>
@@ -146,6 +161,7 @@ export class Container extends Component {
                                 action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
                                 avatar={<OccupancyDisplay total={this.props.container.size} count={items.length} />}
                             />
+                            {(this.state.isEditNote ? (<TextField multiline margin="none" variant="filled" placeholder="Add Note here" />) : null)}
                             <CardContent className={classes.cardContent}>
                                 {
                                     items.map((item, index) => {
