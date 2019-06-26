@@ -14,7 +14,8 @@ import {
     SAVE_STATE,
     SNAPSHOT_ADD,
     SNAPSHOT_DELETE,
-    SNAPSHOT_RENAME
+    SNAPSHOT_RENAME,
+    SNAPSHOT_REPOSITION
 } from 'actions/actionTypes'
 
 import { updateArrangement } from 'services/arrangementService'
@@ -191,13 +192,13 @@ const realReducer = (state = initialState, action) => {
             return snapshotDeleteState
         }
 
-        case ARRANGEMENT_RENAME:
+        case ARRANGEMENT_RENAME: {
             const arrangementRenameState = cloneDeep(state);
             arrangementRenameState.name = action.name;
             
             exportState(arrangementRenameState);
             return arrangementRenameState;
-
+        }
 
         case SNAPSHOT_RENAME: {
             const snapshotRenameState = cloneDeep(state);
@@ -206,6 +207,18 @@ const realReducer = (state = initialState, action) => {
             snapshotRenameState.snapshots[index].name = action.name
             exportState(snapshotRenameState)
             return snapshotRenameState
+        }
+
+        // ability to drag tabs
+        case SNAPSHOT_REPOSITION: {
+            const snapshotReposition = cloneDeep(state);
+
+            let c = snapshotReposition.snapshots[action.a];
+            snapshotReposition.snapshots[action.a] = snapshotReposition.snapshots[action.b];
+            snapshotReposition.snapshots[action.b] = c;
+
+            exportState(snapshotReposition)
+            return snapshotReposition
         }
 
         default: {

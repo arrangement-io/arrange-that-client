@@ -16,7 +16,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { getArrangement } from 'services/arrangementService'
 
 import { setRealData, arrangementRename } from 'actions/real/real'
-import { snapshotAdd, snapshotDelete, snapshotRename } from 'actions/snapshot/snapshot'
+import { snapshotAdd, snapshotDelete, snapshotRename, snapshotReposition } from 'actions/snapshot/snapshot'
 import { uuid } from 'utils'
 
 import Tabs, { Tab } from 'react-awesome-tabs';
@@ -33,12 +33,12 @@ export class Arrange extends Component {
     }
 
     handleActivateListView = () => event => {
-        this.setState({isListView: event.target.checked});
+        this.setState({ isListView: event.target.checked });
     }
-        
+
 
     handleTabSwitch = (active) => {
-        this.setState({activeTab: active})
+        this.setState({ activeTab: active })
     }
 
     handleTabAdd = () => {
@@ -49,13 +49,24 @@ export class Arrange extends Component {
             activeTab: numberOfCurrentSnapshots
         });
     }
-    
+
+    handleTabPositionChange = (a, b) => {
+        this.props.snapshotReposition(a, b)
+        if (this.state.activeTab == a) {
+            this.setState({ activeTab: b });
+        } else if (this.state.activeTab == b) {
+            this.setState({ activeTab: a });
+        }
+
+        this.forceUpdate()
+    }
+
     deleteSnapshot = (snapshotId) => {
         this.props.snapshotDelete(snapshotId)
         const numberOfCurrentSnapshots = this.props.real.snapshots.length
         this.setState({
             ...this.state,
-            activeTab: numberOfCurrentSnapshots-1,
+            activeTab: numberOfCurrentSnapshots - 1,
         });
     }
 
@@ -87,7 +98,7 @@ export class Arrange extends Component {
                 <EditArrangementTitle
                     name={this.props.real.name}
                     handleEnter={this.handleArrangementTitleEnter}
-                    handleEsc={this.handleArrangementTitleEsc}/>
+                    handleEsc={this.handleArrangementTitleEsc} />
             )
         }
         else {
@@ -107,7 +118,7 @@ export class Arrange extends Component {
             newSnapshotSnapshot[container._id] = []
         }
         for (let container of this.props.real.containers) {
-            newSnapshotContainers.push({_id: container._id, items: []})
+            newSnapshotContainers.push({ _id: container._id, items: [] })
         }
         const newUnassigned = []
         for (let item of this.props.real.items) {
@@ -126,7 +137,8 @@ export class Arrange extends Component {
     cloneSnapshot = (snapshotId) => {
         const numberOfCurrentSnapshots = this.props.real.snapshots.length
         const snapshotToClone = this.props.real.snapshots.find(s => s._id === snapshotId)
-        const clone = {...cloneDeep(snapshotToClone),
+        const clone = {
+            ...cloneDeep(snapshotToClone),
             _id: uuid("snapshot"),
             name: "Clone of " + snapshotToClone.name
         }
@@ -157,11 +169,11 @@ export class Arrange extends Component {
             })
     }
 
-    componentDidMount () {
+    componentDidMount() {
         this.loadState()
     }
-    
-    render () {
+
+    render() {
         return (
             <div>
                 <Grid container spacing={8} className="arrange">
@@ -172,7 +184,7 @@ export class Arrange extends Component {
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <Typography variant="headline" gutterBottom align="center">
-                            <ExportButton handleExport={this.exportToTSV}/>
+                            <ExportButton handleExport={this.exportToTSV} />
                         </Typography>
                     </Grid>
                     <Grid item xs={12} sm={4}>
@@ -187,20 +199,22 @@ export class Arrange extends Component {
                         />
                     </Grid>
                 </Grid>
-                <Tabs 
-                    active={this.state.activeTab} 
+                <Tabs
+                    active={this.state.activeTab}
                     onTabSwitch={this.handleTabSwitch}
                     onTabAdd={this.handleTabAdd}
                     showAdd={true}
+                    draggable={true}
+                    onTabPositionChange={this.handleTabPositionChange}
                 >
                     {this.props.real.snapshots.map((snapshot, index) => {
                         return (
                             <Tab key={index} title={
-                                <SnapshotTitle 
-                                    snapshot={snapshot} 
-                                    onDelete={this.deleteSnapshot} 
+                                <SnapshotTitle
+                                    snapshot={snapshot}
+                                    onDelete={this.deleteSnapshot}
                                     onClone={this.cloneSnapshot}
-                                    onSave={this.props.snapshotRename} /> }>
+                                    onSave={this.props.snapshotRename} />}>
                                 {this.state.isListView ? (
                                     <ListView snapshotId={snapshot._id} />
                                 ) : (
@@ -236,6 +250,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         snapshotRename: (snapshotId, name) => {
             dispatch(snapshotRename(snapshotId, name))
+        },
+        snapshotReposition: (a, b) => {
+            dispatch(snapshotReposition(a, b))
         }
     }
 }
@@ -243,4 +260,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-) (Arrange)
+)(Arrange)
