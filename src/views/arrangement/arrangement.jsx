@@ -5,7 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import { Grid, Typography, List } from '@material-ui/core'
 import Snapshot from 'containers/snapshot/snapshot'
-import ListView from 'containers/listView/listView'
+import SheetView from 'containers/listView/sheetView'
 
 import EditArrangementTitle from 'components/editArrangementTitle/editArrangementTitle'
 import ExportButton from 'components/exportbutton/exportbutton'
@@ -28,7 +28,7 @@ export class Arrange extends Component {
             activeTab: 0,
             isEdit: false,
             name: this.props.real.name,
-            isListView: false,
+            isListView: true,
         };
     }
 
@@ -183,7 +183,7 @@ export class Arrange extends Component {
                                     onChange={this.handleActivateListView()}
                                 />
                             }
-                            label="List View"
+                            label="Sheet View"
                         />
                     </Grid>
                 </Grid>
@@ -202,7 +202,7 @@ export class Arrange extends Component {
                                     onClone={this.cloneSnapshot}
                                     onSave={this.props.snapshotRename} /> }>
                                 {this.state.isListView ? (
-                                    <ListView snapshotId={snapshot._id} />
+                                    <SheetView snapshotId={snapshot._id} />
                                 ) : (
                                     <Snapshot snapshotId={snapshot._id} />
                                 )}
