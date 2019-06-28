@@ -33,6 +33,21 @@ export function checkDuplicate (item, allItems) {
     return (typeof nameDuplicated === 'undefined' && typeof idDuplicated === 'undefined')
 }
 
+// Generated item if name is valud and no duplicates
+export function generateItem(name, allItems) {
+    if (validateName(name)) {
+        const item = {
+            _id: uuid('item'),
+            name: name,
+            size: 1
+        }
+        if (checkDuplicate(item, allItems)) {
+            return item;
+        }
+    }
+    return null;
+}
+
 export function getListStyle (isDraggingOver, isOwn, isFull) {
     let color = 'white'
     if (isDraggingOver) {
