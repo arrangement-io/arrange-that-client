@@ -25,6 +25,10 @@ const styles = theme => ({
         paddingTop: 10,
         paddingBottom: 0,
         paddingRight: 10
+    },
+    cardContent: {
+        height: "calc(100vh - 341px)",
+        overflow: "scroll"
     }
 })
 
@@ -214,7 +218,7 @@ export class ContainerCollection extends Component {
                             <Grid item xs>Total number of containers: {this.props.containers.length}</Grid>
                         </Grid>
                     </CardContent>
-                    <CardContent className={classes.CardContent}>
+                    <CardContent className={classes.cardContent}>
                         <Grid container spacing={8}>
                             {
                                 this.props.containers.map((container) => {

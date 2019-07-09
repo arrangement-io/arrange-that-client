@@ -8,6 +8,13 @@ import ContainerCollection from 'containers/containerCollection/containerCollect
 import { DragDropContext } from 'react-beautiful-dnd'
 import { setRealData, setUnassignedItems, setContainerItems } from 'actions/real/real'
 import { reorder, move, getSnapshotContainer } from 'utils'
+import { withStyles } from '@material-ui/core/styles'
+
+const styles = theme => ({
+    snapshotBody: {
+        margin: "10px"
+    }
+});
 
 class Snapshot extends Component {
     componentDidMount () {
@@ -127,25 +134,30 @@ class Snapshot extends Component {
     }
 
     render () {
+        const { classes } = this.props;
+
         const unassigned_items = this.getUnassignedItems(this.props.snapshotId)
         return (
-            <DragDropContext onDragEnd={this.onDragEnd}>
-                <Grid container spacing={8}>
-                    <Grid item xs={5} sm={4} md={3} lg={2}>
-                        <ItemCollection 
-                            items={this.props.real.items} 
-                            unsnapshot_items={unassigned_items} 
-                            getDragItemColor={this.getDragItemColor} />   
+            <div className={classes.snapshotBody}>
+                <DragDropContext onDragEnd={this.onDragEnd}>
+                    <Grid container spacing={8}>
+                        <Grid item xs={5} sm={4} md={3} lg={2}>
+                            <ItemCollection 
+                                items={this.props.real.items} 
+                                unsnapshot_items={unassigned_items} 
+                                getDragItemColor={this.getDragItemColor} />   
+                        </Grid>
+                        <Grid item xs={7} sm={8} md={9} lg={10}>
+                            <ContainerCollection 
+                                snapshot={this.getSnapshot(this.props.snapshotId)} 
+                                containers={this.props.real.containers} 
+                                items={this.props.real.items} 
+                                getDragItemColor={this.getDragItemColor} />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={7} sm={8} md={9} lg={10}>
-                        <ContainerCollection 
-                            snapshot={this.getSnapshot(this.props.snapshotId)} 
-                            containers={this.props.real.containers} 
-                            items={this.props.real.items} 
-                            getDragItemColor={this.getDragItemColor} />
-                    </Grid>
-                </Grid>
-            </DragDropContext>
+                </DragDropContext>
+            </div>
+            
         )
     }
 }
@@ -176,4 +188,4 @@ Snapshot.propTypes = {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-) (Snapshot)
+) (withStyles(styles)(Snapshot))
