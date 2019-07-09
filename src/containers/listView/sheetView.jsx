@@ -233,8 +233,9 @@ class SheetView extends Component {
                     colHeaders={this.generateColumnHeaders()}
                     columns={this.generateColumnDefs()}
                     rowHeaders={false} 
-                    afterChange= {this.onCellValueChange}
-                    height="60vh" 
+                    afterChange={this.onCellValueChange}
+                    minSpareRows={1}
+                    height="65vh" 
                     licenseKey='non-commercial-and-evaluation' />
             </div>
         );
