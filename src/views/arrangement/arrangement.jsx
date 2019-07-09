@@ -186,6 +186,8 @@ export class Arrange extends Component {
     render() {
         const { classes } = this.props;
 
+        document.title = this.props.real.name + " - Arrange.Space";
+
         return (
             <div>
                 <Grid container spacing={8} className={classes.header}>

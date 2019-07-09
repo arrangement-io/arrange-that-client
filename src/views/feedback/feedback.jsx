@@ -14,6 +14,8 @@ const styles = {
 
 class Feedback extends Component {
     render = () => {
+        document.title = "Feedback - Arrange.Space";
+
         const { classes } = this.props;
         return (
             <main className={classes.root}>

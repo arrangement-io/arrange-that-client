@@ -34,7 +34,9 @@ class HomePage extends Component {
     }
 
     render() {
-        const loadingComponent = this.state.loading ? <LinearProgress /> : null
+        document.title = "Arrange.Space";
+
+        const loadingComponent = this.state.loading ? <LinearProgress /> : null;
         return (
             <div style={style}>
                 {loadingComponent}
