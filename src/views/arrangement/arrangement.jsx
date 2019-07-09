@@ -155,7 +155,6 @@ export class Arrange extends Component {
         const id = this.props.match.params.arrangement_id
         return getArrangement(id)
             .then(response => {
-                console.log(response)
                 if (response.data === "no arrangement found") {
                     console.log("no arrangement found")
                 }
