@@ -5,13 +5,27 @@ import PropTypes from 'prop-types'
 import { HotTable } from '@handsontable/react';
 import Handsontable from 'handsontable';
 
-import { setRealData, setUnassignedItems, setContainerItems } from 'actions/real/real'
-import { addItem, renameItem, deleteItem } from 'actions/item/item'
+import { setRealData, bulkSetUnassignedItems, bulkSetContainerItems, saveState } from 'actions/real/real'
+import { bulkAddItem, bulkRenameItem, bulkDeleteItem } from 'actions/item/item'
 import { generateItem } from 'utils'
+
+import { withStyles } from '@material-ui/core/styles'
 
 
 const NAME_FIELD = "name";
 const CONTAINER_FIELD = "container";
+
+const styles = theme => ({
+    sheet: {
+        marginLeft: 10,
+        marginTop: 10,
+        marginBottom: 10,
+        marginRight: 10,
+        borderStyle: "solid",
+        borderWidth: "1px",
+        borderColor: "#777"
+    }
+})
 
 class SheetView extends Component {
     constructor(props) {
@@ -30,7 +44,8 @@ class SheetView extends Component {
                 data:"container", 
                 type: 'dropdown',
                 source: this.props.real.containers.map(container => container.name),
-                renderer: this.renderContainerChip
+                renderer: this.renderContainerChip,
+                allowInvalid: false
             }
         ];
     }
@@ -91,7 +106,7 @@ class SheetView extends Component {
         const snapshotContainer = snapshot.snapshotContainers.find(container => container._id === containerId);
         if (snapshotContainer.items.includes(itemId)) {
             const updatedItemsList = snapshotContainer.items.filter(item => item !== itemId);
-            this.props.setContainerItems(this.props.snapshotId, containerId, updatedItemsList);
+            this.props.bulkSetContainerItems(this.props.snapshotId, containerId, updatedItemsList);
         }
         else {
             console.log("Item was not found in container when it shouldn't be!");
@@ -103,7 +118,7 @@ class SheetView extends Component {
         const snapshotContainer = snapshot.snapshotContainers.find(container => container._id === containerId);
         if (!snapshotContainer.items.includes(itemId)) {
             const updatedItemsList = [...snapshotContainer.items, itemId];
-            this.props.setContainerItems(this.props.snapshotId, containerId, updatedItemsList);
+            this.props.bulkSetContainerItems(this.props.snapshotId, containerId, updatedItemsList);
         }
         else {
             console.log("Item was already in container when it shouldn't be!");
@@ -114,7 +129,7 @@ class SheetView extends Component {
         const snapshot = this.getSnapshot(this.props.snapshotId);
         if (snapshot.unassigned.includes(itemId)) {
             const updatedItemsList = snapshot.unassigned.filter(item => item !== itemId);
-            this.props.setUnassignedItems(this.props.snapshotId, updatedItemsList);
+            this.props.bulkSetUnassignedItems(this.props.snapshotId, updatedItemsList);
         }
         else {
             console.log("Item was not found in unassigned when it shouldn't be!");
@@ -125,7 +140,7 @@ class SheetView extends Component {
         const snapshot = this.getSnapshot(this.props.snapshotId);
         if (!snapshot.unassigned.includes(itemId)) {
             const updatedItemsList = [...snapshot.unassigned, itemId];
-            this.props.setUnassignedItems(this.props.snapshotId, updatedItemsList);
+            this.props.bulkSetUnassignedItems(this.props.snapshotId, updatedItemsList);
         }
         else {
             console.log("Item was found in unassigned when it shouldn't be!");
@@ -137,13 +152,11 @@ class SheetView extends Component {
         if (item) {
             if (current === null || !current) {
                 // Delete the item  
-                console.log("deleted item");
-                console.log(item);
-                this.props.deleteItem(item._id);
+                this.props.bulkDeleteItem(item._id);
             }
             else {
                 // Rename already existing item
-                this.props.renameItem({
+                this.props.bulkRenameItem({
                     ...item,
                     name: current
                 })
@@ -153,7 +166,7 @@ class SheetView extends Component {
             // Creating a new item if it didn't exist
             const newItem = generateItem(current, this.props.real.items);
             if (newItem) {
-                this.props.addItem(newItem);
+                this.props.bulkAddItem(newItem);
             }
         }    
     }
@@ -168,27 +181,27 @@ class SheetView extends Component {
             if (current === previous) {
                 // Move to same container
                 // Do nothing
-                console.log("Same Container");
+                console.debug("Same Container");
             } else {
                 // Move from one container to the other container.
-                console.log("New Container");
+                console.debug("New Container");
                 this.removeItemFromContainer(itemChanged._id, this.getContainerFromContainerName(previous)._id);
                 this.addItemToContainer(itemChanged._id, this.getContainerFromContainerName(current)._id);   
             }
         } else if (current && this.getContainerFromContainerName(current)) {
             // Move from unassigned to container
-            console.log("Move from unassigned to container");
+            console.debug("Move from unassigned to container");
             this.removeItemFromUnassigned(itemChanged._id);
             this.addItemToContainer(itemChanged._id, this.getContainerFromContainerName(current)._id);   
         } else if (previous && this.getContainerFromContainerName(previous)) {
             // Move from container to unassigned
-            console.log("Move from container to unassigned");
+            console.debug("Move from container to unassigned");
             this.removeItemFromContainer(itemChanged._id, this.getContainerFromContainerName(previous)._id);
             this.addItemToUnassigned(itemChanged._id);
         } else {
             // Move from unassigned to unassigned
             // Do nothing
-            console.log("remain unassigned");
+            console.debug("remain unassigned");
         }
     }
     processChange = (row, columnTitle, previous, current) => {
@@ -206,12 +219,15 @@ class SheetView extends Component {
                 const [row, columnTitle, previous, current] = change
                 this.processChange(row, columnTitle, previous, current);
             })
+            this.props.saveState();
         }       
     }
 
     render() {
+        const { classes } = this.props;
+
         return (
-            <div id="hot-app">
+            <div className={classes.sheet} id="hot-app">
                 <HotTable 
                     data={this.state.data} 
                     colHeaders={this.generateColumnHeaders()}
@@ -232,23 +248,26 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        renameItem: (item) => {
-            dispatch(renameItem(item))
+        bulkRenameItem: (item) => {
+            dispatch(bulkRenameItem(item))
         },
-        addItem: (item) => {
-            dispatch(addItem(item))
+        bulkAddItem: (item) => {
+            dispatch(bulkAddItem(item))
         },
-        deleteItem: (item) => {
-            dispatch(deleteItem(item))
+        bulkDeleteItem: (item) => {
+            dispatch(bulkDeleteItem(item))
+        },
+        saveState: () => {
+            dispatch(saveState())
         },
         setRealData: (data) => {
             dispatch(setRealData(data))
         },
-        setUnassignedItems: (snapshotId, unassigned) => {
-            dispatch(setUnassignedItems(snapshotId, unassigned))
+        bulkSetUnassignedItems: (snapshotId, unassigned) => {
+            dispatch(bulkSetUnassignedItems(snapshotId, unassigned))
         },
-        setContainerItems: (snapshotId, containerId, items) => {
-            dispatch(setContainerItems(snapshotId, containerId, items))
+        bulkSetContainerItems: (snapshotId, containerId, items) => {
+            dispatch(bulkSetContainerItems(snapshotId, containerId, items))
         }
     }
 }
@@ -260,4 +279,4 @@ SheetView.propTypes = {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-) (SheetView);
+) (withStyles(styles)(SheetView));

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getBearer } from 'services/authService'
+import { getBearer, logout } from 'services/authService'
 
 import { base_url } from './serviceTypes';
 
@@ -56,6 +56,18 @@ export const postAuthenticated = (opts) => {
         method: 'POST',
         headers: {"Authorization": "Bearer " + getBearer()}
     })
+        .then(response => Promise.resolve(response))
+        .catch(err => {
+            if (err && err.data) {
+                if (err.status == 401) {
+                    console.log("log out!")
+                    console.log("refresh tokens!")
+                    logout()
+                }
+            }
+            console.log(err);
+            return Promise.reject(err);
+        })
 }
 
 const request = (opts) => {

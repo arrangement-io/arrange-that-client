@@ -66,7 +66,10 @@ const realReducer = (state = initialState, action) => {
             for (const snapshot of addItemState.snapshots) {
                 snapshot.unassigned.push(action.item._id)
             }
-            exportState(addItemState)
+
+            if (!action.bulk) {
+                exportState(addItemState)
+            }
             return addItemState
         }
                 
@@ -85,7 +88,9 @@ const realReducer = (state = initialState, action) => {
                 // Remove item from unassigned in snapshot
                 snapshotItemDelete.unassigned = snapshotItemDelete.unassigned.filter(ele => ele !== action.id);
             }
-            exportState(deleteItemState)
+            if (!action.bulk) {
+                exportState(deleteItemState)
+            }
             return deleteItemState
         }
 
@@ -93,7 +98,9 @@ const realReducer = (state = initialState, action) => {
             const resultItemRename = cloneDeep(state);
             const item = resultItemRename.items.find(ele => ele._id === action.item._id)
             item.name = action.item.name
-            exportState(resultItemRename)
+            if (!action.bulk) {
+                exportState(resultItemRename)
+            }
             return resultItemRename
         }
 
@@ -153,9 +160,10 @@ const realReducer = (state = initialState, action) => {
 
             const index = getSnapshotIndex(setUnassignedState, action.snapshotId)
             setUnassignedState.snapshots[index].unassigned = action.unassigned
-            console.log(setUnassignedState)
             
-            exportState(setUnassignedState)
+            if (!action.bulk) {
+                exportState(setUnassignedState)
+            }
             return setUnassignedState
         }
 
@@ -166,7 +174,9 @@ const realReducer = (state = initialState, action) => {
             const containerIndex = getSnapshotContainerIndex(setContainerItemsState.snapshots[index], action.containerId)
             setContainerItemsState.snapshots[index].snapshotContainers[containerIndex].items = action.items
 
-            exportState(setContainerItemsState)
+            if (!action.bulk) {
+                exportState(setContainerItemsState)
+            }
             return setContainerItemsState
         }
 
