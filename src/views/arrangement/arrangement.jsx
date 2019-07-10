@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep';
 
-import { Grid, Typography, List } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import Snapshot from 'containers/snapshot/snapshot'
 import SheetView from 'containers/listView/sheetView'
 
@@ -18,8 +18,18 @@ import { getArrangement } from 'services/arrangementService'
 import { setRealData, arrangementRename } from 'actions/real/real'
 import { snapshotAdd, snapshotDelete, snapshotRename, snapshotReposition } from 'actions/snapshot/snapshot'
 import { uuid } from 'utils'
+import { withStyles } from '@material-ui/core/styles'
 
 import Tabs, { Tab } from 'react-awesome-tabs';
+
+const styles = theme => ({
+    header: {
+        paddingLeft: "24px",
+        paddingRight: "24px",
+        paddingTop: "15px",
+        minHeight: "64px"
+    }
+});
 
 export class Arrange extends Component {
     constructor(props) {
@@ -174,9 +184,11 @@ export class Arrange extends Component {
     }
 
     render() {
+        const { classes } = this.props;
+
         return (
             <div>
-                <Grid container spacing={8} className="arrange">
+                <Grid container spacing={8} className={classes.header}>
                     <Grid item xs={12} sm={4}>
                         <div className="arrangementTitle" onClick={this.addEditArrangementTitle}>
                             {this.displayEditArrangementTitle()}
@@ -200,6 +212,7 @@ export class Arrange extends Component {
                     </Grid>
                 </Grid>
                 <Tabs
+                    className={classes.tabContent} 
                     active={this.state.activeTab}
                     onTabSwitch={this.handleTabSwitch}
                     onTabAdd={this.handleTabAdd}
@@ -260,4 +273,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Arrange)
+)(withStyles(styles)(Arrange))
