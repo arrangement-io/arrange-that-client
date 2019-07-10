@@ -7,6 +7,7 @@ import ItemCollection from 'containers/itemCollection/itemCollection'
 import ContainerCollection from 'containers/containerCollection/containerCollection'
 import { DragDropContext } from 'react-beautiful-dnd'
 import { setRealData, setUnassignedItems, setContainerItems } from 'actions/real/real'
+import { snapshotSetContainers } from 'actions/snapshot/snapshot'
 import { reorder, move, getSnapshotContainer } from 'utils'
 import { withStyles } from '@material-ui/core/styles'
 
@@ -23,61 +24,71 @@ class Snapshot extends Component {
     }
 
     onDragEnd = (result) => {
-        const { source, destination } = result
+        const { source, destination, type } = result
         const snapshot = this.getSnapshot(this.props.snapshotId)
         if (!destination) { // dropped outside the list
             return
         }
+        if (type === "item") {
+            if (source.droppableId === destination.droppableId) { // dropped in same list
+                let items = []
+                if (source.droppableId === 'itemcollection') { // dropped in items' list, only reorder the items in list
+                    items = snapshot.unassigned
+                    items = reorder(
+                        items,
+                        source.index,
+                        destination.index
+                    )
+                    this.props.setUnassignedItems(this.props.snapshotId, items)
+                } else { // dropped in a container, only reorder the items in a container
+                    items = getSnapshotContainer(snapshot, source.droppableId).items
+                    items = reorder(
+                        items,
+                        source.index,
+                        destination.index
+                    )
+                    this.props.setContainerItems(this.props.snapshotId, source.droppableId, items)
+                }
+            } else { // dropped in other list
+                let result
+                if (source.droppableId === 'itemcollection') { // dropped in a container from items' list, move
+                    result = move(
+                        snapshot.unassigned,
+                        getSnapshotContainer(snapshot, destination.droppableId).items,
+                        source,
+                        destination
+                    )
+                    this.props.setUnassignedItems(this.props.snapshotId, result['source'])
+                    this.props.setContainerItems(this.props.snapshotId, destination.droppableId, result['destination'])
+                } else if (destination.droppableId === 'itemcollection') { // dropped in items' list from a container, move item from a container to items' list
+                    result = move(
+                        getSnapshotContainer(snapshot, source.droppableId).items,
+                        snapshot.unassigned,
+                        source,
+                        destination
+                    )
+                    this.props.setContainerItems(this.props.snapshotId, source.droppableId, result['source'])
+                    this.props.setUnassignedItems(this.props.snapshotId, result['destination'])
+                } else { // dropped in a container from another container, move item from a container to another container
+                    result = move(
+                        getSnapshotContainer(snapshot, source.droppableId).items,
+                        getSnapshotContainer(snapshot, destination.droppableId).items,
+                        source,
+                        destination
+                    )
+                    this.props.setContainerItems(this.props.snapshotId, source.droppableId, result['source'])
+                    this.props.setContainerItems(this.props.snapshotId, destination.droppableId, result['destination'])
+                }
+            }
+        }
         
-        if (source.droppableId === destination.droppableId) { // dropped in same list
-            let items = []
-            if (source.droppableId === 'itemcollection') { // dropped in items' list, only reorder the items in list
-                items = snapshot.unassigned
-                items = reorder(
-                    items,
-                    source.index,
-                    destination.index
-                )
-                this.props.setUnassignedItems(this.props.snapshotId, items)
-            } else { // dropped in a container, only reorder the items in a container
-                items = getSnapshotContainer(snapshot, source.droppableId).items
-                items = reorder(
-                    items,
-                    source.index,
-                    destination.index
-                )
-                this.props.setContainerItems(this.props.snapshotId, source.droppableId, items)
-            }
-        } else { // dropped in other list
-            let result
-            if (source.droppableId === 'itemcollection') { // dropped in a container from items' list, move
-                result = move(
-                    snapshot.unassigned,
-                    getSnapshotContainer(snapshot, destination.droppableId).items,
-                    source,
-                    destination
-                )
-                this.props.setUnassignedItems(this.props.snapshotId, result['source'])
-                this.props.setContainerItems(this.props.snapshotId, destination.droppableId, result['destination'])
-            } else if (destination.droppableId === 'itemcollection') { // dropped in items' list from a container, move item from a container to items' list
-                result = move(
-                    getSnapshotContainer(snapshot, source.droppableId).items,
-                    snapshot.unassigned,
-                    source,
-                    destination
-                )
-                this.props.setContainerItems(this.props.snapshotId, source.droppableId, result['source'])
-                this.props.setUnassignedItems(this.props.snapshotId, result['destination'])
-            } else { // dropped in a container from another container, move item from a container to another container
-                result = move(
-                    getSnapshotContainer(snapshot, source.droppableId).items,
-                    getSnapshotContainer(snapshot, destination.droppableId).items,
-                    source,
-                    destination
-                )
-                this.props.setContainerItems(this.props.snapshotId, source.droppableId, result['source'])
-                this.props.setContainerItems(this.props.snapshotId, destination.droppableId, result['destination'])
-            }
+        if (type === "container") {
+            console.log(source);
+            console.log(destination);
+            let containers = snapshot.snapshotContainers
+            containers = reorder(containers, source.index, destination.index);
+            console.log(containers);
+            this.props.snapshotSetContainers(this.props.snapshotId, containers);
         }
     }
 
@@ -170,13 +181,16 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         setRealData: (data) => {
-            dispatch(setRealData(data))
+            dispatch(setRealData(data));
         },
         setUnassignedItems: (snapshotId, unassigned) => {
-            dispatch(setUnassignedItems(snapshotId, unassigned))
+            dispatch(setUnassignedItems(snapshotId, unassigned));
         },
         setContainerItems: (snapshotId, containerId, items) => {
-            dispatch(setContainerItems(snapshotId, containerId, items))
+            dispatch(setContainerItems(snapshotId, containerId, items));
+        },
+        snapshotSetContainers: (snapshotId, snapshotContainers) => {
+            dispatch(snapshotSetContainers(snapshotId, snapshotContainers));
         }
     }
 }

@@ -143,7 +143,7 @@ export class Container extends Component {
                     action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
                     avatar={<OccupancyDisplay total={this.props.container.size} count={items.length} />}
                 />
-                <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true}>
+                <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true} type={"item"}>
                     {(provided, snapshot) => (
                         <div ref={provided.innerRef}>
                             <CardContent className={classes.cardContent}>

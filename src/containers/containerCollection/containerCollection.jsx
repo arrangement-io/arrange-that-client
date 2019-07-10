@@ -1,20 +1,18 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
-import PropTypes from 'prop-types'
-import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Button } from '@material-ui/core'
-
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import { Droppable, Draggable } from 'react-beautiful-dnd'
+
+import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Button } from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles'
+import { withSnackbar } from 'notistack';
 
 import Container from 'components/container/container'
-
 import EditContainer from 'components/editContainer/editContainer'
-
 import { addContainer, deleteContainer } from 'actions/container/container'
-
-import { withStyles } from '@material-ui/core/styles'
-
 import { uuid, validateName, checkDuplicate } from 'utils'
-import { withSnackbar } from 'notistack';
+
 
 const styles = theme => ({
     card: {
@@ -218,26 +216,49 @@ export class ContainerCollection extends Component {
                             <Grid item xs>Total number of containers: {this.props.containers.length}</Grid>
                         </Grid>
                     </CardContent>
-                    <CardContent className={classes.cardContent}>
-                        <Grid container spacing={8}>
-                            {
-                                this.props.containers.map((container) => {
-                                    return (
-                                        <Grid item xs={12} sm={6} md={3} lg={2} key={container._id}>
-                                            <Container 
-                                                container={container}
-                                                snapshot={this.props.snapshot} 
-                                                items={this.props.items} 
-                                                deleteContainer={this.props.deleteContainer}
-                                                getDragItemColor={this.props.getDragItemColor}
-                                            />
-                                        </Grid>
-                                    )  
-                                })
-                            }
-                            { this.displayEditContainer() }
-                        </Grid>        
-                    </CardContent>
+                    <Droppable droppableId="containerCollection" type="container" direction="horizontal">
+                        {(provided, snapshot) => (
+                            <div ref={provided.innerRef}>
+                                <CardContent className={classes.cardContent}>
+                                    <Grid container spacing={8}>
+                                        {
+                                            this.props.snapshot.snapshotContainers.map((snapshotContainer, index) => {
+                                                let container = this.props.containers.find(c => c._id === snapshotContainer._id);
+                                                if (container) {
+                                                    return (
+                                                        <Grid item xs={12} sm={6} md={3} lg={2} key={snapshotContainer._id}>
+                                                            <Draggable
+                                                                key={snapshotContainer._id}
+                                                                draggableId={snapshotContainer._id}
+                                                                index={index}
+                                                            >
+                                                                {(provided, snapshot) => (
+                                                                    <div
+                                                                        ref={provided.innerRef}
+                                                                        {...provided.draggableProps}
+                                                                        {...provided.dragHandleProps}
+                                                                    >
+                                                                        <Container 
+                                                                            container={container}
+                                                                            snapshot={this.props.snapshot} 
+                                                                            items={this.props.items} 
+                                                                            deleteContainer={this.props.deleteContainer}
+                                                                            getDragItemColor={this.props.getDragItemColor}
+                                                                        />
+                                                                    </div>
+                                                                )}
+                                                            </Draggable>
+                                                        </Grid>
+                                                    )  
+                                                }
+                                            })
+                                        }
+                                        { this.displayEditContainer() }
+                                    </Grid>        
+                                </CardContent>
+                            </div>
+                        )}
+                    </Droppable>
                     <CardActions>
                         <Button variant="text" color="default" onClick={this.addEditContainer}>
                             <Typography variant="body1" align="left">

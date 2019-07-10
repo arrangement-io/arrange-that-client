@@ -192,7 +192,7 @@ export class ItemCollection extends Component {
             <Card className={classes.card}>
                 <CardHeader className={classes.cardHeader} title="People"/>
                 <CardContent>Unassigned: {this.props.unsnapshot_items.length}/{this.props.items.length}</CardContent>
-                <Droppable droppableId="itemcollection">
+                <Droppable droppableId="itemcollection" type={"item"}>
                     {(provided, snapshot) => (
                         <div ref={provided.innerRef}>
                             <CardContent className={classes.cardContent}>

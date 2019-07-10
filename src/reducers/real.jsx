@@ -15,7 +15,8 @@ import {
     SNAPSHOT_ADD,
     SNAPSHOT_DELETE,
     SNAPSHOT_RENAME,
-    SNAPSHOT_REPOSITION
+    SNAPSHOT_REPOSITION,
+    SNAPSHOT_SET_CONTAINERS
 } from 'actions/actionTypes'
 
 import { updateArrangement } from 'services/arrangementService'
@@ -229,6 +230,16 @@ const realReducer = (state = initialState, action) => {
 
             exportState(snapshotReposition)
             return snapshotReposition
+        }
+
+        case SNAPSHOT_SET_CONTAINERS: {
+            const setSnapshotContainersState = cloneDeep(state);
+            const index = getSnapshotIndex(setSnapshotContainersState, action.snapshotId);
+            setSnapshotContainersState.snapshots[index].snapshotContainers = action.snapshotContainers;
+
+            exportState(setSnapshotContainersState);
+            console.log(setSnapshotContainersState);
+            return setSnapshotContainersState;
         }
 
         default: {
