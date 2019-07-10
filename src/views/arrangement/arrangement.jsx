@@ -5,7 +5,7 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import { Grid, Typography } from '@material-ui/core'
 import Snapshot from 'containers/snapshot/snapshot'
-import ListView from 'containers/listView/listView'
+import SheetView from 'containers/listView/sheetView'
 
 import EditArrangementTitle from 'components/editArrangementTitle/editArrangementTitle'
 import ExportButton from 'components/exportbutton/exportbutton'
@@ -165,7 +165,7 @@ export class Arrange extends Component {
         const id = this.props.match.params.arrangement_id
         return getArrangement(id)
             .then(response => {
-                if (response.data.arrangement === "no arrangement found") {
+                if (response.data === "no arrangement found") {
                     console.log("no arrangement found")
                 }
                 else {
@@ -207,7 +207,7 @@ export class Arrange extends Component {
                                     onChange={this.handleActivateListView()}
                                 />
                             }
-                            label="List View"
+                            label="Sheet View"
                         />
                     </Grid>
                 </Grid>
@@ -229,7 +229,7 @@ export class Arrange extends Component {
                                     onClone={this.cloneSnapshot}
                                     onSave={this.props.snapshotRename} />}>
                                 {this.state.isListView ? (
-                                    <ListView snapshotId={snapshot._id} />
+                                    <SheetView snapshotId={snapshot._id} />
                                 ) : (
                                     <Snapshot snapshotId={snapshot._id} />
                                 )}
