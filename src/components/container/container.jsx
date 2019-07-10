@@ -131,21 +131,21 @@ export class Container extends Component {
         const items = this.getItems(this.props.items, this.props.container._id)
 
         const containerCard = (
-            <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true}>
-                {(provided, snapshot) => (
-                    <div ref={provided.innerRef}>
-                        <Card className={classes.card}>
-                            <CardHeader
-                                className={classes.cardHeader}
-                                title={
-                                    <Typography variant="body1" align="left">
-                                        <b>{this.props.container.name}</b>
-                                    </Typography>
-                                }
-                                onDoubleClick={this.handleContainerDoubleClick}
-                                action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
-                                avatar={<OccupancyDisplay total={this.props.container.size} count={items.length} />}
-                            />
+            <Card className={classes.card}>
+                <CardHeader
+                    className={classes.cardHeader}
+                    title={
+                        <Typography variant="body1" align="left">
+                            <b>{this.props.container.name}</b>
+                        </Typography>
+                    }
+                    onDoubleClick={this.handleContainerDoubleClick}
+                    action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
+                    avatar={<OccupancyDisplay total={this.props.container.size} count={items.length} />}
+                />
+                <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true}>
+                    {(provided, snapshot) => (
+                        <div ref={provided.innerRef}>
                             <CardContent className={classes.cardContent}>
                                 {
                                     items.map((item, index) => {
@@ -164,10 +164,10 @@ export class Container extends Component {
                                 }
                                 {provided.placeholder}
                             </CardContent>
-                        </Card>
-                    </div>
-                )}
-            </Droppable>
+                        </div>
+                    )}
+                </Droppable>
+            </Card>      
         )
 
         const editContainer = (

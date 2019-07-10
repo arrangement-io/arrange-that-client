@@ -27,7 +27,7 @@ const styles = theme => ({
         paddingRight: 10
     },
     cardContent: {
-        height: "calc(100vh - 341px)",
+        maxHeight: "calc(100vh - 341px)",
         overflow: "scroll"
     }
 })
