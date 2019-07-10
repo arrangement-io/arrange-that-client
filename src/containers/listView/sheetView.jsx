@@ -172,36 +172,37 @@ class SheetView extends Component {
     }
 
     processChangeContainerName = (row, columnTitle, previous, current) => {
-        // TODO: Validate that the container name changing to exists
         const itemChanged = this.props.real.items[row]
-        if (current 
-            && previous 
-            && this.getContainerFromContainerName(previous) 
-            && this.getContainerFromContainerName(current)) {
-            if (current === previous) {
-                // Move to same container
-                // Do nothing
-                console.debug("Same Container");
-            } else {
-                // Move from one container to the other container.
-                console.debug("New Container");
-                this.removeItemFromContainer(itemChanged._id, this.getContainerFromContainerName(previous)._id);
+        if (itemChanged) {
+            if (current 
+                && previous 
+                && this.getContainerFromContainerName(previous) 
+                && this.getContainerFromContainerName(current)) {
+                if (current === previous) {
+                    // Move to same container
+                    // Do nothing
+                    console.debug("Same Container");
+                } else {
+                    // Move from one container to the other container.
+                    console.debug("New Container");
+                    this.removeItemFromContainer(itemChanged._id, this.getContainerFromContainerName(previous)._id);
+                    this.addItemToContainer(itemChanged._id, this.getContainerFromContainerName(current)._id);   
+                }
+            } else if (current && this.getContainerFromContainerName(current)) {
+                // Move from unassigned to container
+                console.debug("Move from unassigned to container");
+                this.removeItemFromUnassigned(itemChanged._id);
                 this.addItemToContainer(itemChanged._id, this.getContainerFromContainerName(current)._id);   
+            } else if (previous && this.getContainerFromContainerName(previous)) {
+                // Move from container to unassigned
+                console.debug("Move from container to unassigned");
+                this.removeItemFromContainer(itemChanged._id, this.getContainerFromContainerName(previous)._id);
+                this.addItemToUnassigned(itemChanged._id);
+            } else {
+                // Move from unassigned to unassigned
+                // Do nothing
+                console.debug("remain unassigned");
             }
-        } else if (current && this.getContainerFromContainerName(current)) {
-            // Move from unassigned to container
-            console.debug("Move from unassigned to container");
-            this.removeItemFromUnassigned(itemChanged._id);
-            this.addItemToContainer(itemChanged._id, this.getContainerFromContainerName(current)._id);   
-        } else if (previous && this.getContainerFromContainerName(previous)) {
-            // Move from container to unassigned
-            console.debug("Move from container to unassigned");
-            this.removeItemFromContainer(itemChanged._id, this.getContainerFromContainerName(previous)._id);
-            this.addItemToUnassigned(itemChanged._id);
-        } else {
-            // Move from unassigned to unassigned
-            // Do nothing
-            console.debug("remain unassigned");
         }
     }
     processChange = (row, columnTitle, previous, current) => {

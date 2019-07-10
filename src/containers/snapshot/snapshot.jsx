@@ -16,8 +16,6 @@ const styles = theme => ({
     }
 });
 
-import { logout } from 'actions/account/account'
-
 class Snapshot extends Component {
     componentDidMount () {
         this.healSnapshotContainers(this.props.snapshotId)
@@ -179,9 +177,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         setContainerItems: (snapshotId, containerId, items) => {
             dispatch(setContainerItems(snapshotId, containerId, items))
-        },
-        logout: () => {
-            dispatch(logout())
         }
     }
 }
