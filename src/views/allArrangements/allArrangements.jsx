@@ -25,6 +25,8 @@ class AllArrangements extends Component {
     }
 
     render () {
+        document.title = "View All - Arrange.Space";
+
         return <AllArrangementsTable />
     }
 }

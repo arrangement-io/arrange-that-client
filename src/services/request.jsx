@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getBearer } from 'services/authService'
+import { getBearer, logout } from 'services/authService'
 
 import { base_url } from './serviceTypes';
 

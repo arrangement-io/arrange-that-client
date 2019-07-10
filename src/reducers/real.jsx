@@ -14,7 +14,8 @@ import {
     SAVE_STATE,
     SNAPSHOT_ADD,
     SNAPSHOT_DELETE,
-    SNAPSHOT_RENAME
+    SNAPSHOT_RENAME,
+    SNAPSHOT_REPOSITION
 } from 'actions/actionTypes'
 
 import { updateArrangement } from 'services/arrangementService'
@@ -65,7 +66,10 @@ const realReducer = (state = initialState, action) => {
             for (const snapshot of addItemState.snapshots) {
                 snapshot.unassigned.push(action.item._id)
             }
-            exportState(addItemState)
+
+            if (!action.bulk) {
+                exportState(addItemState)
+            }
             return addItemState
         }
                 
@@ -84,7 +88,9 @@ const realReducer = (state = initialState, action) => {
                 // Remove item from unassigned in snapshot
                 snapshotItemDelete.unassigned = snapshotItemDelete.unassigned.filter(ele => ele !== action.id);
             }
-            exportState(deleteItemState)
+            if (!action.bulk) {
+                exportState(deleteItemState)
+            }
             return deleteItemState
         }
 
@@ -92,7 +98,9 @@ const realReducer = (state = initialState, action) => {
             const resultItemRename = cloneDeep(state);
             const item = resultItemRename.items.find(ele => ele._id === action.item._id)
             item.name = action.item.name
-            exportState(resultItemRename)
+            if (!action.bulk) {
+                exportState(resultItemRename)
+            }
             return resultItemRename
         }
 
@@ -152,9 +160,10 @@ const realReducer = (state = initialState, action) => {
 
             const index = getSnapshotIndex(setUnassignedState, action.snapshotId)
             setUnassignedState.snapshots[index].unassigned = action.unassigned
-            console.log(setUnassignedState)
             
-            exportState(setUnassignedState)
+            if (!action.bulk) {
+                exportState(setUnassignedState)
+            }
             return setUnassignedState
         }
 
@@ -165,7 +174,9 @@ const realReducer = (state = initialState, action) => {
             const containerIndex = getSnapshotContainerIndex(setContainerItemsState.snapshots[index], action.containerId)
             setContainerItemsState.snapshots[index].snapshotContainers[containerIndex].items = action.items
 
-            exportState(setContainerItemsState)
+            if (!action.bulk) {
+                exportState(setContainerItemsState)
+            }
             return setContainerItemsState
         }
 
@@ -191,13 +202,13 @@ const realReducer = (state = initialState, action) => {
             return snapshotDeleteState
         }
 
-        case ARRANGEMENT_RENAME:
+        case ARRANGEMENT_RENAME: {
             const arrangementRenameState = cloneDeep(state);
             arrangementRenameState.name = action.name;
             
             exportState(arrangementRenameState);
             return arrangementRenameState;
-
+        }
 
         case SNAPSHOT_RENAME: {
             const snapshotRenameState = cloneDeep(state);
@@ -206,6 +217,18 @@ const realReducer = (state = initialState, action) => {
             snapshotRenameState.snapshots[index].name = action.name
             exportState(snapshotRenameState)
             return snapshotRenameState
+        }
+
+        // ability to drag tabs
+        case SNAPSHOT_REPOSITION: {
+            const snapshotReposition = cloneDeep(state);
+
+            let c = snapshotReposition.snapshots[action.a];
+            snapshotReposition.snapshots[action.a] = snapshotReposition.snapshots[action.b];
+            snapshotReposition.snapshots[action.b] = c;
+
+            exportState(snapshotReposition)
+            return snapshotReposition
         }
 
         default: {

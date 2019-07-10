@@ -5,6 +5,7 @@ import store from 'store/store'
 import { SnackbarProvider } from 'notistack';
 import axios from 'axios';
 import { logout } from 'actions/account/account'
+import 'handsontable/dist/handsontable.full.css';
 
 import './App.css'
 

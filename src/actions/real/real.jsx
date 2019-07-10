@@ -14,14 +14,31 @@ export const setRealData = (data) => ({
 export const setUnassignedItems = (snapshotId, unassigned) => ({
     type: SET_UNASSIGNED_ITEMS,
     snapshotId,
-    unassigned
+    unassigned,
+    bulk: false
+})
+
+export const bulkSetUnassignedItems = (snapshotId, unassigned) => ({
+    type: SET_UNASSIGNED_ITEMS,
+    snapshotId,
+    unassigned,
+    bulk: true,
 })
 
 export const setContainerItems = (snapshotId, containerId, items) => ({
     type: SET_CONTAINER_ITEMS,
     snapshotId,
     containerId,
-    items
+    items,
+    bulk: false
+})
+
+export const bulkSetContainerItems = (snapshotId, containerId, items) => ({
+    type: SET_CONTAINER_ITEMS,
+    snapshotId,
+    containerId,
+    items,
+    bulk: true
 })
 
 export const saveState = (data) => ({

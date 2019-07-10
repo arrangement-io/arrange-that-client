@@ -25,6 +25,10 @@ const styles = theme => ({
         paddingTop: 10,
         paddingBottom: 0,
         paddingRight: 10
+    },
+    cardContent: {
+        height: "calc(100vh - 341px)",
+        overflow: "scroll"
     }
 })
 
@@ -195,7 +199,7 @@ export class ItemCollection extends Component {
                             <Card className={classes.card}>
                                 <CardHeader className={classes.cardHeader} title="People"/>
                                 <CardContent>Unassigned: {this.props.unsnapshot_items.length}/{this.props.items.length}</CardContent>
-                                <CardContent className={classes.CardContent}>
+                                <CardContent className={classes.cardContent}>
                                     <Grid container spacing={0}>
                                         {
                                             this.props.unsnapshot_items.map((id, index) => {
