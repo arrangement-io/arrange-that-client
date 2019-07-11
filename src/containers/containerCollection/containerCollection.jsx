@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Droppable, Draggable } from 'react-beautiful-dnd'
 
 import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
@@ -35,29 +34,31 @@ const styles = theme => ({
 // Using react-sortable-hoc to create a sortable container element
 const SortableContainerElement = SortableElement(({container, snapshot, items, deleteContainer, style}) => {
     return (
-        <div style={style}>
+        <Grid item xs={12} sm={6} md={3} lg={2} key={container._id} style={style}>
             <Container 
                 container={container}
                 snapshot={snapshot} 
                 items={items} 
                 deleteContainer={deleteContainer}
-            />
-        </div>
+            /> 
+        </Grid>
     )
 });
 
 // Using react-sortable-hoc to create a container for the sortable containers
 const SortableContainerCollection = SortableContainer(({snapshot, containers, items, deleteContainer, displayEditContainer}) => {
+    console.log("making a container container");
     return (
-        <Grid container spacing={8}>
-            {
-                snapshot.snapshotContainers.map((snapshotContainer, index) => {
-                    let container = containers.find(c => c._id === snapshotContainer._id);
-                    if (container) {
-                        return (
-                            <Grid item xs={12} sm={6} md={3} lg={2} key={snapshotContainer._id}>
+        // It needs to be wrapped in a div to prevent an error
+        <div>
+            <Grid container spacing={8}>
+                {
+                    snapshot.snapshotContainers.map((snapshotContainer, index) => {
+                        let container = containers.find(c => c._id === snapshotContainer._id);
+                        if (container) {
+                            return (          
                                 <SortableContainerElement 
-                                    key={`item-${index}`} 
+                                    key={container._id} 
                                     index={index} 
                                     container={container}
                                     snapshot={snapshot}
@@ -65,13 +66,13 @@ const SortableContainerCollection = SortableContainer(({snapshot, containers, it
                                     deleteContainer={deleteContainer}
                                     style={{zIndex: 1000}}
                                 />
-                            </Grid>
-                        )  
-                    }
-                })
-            }
-            { displayEditContainer() }
-        </Grid>        
+                            )  
+                        }
+                    })
+                }
+                { displayEditContainer() }
+            </Grid>        
+        </div>
     )
 });
 
@@ -279,8 +280,7 @@ export class ContainerCollection extends Component {
                             classes={classes} 
                             onSortEnd={this.onSortEnd}
                             useDragHandle={true}
-                            axis="xy"
-                            lockOffset="0%" />
+                            axis="xy" />
                     </CardContent>
                     <CardActions>
                         <Button variant="text" color="default" onClick={this.addEditContainer}>
