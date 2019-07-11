@@ -1,7 +1,7 @@
 import {
     ITEM_ADD,
     ITEM_DELETE,
-    ITEM_RENAME
+    ITEM_UPDATE
 } from 'actions/actionTypes'
 
 export const addItem = (item) => ({
@@ -27,14 +27,14 @@ export const bulkDeleteItem = (id) => ({
     bulk: true
 })
 
-export const renameItem = (item) => ({
-    type: ITEM_RENAME,
+export const updateItem = (item) => ({
+    type: ITEM_UPDATE,
     item: item,
     bulk: false
 })
 
-export const bulkRenameItem = (item) => ({
-    type: ITEM_RENAME,
+export const bulkUpdateItem = (item) => ({
+    type: ITEM_UPDATE,
     item: item,
     bulk: true
 })

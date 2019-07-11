@@ -4,16 +4,20 @@ import PropTypes from 'prop-types'
 
 import { HotTable } from '@handsontable/react';
 import Handsontable from 'handsontable';
+import { Card, CardHeader, CardContent } from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles'
+
 
 import { setRealData, bulkSetUnassignedItems, bulkSetContainerItems, saveState } from 'actions/real/real'
-import { bulkAddItem, bulkRenameItem, bulkDeleteItem } from 'actions/item/item'
+import { bulkAddItem, bulkUpdateItem, bulkDeleteItem } from 'actions/item/item'
 import { generateItem } from 'utils'
 
-import { withStyles } from '@material-ui/core/styles'
+
 
 
 const NAME_FIELD = "name";
 const CONTAINER_FIELD = "container";
+const NOTES_FIELD = "notes";
 
 const styles = theme => ({
     sheet: {
@@ -24,13 +28,60 @@ const styles = theme => ({
         borderStyle: "solid",
         borderWidth: "1px",
         borderColor: "#777"
+    },
+    card: {
+        background:"#fafafa"
+    },
+    cardHeader: {
+        paddingLeft: 10,
+        paddingTop: 10,
+        paddingBottom: 0,
+        paddingRight: 10
+    },
+    cardContent: {
+        height: "calc(100vh - 341px)",
+        overflow: "scroll"
     }
 })
 
 class SheetView extends Component {
     constructor(props) {
         super(props);
-        this.state = {data: this.generateItemList(this.props.snapshotId)}
+        this.state = {
+            data: this.generateItemList(this.props.snapshotId),
+            contextMenu: {
+                callback: function (key, selection, clickEvent) {
+                    // Common callback for all options
+                },
+                items: {
+                    "insert_column": {
+                        name: "Insert Column",
+                        submenu: {
+                            items: [
+                                {
+                                    key: "insert_column:address",
+                                    name: "Address",
+                                    disabled: function () { return true; }
+                                },
+                                {
+                                    key: "insert_column:gender",
+                                    name: "Gender",
+                                    disabled: function () { return true; }
+                                },
+                                {
+                                    key: "insert_column:year",
+                                    name: "Year",
+                                    disabled: function () { return true; }
+                                }
+                            ]
+                        }
+                    },
+                    "alignment": {
+                        name: "Alignment"
+                    }
+                }
+            }
+        }
     }
 
     generateColumnHeaders = () => {
@@ -39,13 +90,21 @@ class SheetView extends Component {
 
     generateColumnDefs = () => {
         return [
-            {data: "name"}, 
             {
-                data:"container", 
+                data: NAME_FIELD,
+                width: 120
+            },
+            {  
+                data: NOTES_FIELD,
+                width: 180
+            },
+            {
+                data: CONTAINER_FIELD, 
                 type: 'dropdown',
                 source: this.props.real.containers.map(container => container.name),
                 renderer: this.renderContainerChip,
-                allowInvalid: false
+                allowInvalid: false,
+                width: 100
             }
         ];
     }
@@ -55,7 +114,7 @@ class SheetView extends Component {
         return this.props.real.items.map(item => {
             let container = this.getContainerForItem(snapshot, item._id)
             let containerName = (container) ? container.name : null
-            return {name: item.name, container: containerName};
+            return {...item, container: containerName};
         });
     }
 
@@ -91,7 +150,7 @@ class SheetView extends Component {
         if (value) {
             const container = this.getContainerFromContainerName(value);
             if (container) {
-                const count = instance.getDataAtCol(col).filter(x => x == value).length
+                const count = instance.getDataAtCol(col).filter(x => x === value).length
                 const total = container.size
             
                 const escaped = Handsontable.helper.stringify(value);
@@ -156,7 +215,7 @@ class SheetView extends Component {
             }
             else {
                 // Rename already existing item
-                this.props.bulkRenameItem({
+                this.props.bulkUpdateItem({
                     ...item,
                     name: current
                 })
@@ -169,6 +228,23 @@ class SheetView extends Component {
                 this.props.bulkAddItem(newItem);
             }
         }    
+    }
+
+    processChangeItemNotes = (row, columnTitle, previous, current) => {
+        const itemChanged = this.props.real.items[row]
+        if (itemChanged) {
+            if (current === null || !current) {
+                // Delete the note
+                this.props.bulkUpdateItem({
+                    ...itemChanged,
+                    notes: ""
+                })
+            }
+            this.props.bulkUpdateItem({
+                ...itemChanged,
+                notes: current
+            })
+        }
     }
 
     processChangeContainerName = (row, columnTitle, previous, current) => {
@@ -212,6 +288,9 @@ class SheetView extends Component {
         else if (columnTitle === CONTAINER_FIELD) {
             this.processChangeContainerName(row, columnTitle, previous, current);
         }
+        else if (columnTitle === NOTES_FIELD) {
+            this.processChangeItemNotes(row, columnTitle, previous, current);
+        }
     }
 
     onCellValueChange = (changes, source) => {
@@ -228,17 +307,25 @@ class SheetView extends Component {
         const { classes } = this.props;
 
         return (
-            <div className={classes.sheet} id="hot-app">
-                <HotTable 
-                    data={this.state.data} 
-                    colHeaders={this.generateColumnHeaders()}
-                    columns={this.generateColumnDefs()}
-                    rowHeaders={false} 
-                    afterChange={this.onCellValueChange}
-                    minSpareRows={1}
-                    height="65vh" 
-                    licenseKey='non-commercial-and-evaluation' />
-            </div>
+            <Card className={classes.card}>
+                <CardHeader className={classes.cardHeader} title="People" />
+                <CardContent className={classes.cardContent}>
+                    <div className={classes.sheet} id="hot-app">
+                        <HotTable 
+                            data={this.state.data} 
+                            colHeaders={this.generateColumnHeaders()}
+                            columns={this.generateColumnDefs()}
+                            rowHeaders={false} 
+                            afterChange={this.onCellValueChange}
+                            minSpareRows={1}
+                            contextMenu={this.state.contextMenu}
+                            dropdownMenu={this.state.contextMenu}
+                            height="calc(100vh - 400px)"
+                            licenseKey='non-commercial-and-evaluation' />
+                    </div>
+
+                </CardContent>
+            </Card>
         );
     }
 }
@@ -250,8 +337,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        bulkRenameItem: (item) => {
-            dispatch(bulkRenameItem(item))
+        bulkUpdateItem: (item) => {
+            dispatch(bulkUpdateItem(item))
         },
         bulkAddItem: (item) => {
             dispatch(bulkAddItem(item))

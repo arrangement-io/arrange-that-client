@@ -38,7 +38,7 @@ export class Arrange extends Component {
             activeTab: 0,
             isEdit: false,
             name: this.props.real.name,
-            isListView: false,
+            isListView: true,
         };
     }
 
@@ -62,9 +62,9 @@ export class Arrange extends Component {
 
     handleTabPositionChange = (a, b) => {
         this.props.snapshotReposition(a, b)
-        if (this.state.activeTab == a) {
+        if (this.state.activeTab === a) {
             this.setState({ activeTab: b });
-        } else if (this.state.activeTab == b) {
+        } else if (this.state.activeTab === b) {
             this.setState({ activeTab: a });
         }
 
