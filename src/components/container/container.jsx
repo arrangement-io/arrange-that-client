@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core'
 import MoreMenu from 'components/moremenu/moremenu'
 import { connect } from 'react-redux'
+import {SortableHandle} from 'react-sortable-hoc';
 
 import Item from 'components/item/item'
 import EditContainer from 'components/editContainer/editContainer'
@@ -33,6 +34,14 @@ const styles = theme => ({
         paddingRight: 10
     }
 })
+
+// Create a drag handle out of the name of the container
+const DragHandle = SortableHandle(({name}) => (
+    <div style={{cursor: "grab"}}>
+        <Typography variant="body1" align="left">
+            <b>{name}</b>
+        </Typography>
+    </div>));
 
 export class Container extends Component {
     constructor(props) {
@@ -135,9 +144,7 @@ export class Container extends Component {
                 <CardHeader
                     className={classes.cardHeader}
                     title={
-                        <Typography variant="body1" align="left">
-                            <b>{this.props.container.name}</b>
-                        </Typography>
+                        <DragHandle name={this.props.container.name} />
                     }
                     onDoubleClick={this.handleContainerDoubleClick}
                     action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
