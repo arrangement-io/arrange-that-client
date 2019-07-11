@@ -63,7 +63,6 @@ const SortableContainerCollection = SortableContainer(({snapshot, containers, it
                                     snapshot={snapshot}
                                     items={items}
                                     deleteContainer={deleteContainer}
-                                    style={{zIndex: 1000}}
                                 />
                             )  
                         }
@@ -277,6 +276,7 @@ export class ContainerCollection extends Component {
                             classes={classes} 
                             onSortEnd={this.onSortEnd}
                             useDragHandle={true}
+                            helperClass='sortableHelper'
                             axis="xy" />
                     </CardContent>
                     <CardActions>
