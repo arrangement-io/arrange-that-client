@@ -81,15 +81,6 @@ class Snapshot extends Component {
                 }
             }
         }
-        
-        if (type === "container") {
-            console.log(source);
-            console.log(destination);
-            let containers = snapshot.snapshotContainers
-            containers = reorder(containers, source.index, destination.index);
-            console.log(containers);
-            this.props.snapshotSetContainers(this.props.snapshotId, containers);
-        }
     }
 
     healUnassignedItems = (snapshotId) => {

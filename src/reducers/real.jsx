@@ -238,7 +238,6 @@ const realReducer = (state = initialState, action) => {
             setSnapshotContainersState.snapshots[index].snapshotContainers = action.snapshotContainers;
 
             exportState(setSnapshotContainersState);
-            console.log(setSnapshotContainersState);
             return setSnapshotContainersState;
         }
 

@@ -47,7 +47,6 @@ const SortableContainerElement = SortableElement(({container, snapshot, items, d
 
 // Using react-sortable-hoc to create a container for the sortable containers
 const SortableContainerCollection = SortableContainer(({snapshot, containers, items, deleteContainer, displayEditContainer}) => {
-    console.log("making a container container");
     return (
         // It needs to be wrapped in a div to prevent an error
         <div>
@@ -249,8 +248,6 @@ export class ContainerCollection extends Component {
     }
 
     onSortEnd = ({oldIndex, newIndex}) => { 
-        console.log(oldIndex)
-        console.log(newIndex);
         let containers = this.props.snapshot.snapshotContainers
         containers = reorder(containers, oldIndex, newIndex);
         this.props.snapshotSetContainers(this.props.snapshot._id, containers);
