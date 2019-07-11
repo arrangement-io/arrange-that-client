@@ -318,8 +318,6 @@ class SheetView extends Component {
                             rowHeaders={false} 
                             afterChange={this.onCellValueChange}
                             minSpareRows={1}
-                            contextMenu={this.state.contextMenu}
-                            dropdownMenu={this.state.contextMenu}
                             height="calc(100vh - 400px)"
                             licenseKey='non-commercial-and-evaluation' />
                     </div>
