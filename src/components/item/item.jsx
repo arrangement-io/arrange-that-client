@@ -9,7 +9,7 @@ import MoreMenu from 'components/moremenu/moremenu'
 import { Draggable } from 'react-beautiful-dnd'
 import { withStyles } from '@material-ui/core/styles'
 
-import { renameItem, deleteItem } from 'actions/item/item'
+import { updateItem, deleteItem } from 'actions/item/item'
 
 import EditItem from 'components/editItem/editItem'
 
@@ -63,7 +63,7 @@ export class Item extends Component {
 
     handleEditItemSubmit = () => {
 
-        this.props.renameItem({
+        this.props.updateItem({
             ...this.props.item,
             name: this.state.name
         })
@@ -100,12 +100,14 @@ export class Item extends Component {
                 key={this.props.item._id}
                 draggableId={this.props.item._id}
                 index={this.props.index}
+
             >
                 {(provided, snapshot) => (
                     <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
+
                     >
                         <Card className={classes.card} raised={snapshot.isDragging}>
                             <CardHeader
@@ -164,8 +166,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        renameItem: (item) => {
-            dispatch(renameItem(item))
+        updateItem: (item) => {
+            dispatch(updateItem(item))
         },
         deleteItem: (item) => {
             dispatch(deleteItem(item))

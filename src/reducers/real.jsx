@@ -3,7 +3,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import {
     ITEM_ADD,
     ITEM_DELETE,
-    ITEM_RENAME,
+    ITEM_UPDATE,
     CONTAINER_ADD,
     CONTAINER_DELETE,
     CONTAINER_EDIT,
@@ -95,12 +95,13 @@ const realReducer = (state = initialState, action) => {
             return deleteItemState
         }
 
-        case ITEM_RENAME: {
+        case ITEM_UPDATE: {
             const resultItemRename = cloneDeep(state);
             const item = resultItemRename.items.find(ele => ele._id === action.item._id)
-            item.name = action.item.name
+            item.name = action.item.name;
+            item.notes = action.item.notes;
             if (!action.bulk) {
-                exportState(resultItemRename)
+                exportState(resultItemRename);
             }
             return resultItemRename
         }
