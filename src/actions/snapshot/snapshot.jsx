@@ -2,7 +2,8 @@ import {
     SNAPSHOT_ADD,
     SNAPSHOT_DELETE,
     SNAPSHOT_RENAME,
-    SNAPSHOT_REPOSITION
+    SNAPSHOT_REPOSITION,
+    SNAPSHOT_SET_CONTAINERS
 } from 'actions/actionTypes'
 
 export const snapshotAdd = (snapshot) => ({
@@ -25,4 +26,10 @@ export const snapshotReposition = (a, b) => ({
     type: SNAPSHOT_REPOSITION,
     a,
     b
+})
+
+export const snapshotSetContainers = (snapshotId, snapshotContainers) => ({
+    type: SNAPSHOT_SET_CONTAINERS,
+    snapshotId,
+    snapshotContainers
 })

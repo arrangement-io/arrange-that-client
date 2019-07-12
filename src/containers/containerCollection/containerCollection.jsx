@@ -1,20 +1,19 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
-import PropTypes from 'prop-types'
-import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Button } from '@material-ui/core'
-
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+
+import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Button } from '@material-ui/core'
+import { withStyles } from '@material-ui/core/styles'
+import { withSnackbar } from 'notistack';
+import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 
 import Container from 'components/container/container'
-
 import EditContainer from 'components/editContainer/editContainer'
-
 import { addContainer, deleteContainer } from 'actions/container/container'
+import { snapshotSetContainers } from 'actions/snapshot/snapshot'
+import { uuid, validateName, checkDuplicate, reorder } from 'utils'
 
-import { withStyles } from '@material-ui/core/styles'
-
-import { uuid, validateName, checkDuplicate } from 'utils'
-import { withSnackbar } from 'notistack';
 
 const styles = theme => ({
     card: {
@@ -27,10 +26,53 @@ const styles = theme => ({
         paddingRight: 10
     },
     cardContent: {
-        height: "calc(100vh - 341px)",
+        maxHeight: "calc(100vh - 341px)",
         overflow: "scroll"
     }
 })
+
+// Using react-sortable-hoc to create a sortable container element
+const SortableContainerElement = SortableElement(({container, snapshot, items, deleteContainer, style}) => {
+    return (
+        <Grid item xs={12} sm={6} md={3} lg={2} key={container._id} style={style}>
+            <Container 
+                container={container}
+                snapshot={snapshot} 
+                items={items} 
+                deleteContainer={deleteContainer}
+            /> 
+        </Grid>
+    )
+});
+
+// Using react-sortable-hoc to create a container for the sortable containers
+const SortableContainerCollection = SortableContainer(({snapshot, containers, items, deleteContainer, displayEditContainer}) => {
+    return (
+        // It needs to be wrapped in a div to prevent an error
+        <div>
+            <Grid container spacing={8}>
+                {
+                    snapshot.snapshotContainers.map((snapshotContainer, index) => {
+                        let container = containers.find(c => c._id === snapshotContainer._id);
+                        if (container) {
+                            return (          
+                                <SortableContainerElement 
+                                    key={container._id} 
+                                    index={index} 
+                                    container={container}
+                                    snapshot={snapshot}
+                                    items={items}
+                                    deleteContainer={deleteContainer}
+                                />
+                            )  
+                        }
+                    })
+                }
+                { displayEditContainer() }
+            </Grid>        
+        </div>
+    )
+});
 
 export class ContainerCollection extends Component {
     constructor (props) {
@@ -204,6 +246,12 @@ export class ContainerCollection extends Component {
         return props.items.length - props.snapshot.unassigned.length
     }
 
+    onSortEnd = ({oldIndex, newIndex}) => { 
+        let containers = this.props.snapshot.snapshotContainers
+        containers = reorder(containers, oldIndex, newIndex);
+        this.props.snapshotSetContainers(this.props.snapshot._id, containers);
+    }
+
     render () {
         const { classes } = this.props;
         const totalAvailableSpaces = this.totalAvailableSpaces(this.props);
@@ -219,24 +267,17 @@ export class ContainerCollection extends Component {
                         </Grid>
                     </CardContent>
                     <CardContent className={classes.cardContent}>
-                        <Grid container spacing={8}>
-                            {
-                                this.props.containers.map((container) => {
-                                    return (
-                                        <Grid item xs={12} sm={6} md={3} lg={2} key={container._id}>
-                                            <Container 
-                                                container={container}
-                                                snapshot={this.props.snapshot} 
-                                                items={this.props.items} 
-                                                deleteContainer={this.props.deleteContainer}
-                                                getDragItemColor={this.props.getDragItemColor}
-                                            />
-                                        </Grid>
-                                    )  
-                                })
-                            }
-                            { this.displayEditContainer() }
-                        </Grid>        
+                        <SortableContainerCollection
+                            snapshot={this.props.snapshot}
+                            containers={this.props.containers}
+                            items={this.props.items}
+                            deleteContainer={this.deleteContainer}
+                            displayEditContainer={this.displayEditContainer}
+                            classes={classes} 
+                            onSortEnd={this.onSortEnd}
+                            useDragHandle={true}
+                            helperClass='sortableHelper'
+                            axis="xy" />
                     </CardContent>
                     <CardActions>
                         <Button variant="text" color="default" onClick={this.addEditContainer}>
@@ -266,8 +307,7 @@ ContainerCollection.propTypes = {
         _id: PropTypes.string,
         name: PropTypes.string,
         size: PropTypes.number
-    })),
-    getDragItemColor: PropTypes.func
+    }))
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -286,7 +326,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         deleteContainer: (id) => {
             dispatch(deleteContainer(id))
-        } 
+        },
+        snapshotSetContainers: (snapshotId, snapshotContainers) => {
+            dispatch(snapshotSetContainers(snapshotId, snapshotContainers));
+        }
     }
 }
 
