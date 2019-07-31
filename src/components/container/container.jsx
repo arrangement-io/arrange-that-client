@@ -9,13 +9,15 @@ import Item from 'components/item/item'
 import EditContainer from 'components/editContainer/editContainer'
 import OccupancyDisplay from 'components/container/occupancyDisplay'
 import { editContainer } from 'actions/container/container'
+import { bulkSetUnassignedItems, bulkSetContainerItems, saveState } from 'actions/real/real'
 
 import { withStyles } from '@material-ui/core/styles'
 import { getSnapshotContainer } from 'utils'
 import { Droppable } from 'react-beautiful-dnd'
 
-const EDIT = "Edit"
-const DELETE_FROM_ALL_SNAPSHOTS = "Delete from all snapshots"
+const EDIT = "Edit";
+const REMOVE_ALL = "Remove all";
+const DELETE_FROM_ALL_SNAPSHOTS = "Delete from all snapshots";
 
 const styles = theme => ({
     card: {
@@ -92,13 +94,13 @@ export class Container extends Component {
         })
     }
 
-    getItemIds = (containerId) => {
-        return getSnapshotContainer(this.props.snapshot, containerId).items
+    getItemIds = () => {
+        return getSnapshotContainer(this.props.snapshot, this.props.container._id).items
     }
 
-    getItems = (items, containerId) => {
+    getItems = (items) => {
         const itemsInContainer = []
-        for (let itemId of this.getItemIds(containerId)) {
+        for (let itemId of this.getItemIds()) {
             const item = items.find(ele => ele._id === itemId)
             // Check if item exists
             if (item) {
@@ -108,9 +110,39 @@ export class Container extends Component {
         return itemsInContainer
     }
 
+    addAllItemToUnassigned = () => {
+        const updatedItemsList = [...this.props.snapshot.unassigned];
+
+        this.getItemIds().forEach(itemId => {
+            if (!this.props.snapshot.unassigned.includes(itemId)) {
+                updatedItemsList.push(itemId);
+            }
+            else {
+                console.log("Item was found in unassigned when it shouldn't be!");
+            }
+        })
+        this.props.bulkSetUnassignedItems(this.props.snapshot._id, updatedItemsList);  
+    }
+    
+    removeAllItemFromContainer = () => {
+        const snapshotContainer = this.props.snapshot.snapshotContainers.find(container => container._id === this.props.container._id);
+        const itemIds = this.getItemIds();
+        const updatedItemsList = snapshotContainer.items.filter(item => !itemIds.includes(item));
+        this.props.bulkSetContainerItems(this.props.snapshot._id, this.props.container._id, updatedItemsList);
+    }
+
+    removeAllItems = () => {
+        this.addAllItemToUnassigned();
+        this.removeAllItemFromContainer();
+        this.props.saveState();
+    }
+
     handleItemClick = option => {
         if (option === DELETE_FROM_ALL_SNAPSHOTS) {
             this.props.deleteContainer(this.props.container._id)
+        }
+        if (option === REMOVE_ALL) {
+            this.removeAllItems();
         }
         else if (option === EDIT) {
             this.setState({
@@ -135,9 +167,10 @@ export class Container extends Component {
         const { classes } = this.props
         const options = [
             EDIT,
+            REMOVE_ALL,
             DELETE_FROM_ALL_SNAPSHOTS
         ]
-        const items = this.getItems(this.props.items, this.props.container._id)
+        const items = this.getItems(this.props.items)
 
         const containerCard = (
             <Card className={classes.card}>
@@ -217,19 +250,24 @@ Container.propTypes = {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const {
-        real
-    } = state
-    return {
-        real
-    }
+    const { real } = state;
+    return { real };
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         editContainer: (container) => {
             dispatch(editContainer(container))
-        }
+        },
+        bulkSetUnassignedItems: (snapshotId, unassigned) => {
+            dispatch(bulkSetUnassignedItems(snapshotId, unassigned))
+        },
+        bulkSetContainerItems: (snapshotId, containerId, items) => {
+            dispatch(bulkSetContainerItems(snapshotId, containerId, items))
+        },
+        saveState: () => {
+            dispatch(saveState())
+        },
     }
 }
 
