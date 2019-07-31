@@ -145,7 +145,12 @@ const realReducer = (state = initialState, action) => {
         case CONTAINER_NOTE_ADD: {
             const snapshotAddNoteState = cloneDeep(state);
 
-            snapshotAddNoteState.snapshots.containerNotes.push(action)
+            // if (snapshotAddNoteState.snapshots.containerNotes !== undefined) {
+            //     snapshotAddNoteState.snapshots.containerNotes.push(action)
+            // } else {
+            // snapshotAddNoteState.snapshots.containerNotes = [action]
+            // }
+            
             exportState(snapshotAddNoteState)
             return action
         }

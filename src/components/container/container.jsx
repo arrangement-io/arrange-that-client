@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core'
+import { Grid, Typography, Card, CardHeader, CardContent, TextField } from '@material-ui/core'
 import MoreMenu from 'components/moremenu/moremenu'
 import { connect } from 'react-redux'
 
@@ -115,6 +115,7 @@ export class Container extends Component {
             })
         }
         else if (option === ADD_NOTE) {
+            debugger
             this.setState({
                 ...this.state,
                 isEditNote: true,
@@ -141,11 +142,11 @@ export class Container extends Component {
     }
 
     handleEditNoteSubmit = () => {
-        // this.props.editContainerNote({
-        //     ...this.props.snapshot,
-        //     containerNote: this.state.containerNote,
-        //     containerId: this.props.container._id
-        // })
+        this.props.editContainerNote({
+            ...this.props.snapshot,
+            containerNote: this.state.containerNote,
+            containerId: this.props.container._id
+        })
         this.props.addContainerNote(this.createNewContainerNote(this.state.containerNote))
         this.setState({
             ...this.state,
@@ -166,6 +167,14 @@ export class Container extends Component {
         })
     }
 
+    findContainerNote = () => {
+        var text = this.props.snapshot.containerNotes.find(x => (x && x._id === this.props.container._id))
+        if (text === undefined) {
+            return ""
+        }
+        return text;
+    }
+
     render () {
         const { classes } = this.props
         const options = [
@@ -184,7 +193,11 @@ export class Container extends Component {
                     handleNoteEnter={this.handleEditNoteSubmit}
                 />
             ) 
-            : null)
+            : (<TextField
+                multiline margin="none" variant="filled" 
+                value={this.findContainerNote}
+            />)
+        )
 
         const containerCard = (
             <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true}>

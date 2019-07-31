@@ -223,6 +223,7 @@ export class Arrange extends Component {
                     onTabPositionChange={this.handleTabPositionChange}
                 >
                     {this.props.real.snapshots.map((snapshot, index) => {
+                        debugger;
                         return (
                             <Tab key={index} title={
                                 <SnapshotTitle
