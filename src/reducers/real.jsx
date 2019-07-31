@@ -6,6 +6,9 @@ import {
     ITEM_RENAME,
     CONTAINER_ADD,
     CONTAINER_DELETE,
+    CONTAINER_NOTE_ADD,
+    CONTAINER_NOTE_DELETE,
+    CONTAINER_NOTE_EDIT,
     CONTAINER_EDIT,
     SET_REAL_DATA,
     ARRANGEMENT_RENAME,
@@ -19,7 +22,7 @@ import {
 } from 'actions/actionTypes'
 
 import { updateArrangement } from 'services/arrangementService'
-import { getSnapshotIndex, getSnapshotContainerIndex } from 'utils'
+import { getSnapshotIndex, getSnapshotContainerIndex, getContainerNotes } from 'utils'
 
 const initialState = {
     _id: '',
@@ -138,6 +141,37 @@ const realReducer = (state = initialState, action) => {
             exportState(deleteContainerState)
             return deleteContainerState
         }
+
+        case CONTAINER_NOTE_ADD: {
+            const snapshotAddNoteState = cloneDeep(state);
+
+            snapshotAddNoteState.snapshots.containerNotes.push(action)
+            exportState(snapshotAddNoteState)
+            return action
+        }
+
+        // case CONTAINER_NOTE_DELETE: {
+        //     const snapshotDeleteState = cloneDeep(state);
+
+        //     const index = getSnapshotIndex(snapshotDeleteState, action.snapshotId)
+        //     snapshotDeleteState.snapshots.splice(index, 1)
+        //     exportState(snapshotDeleteState)
+        //     return snapshotDeleteState
+        // }
+
+        // case CONTAINER_NOTE_EDIT: {
+        //     const snapshotEditState = cloneDeep(state);
+
+        //     const index = getSnapshotIndex(snapshotEditState, action.snapshotId)
+        //     const note = getContainerNotes(snapshotEditState.snapshots[index])
+            
+        //     note.text = 
+
+
+
+        //     exportState(snapshotEditState)
+        //     return snapshotEditState
+        // }
 
         case CONTAINER_EDIT: {
             const resultContainerRename = cloneDeep(state);

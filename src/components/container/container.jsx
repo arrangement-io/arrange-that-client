@@ -7,12 +7,13 @@ import { connect } from 'react-redux'
 import Item from 'components/item/item'
 import EditContainer from 'components/editContainer/editContainer'
 import OccupancyDisplay from 'components/container/occupancyDisplay'
-import { editContainer, editContainerNote } from 'actions/container/container'
+import { editContainer, addContainerNote, editContainerNote } from 'actions/container/container'
 import EditContainerNote from 'components/container/editContainerNote'
 
 import { withStyles } from '@material-ui/core/styles'
 import { getSnapshotContainer } from 'utils'
 import { Droppable } from 'react-beautiful-dnd'
+import { uuid } from '../../utils';
 
 const EDIT = "Edit"
 const DELETE_FROM_ALL_SNAPSHOTS = "Delete from all snapshots"
@@ -130,12 +131,22 @@ export class Container extends Component {
         })
     }
 
+    createNewContainerNote = (text) => {
+        var newContainerNote = {
+            "_id": uuid("note"),
+            "containerId": this.props.container._id,
+            "text": text
+        }
+        return newContainerNote
+    }
+
     handleEditNoteSubmit = () => {
-        this.props.editContainerNote({
-            ...this.props.snapshot,
-            containerNote: this.state.Note,
-            containerId: this.props.container._id
-        })
+        // this.props.editContainerNote({
+        //     ...this.props.snapshot,
+        //     containerNote: this.state.containerNote,
+        //     containerId: this.props.container._id
+        // })
+        this.props.addContainerNote(this.createNewContainerNote(this.state.containerNote))
         this.setState({
             ...this.state,
         })
@@ -268,6 +279,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         editContainer: (container) => {
             dispatch(editContainer(container))
+        },
+        addContainerNote: (note) => {
+            dispatch(addContainerNote(note))
         },
         editContainerNote: (snapshot) => {
             dispatch(editContainerNote(snapshot))
