@@ -17,6 +17,7 @@ import { getArrangement } from 'services/arrangementService'
 
 import { setRealData, arrangementRename } from 'actions/real/real'
 import { snapshotAdd, snapshotDelete, snapshotRename, snapshotReposition } from 'actions/snapshot/snapshot'
+import { setDisplayNotes } from 'actions/arrangementSettingsActions'
 import { uuid } from 'utils'
 import { withStyles } from '@material-ui/core/styles'
 
@@ -46,6 +47,9 @@ export class Arrange extends Component {
         this.setState({ isListView: event.target.checked });
     }
 
+    handleActivateDisplayNotes = () => event => {
+        this.props.setDisplayNotes(event.target.checked);
+    }
 
     handleTabSwitch = (active) => {
         this.setState({ activeTab: active })
@@ -201,7 +205,18 @@ export class Arrange extends Component {
                             <ExportButton handleExport={this.exportToTSV} />
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={6} sm={2}>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={this.props.arrangementSettings.isDisplayNotes}
+                                    onChange={this.handleActivateDisplayNotes()}
+                                />
+                            }
+                            label="Display Notes"
+                        />
+                    </Grid>
+                    <Grid item xs={6} sm={2}>
                         <FormControlLabel
                             control={
                                 <Switch
@@ -245,8 +260,8 @@ export class Arrange extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const { real } = state
-    return { real }
+    const { real, arrangementSettings } = state
+    return { real, arrangementSettings }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -268,6 +283,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         snapshotReposition: (a, b) => {
             dispatch(snapshotReposition(a, b))
+        },
+        setDisplayNotes: (isDisplayNotes) => {
+            dispatch(setDisplayNotes(isDisplayNotes))
         }
     }
 }

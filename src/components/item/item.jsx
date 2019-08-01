@@ -87,6 +87,13 @@ export class Item extends Component {
         })
     }
 
+    getNote = () => {
+        const item = this.props.real.items.find(x => x._id === this.props.item._id);
+        if ('notes' in item && item.notes) {
+            return " [" + item.notes + "]";
+        }
+    }
+
     render = () => {
         const { classes } = this.props;
 
@@ -114,7 +121,8 @@ export class Item extends Component {
                                 className={classes.cardHeader}
                                 title={
                                     <Typography variant="body1" align="left">
-                                        {this.props.item.name}
+                                        { this.props.item.name }
+                                        { this.props.arrangementSettings.isDisplayNotes ? this.getNote() : "" }
                                     </Typography>
                                 }
                                 onDoubleClick={this.handleItemDoubleClick}
@@ -157,10 +165,12 @@ Item.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
     const {
-        real
+        real,
+        arrangementSettings
     } = state
     return {
-        real
+        real,
+        arrangementSettings
     }
 }
 
