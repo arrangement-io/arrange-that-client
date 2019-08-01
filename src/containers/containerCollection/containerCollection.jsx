@@ -271,7 +271,7 @@ export class ContainerCollection extends Component {
                             snapshot={this.props.snapshot}
                             containers={this.props.containers}
                             items={this.props.items}
-                            deleteContainer={this.deleteContainer}
+                            deleteContainer={this.props.deleteContainer}
                             displayEditContainer={this.displayEditContainer}
                             classes={classes} 
                             onSortEnd={this.onSortEnd}
