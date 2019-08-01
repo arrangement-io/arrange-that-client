@@ -145,38 +145,41 @@ const realReducer = (state = initialState, action) => {
         case CONTAINER_NOTE_ADD: {
             const snapshotAddNoteState = cloneDeep(state);
 
-            // if (snapshotAddNoteState.snapshots.containerNotes !== undefined) {
-            //     snapshotAddNoteState.snapshots.containerNotes.push(action)
-            // } else {
-            // snapshotAddNoteState.snapshots.containerNotes = [action]
-            // }
+            const index = getSnapshotIndex(snapshotAddNoteState, action.snapshotId);
+
+            if (snapshotAddNoteState.snapshots[index].containerNotes !== undefined) {
+                snapshotAddNoteState.snapshots[index].containerNotes.push(action.note);
+            } else {
+                snapshotAddNoteState.snapshots[index].containerNotes = [action.note];
+            }
             
-            exportState(snapshotAddNoteState)
-            return action
+            exportState(snapshotAddNoteState);
+            return snapshotAddNoteState;
         }
 
-        // case CONTAINER_NOTE_DELETE: {
-        //     const snapshotDeleteState = cloneDeep(state);
+        case CONTAINER_NOTE_DELETE: {
+            const snapshotDeleteNoteState = cloneDeep(state);
 
-        //     const index = getSnapshotIndex(snapshotDeleteState, action.snapshotId)
-        //     snapshotDeleteState.snapshots.splice(index, 1)
-        //     exportState(snapshotDeleteState)
-        //     return snapshotDeleteState
-        // }
+            const index = getSnapshotIndex(snapshotDeleteNoteState, action.snapshotId);
 
-        // case CONTAINER_NOTE_EDIT: {
-        //     const snapshotEditState = cloneDeep(state);
+            // snapshotDeleteState.snapshots.splice(index, 1)
+            exportState(snapshotDeleteNoteState);
+            return snapshotDeleteNoteState;
+        }
 
-        //     const index = getSnapshotIndex(snapshotEditState, action.snapshotId)
-        //     const note = getContainerNotes(snapshotEditState.snapshots[index])
+        case CONTAINER_NOTE_EDIT: {
+            const snapshotEditNoteState = cloneDeep(state);
+
+            const index = getSnapshotIndex(snapshotEditNoteState, action.snapshotId)
+            const note = getContainerNotes(snapshotEditNoteState.snapshots[index], action.note._id)
             
-        //     note.text = 
+            if (note) {
+                note.text = action.note.text;
+            }
 
-
-
-        //     exportState(snapshotEditState)
-        //     return snapshotEditState
-        // }
+            exportState(snapshotEditNoteState);
+            return snapshotEditNoteState;
+        }
 
         case CONTAINER_EDIT: {
             const resultContainerRename = cloneDeep(state);

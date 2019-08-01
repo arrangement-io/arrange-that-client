@@ -7,7 +7,8 @@ import { connect } from 'react-redux'
 import Item from 'components/item/item'
 import EditContainer from 'components/editContainer/editContainer'
 import OccupancyDisplay from 'components/container/occupancyDisplay'
-import { editContainer, addContainerNote, editContainerNote } from 'actions/container/container'
+import { editContainer } from 'actions/container/container'
+import { addSnapshotContainerNote, editSnapshotContainerNote } from 'actions/snapshot/snapshot'
 import EditContainerNote from 'components/container/editContainerNote'
 
 import { withStyles } from '@material-ui/core/styles'
@@ -44,7 +45,8 @@ export class Container extends Component {
         this.state = {
             isEdit: false,
             editName: this.props.container.name,
-            editSize: this.props.container.size
+            editSize: this.props.container.size,
+            isEditNote: false
         }
     }
 
@@ -115,7 +117,6 @@ export class Container extends Component {
             })
         }
         else if (option === ADD_NOTE) {
-            debugger
             this.setState({
                 ...this.state,
                 isEditNote: true,
@@ -138,18 +139,17 @@ export class Container extends Component {
             "containerId": this.props.container._id,
             "text": text
         }
-        return newContainerNote
+        return newContainerNote;
     }
 
     handleEditNoteSubmit = () => {
-        this.props.editContainerNote({
-            ...this.props.snapshot,
-            containerNote: this.state.containerNote,
-            containerId: this.props.container._id
-        })
-        this.props.addContainerNote(this.createNewContainerNote(this.state.containerNote))
+        console.log(this.props);
+        console.log("submit!");
+        // this.props.editSnapshotContainerNote(this.props.snapshot._id, this.state.containerNote);
+        this.props.addSnapshotContainerNote(this.props.snapshot._id, this.createNewContainerNote(this.state.containerNote))
         this.setState({
             ...this.state,
+            // isEditNote: false
         })
     }
 
@@ -193,10 +193,12 @@ export class Container extends Component {
                     handleNoteEnter={this.handleEditNoteSubmit}
                 />
             ) 
-            : (<TextField
-                multiline margin="none" variant="filled" 
-                value={this.findContainerNote}
-            />)
+            : null
+            // : this.findContainerNote
+            // : (<TextField
+            //     multiline margin="none" variant="filled" 
+            //     value={this.findContainerNote}
+            // />)
         )
 
         const containerCard = (
@@ -293,11 +295,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         editContainer: (container) => {
             dispatch(editContainer(container))
         },
-        addContainerNote: (note) => {
-            dispatch(addContainerNote(note))
+        addSnapshotContainerNote: (note) => {
+            dispatch(addSnapshotContainerNote(note))
         },
-        editContainerNote: (snapshot) => {
-            dispatch(editContainerNote(snapshot))
+        editSnapshotContainerNote: (snapshot) => {
+            dispatch(editSnapshotContainerNote(snapshot))
         }
     }
 }
