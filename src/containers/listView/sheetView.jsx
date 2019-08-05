@@ -96,7 +96,7 @@ class SheetView extends Component {
             },
             {  
                 data: NOTES_FIELD,
-                width: 180
+                width: 220
             },
             {
                 data: CONTAINER_FIELD, 
@@ -104,7 +104,7 @@ class SheetView extends Component {
                 source: this.props.real.containers.map(container => container.name),
                 renderer: this.renderContainerChip,
                 allowInvalid: false,
-                width: 100
+                width: 220
             }
         ];
     }
