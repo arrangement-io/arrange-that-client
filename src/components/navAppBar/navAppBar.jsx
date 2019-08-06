@@ -48,6 +48,10 @@ class NavAppBar extends Component {
         this.props.history.push("/feedback")
     }
 
+    goToTools = () => {
+        this.props.history.push("/tools")
+    }
+
     createNewArrangement = () => {
         var d = new Date()
         const arrangement_id = uuid("arrangement")
@@ -78,8 +82,6 @@ class NavAppBar extends Component {
     onFailure = (error) => {
         this.props.enqueueSnackbar('Could not login')
     }
-
-
 
     googleResponse = (response) => {
         const data = {
@@ -121,6 +123,9 @@ class NavAppBar extends Component {
                     </Button>
                     <Button onClick={this.goToViewAllArrangements} color="inherit">
                         View All
+                    </Button>
+                    <Button onClick={this.goToTools} color="inherit">
+                        Tools
                     </Button>
                     <Button onClick={this.goToFeedback} color="inherit">
                         Feedback
