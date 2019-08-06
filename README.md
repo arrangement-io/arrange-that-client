@@ -13,13 +13,11 @@ I'm impatient! How do I get started?
 The fastest way is to click " Person" on the menu, or Import A Spreadsheet 
 
 ## Some key features to note:
-* Save/Load: from the file menu, saves your arrangement on the server, so you can create more of them and load them later
-* Clone: creates a replica of your current arrangement with a new name, for creating "rides back" or copying a template week-by-week
-* Groups: clicking " Group" adds a new horizontal grouping of people and cars. Auto-arrange will keep people in the group they are in, so it is good for having multiple departure times or locations
-* Undo/Redo: left and right curving arrows near the top of the main user interface
-* Sharing: allows people to see your arrangement, even if you change it after you shared it
-* Printing: the print view is actually pretty nice
-* Editable fields: fields that turn yellow on hover (like the name of a group) can be edited if you click on them, like the name of the arrangement or peoples' names in the import wizard
+- Sharing: allows people to see your arrangement, even if you change it after you shared it
+- Editable fields: fields that turn yellow on hover (like the name of a group) can be edited if you click on them, like the name of the arrangement or peoples' names in the import wizard
+- Clone: creates a replica of your current arrangement with a new name, for creating "rides back" or copying a template week-by-week
+- Undo/Redo: left and right curving arrows near the top of the main user interface
+
 
 
 ### Authors and Contributors
