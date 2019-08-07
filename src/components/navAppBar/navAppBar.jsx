@@ -8,7 +8,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { setAccount, logout } from 'actions/account/account'
-import { setRealData } from 'actions/real/real'
+import { saveArrangementState } from 'actions/real/real'
 import { uuid } from 'utils'
 import config from 'config.json'
 import { withSnackbar } from 'notistack';
@@ -75,7 +75,7 @@ class NavAppBar extends Component {
             modified_timestamp: d.getTime() / 1000
         }
 
-        this.props.setRealData(real)
+        this.props.saveArrangementState(real)
         this.props.history.push('/arrangement/' + arrangement_id)
     }
 
@@ -187,8 +187,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         setAccount: (account) => {
             dispatch(setAccount(account))
         },
-        setRealData: (data) => {
-            dispatch(setRealData(data))
+        saveArrangementState: (data) => {
+            dispatch(saveArrangementState(data))
         }
     }
 }

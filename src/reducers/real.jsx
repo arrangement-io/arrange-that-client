@@ -152,7 +152,6 @@ const realReducer = (state = initialState, action) => {
         }
 
         case SET_REAL_DATA: {
-            exportState(action.data)
             return cloneDeep(action.data)
         }
         

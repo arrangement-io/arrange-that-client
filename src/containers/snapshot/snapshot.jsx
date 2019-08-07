@@ -6,7 +6,7 @@ import { Grid } from '@material-ui/core'
 import ItemCollection from 'containers/itemCollection/itemCollection'
 import ContainerCollection from 'containers/containerCollection/containerCollection'
 import { DragDropContext } from 'react-beautiful-dnd'
-import { setRealData, setUnassignedItems, setContainerItems } from 'actions/real/real'
+import { saveArrangementState, setUnassignedItems, setContainerItems } from 'actions/real/real'
 import { snapshotSetContainers } from 'actions/snapshot/snapshot'
 import { reorder, move, getSnapshotContainer } from 'utils'
 import { withStyles } from '@material-ui/core/styles'
@@ -115,7 +115,7 @@ class Snapshot extends Component {
         for (let container of snap.snapshotContainers) {
             container.items = container.items.filter(n => this.props.real.items.find(i => i._id === n))
         }
-        this.props.setRealData(this.props.real);
+        this.props.saveArrangementState(this.props.real);
     }
 
     getSnapshot = (snapshotId) => {
@@ -171,8 +171,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        setRealData: (data) => {
-            dispatch(setRealData(data));
+        saveArrangementState: (data) => {
+            dispatch(saveArrangementState(data));
         },
         setUnassignedItems: (snapshotId, unassigned) => {
             dispatch(setUnassignedItems(snapshotId, unassigned));
