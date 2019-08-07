@@ -9,7 +9,7 @@ import Item from 'components/item/item'
 import EditContainer from 'components/editContainer/editContainer'
 import OccupancyDisplay from 'components/container/occupancyDisplay'
 import { editContainer } from 'actions/container/container'
-import { bulkSetUnassignedItems, bulkSetContainerItems, saveState } from 'actions/real/real'
+import { bulkSetUnassignedItems, bulkSetContainerItems, saveArrangementState } from 'actions/real/real'
 
 import { withStyles } from '@material-ui/core/styles'
 import { getSnapshotContainer } from 'utils'
@@ -134,7 +134,7 @@ export class Container extends Component {
     removeAllItems = () => {
         this.addAllItemToUnassigned();
         this.removeAllItemFromContainer();
-        this.props.saveState();
+        this.props.saveArrangementState();
     }
 
     handleItemClick = option => {
@@ -265,8 +265,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         bulkSetContainerItems: (snapshotId, containerId, items) => {
             dispatch(bulkSetContainerItems(snapshotId, containerId, items))
         },
-        saveState: () => {
-            dispatch(saveState())
+        saveArrangementState: () => {
+            dispatch(saveArrangementState())
         },
     }
 }

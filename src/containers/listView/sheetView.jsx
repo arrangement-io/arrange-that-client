@@ -8,7 +8,7 @@ import { Card, CardHeader, CardContent } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 
 
-import { setRealData, bulkSetUnassignedItems, bulkSetContainerItems, saveState } from 'actions/real/real'
+import { setRealData, bulkSetUnassignedItems, bulkSetContainerItems, saveArrangementState } from 'actions/real/real'
 import { bulkAddItem, bulkUpdateItem, bulkDeleteItem } from 'actions/item/item'
 import { generateItem } from 'utils'
 
@@ -299,7 +299,7 @@ class SheetView extends Component {
                 const [row, columnTitle, previous, current] = change
                 this.processChange(row, columnTitle, previous, current);
             })
-            this.props.saveState();
+            this.props.saveArrangementState();
         }       
     }
 
@@ -344,8 +344,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         bulkDeleteItem: (item) => {
             dispatch(bulkDeleteItem(item))
         },
-        saveState: () => {
-            dispatch(saveState())
+        saveArrangementState: () => {
+            dispatch(saveArrangementState())
         },
         setRealData: (data) => {
             dispatch(setRealData(data))

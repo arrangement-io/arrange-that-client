@@ -152,23 +152,23 @@ class SheetView extends Component {
     loadArrangement = () => {
         if (this.state.arrangementId) {
             return getArrangement(this.state.arrangementId)
-            .then(response => {
-                if (isEmpty(response.data)) {
+                .then(response => {
+                    if (isEmpty(response.data)) {
+                        this.props.enqueueSnackbar('Invalid Arrangement ID')
+                        console.log("no arrangement found")
+                    }
+                    else {
+                        console.log("setting roster");
+                        this.props.setRealData(response.data)
+                        this.generateCurrentRoster()
+                    }
+                    Promise.resolve()
+                })
+                .catch(err => {
+                    console.log(err)
                     this.props.enqueueSnackbar('Invalid Arrangement ID')
-                    console.log("no arrangement found")
-                }
-                else {
-                    console.log("setting roster");
-                    this.props.setRealData(response.data)
-                    this.generateCurrentRoster()
-                }
-                Promise.resolve()
-            })
-            .catch(err => {
-                console.log(err)
-                this.props.enqueueSnackbar('Invalid Arrangement ID')
-                Promise.reject(err)
-            })
+                    Promise.reject(err)
+                })
         }
         
     }
@@ -192,43 +192,43 @@ class SheetView extends Component {
                     />
                 </CardContent>
                 <CardContent className={classes.cardContent}>
-                <Grid container spacing={8} className={classes.header}>
-                    <Grid item xs={6} sm={6}>
-                        <Typography variant="headline">
-                          Current Roster  
-                        </Typography>
-                        <div className={classes.sheet} id="hot-app">
-                            <HotTable 
-                                data={this.state.currentRoster} 
-                                colHeaders={this.generateColumnHeaders()}
-                                columns={this.generateColumnDefs()}
-                                rowHeaders={false} 
-                                afterChange={this.onCellValueChange}
-                                minSpareRows={1}
-                                height="calc(100vh - 300px)"
-                                readOnly={true}
-                                columnSorting={true}
-                                licenseKey='non-commercial-and-evaluation' />
-                        </div>
+                    <Grid container spacing={8} className={classes.header}>
+                        <Grid item xs={6} sm={6}>
+                            <Typography variant="headline">
+                                Current Roster  
+                            </Typography>
+                            <div className={classes.sheet} id="hot-app">
+                                <HotTable 
+                                    data={this.state.currentRoster} 
+                                    colHeaders={this.generateColumnHeaders()}
+                                    columns={this.generateColumnDefs()}
+                                    rowHeaders={false} 
+                                    afterChange={this.onCellValueChange}
+                                    minSpareRows={1}
+                                    height="calc(100vh - 300px)"
+                                    readOnly={true}
+                                    columnSorting={true}
+                                    licenseKey='non-commercial-and-evaluation' />
+                            </div>
+                        </Grid>
+                        <Grid item xs={6} sm={6}>
+                            <Typography variant="headline">
+                                Roster to Check
+                            </Typography>
+                            <div className={classes.sheet} id="hot-app2">
+                                <HotTable 
+                                    data={this.state.newRoster} 
+                                    colHeaders={this.generateColumnHeaders()}
+                                    columns={this.generateColumnDefs()}
+                                    rowHeaders={false} 
+                                    afterChange={this.onCellValueChange}
+                                    minSpareRows={1}
+                                    columnSorting={true}
+                                    height="calc(100vh - 300px)"
+                                    licenseKey='non-commercial-and-evaluation' />
+                            </div>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6} sm={6}>
-                        <Typography variant="headline">
-                          Roster to Check
-                        </Typography>
-                        <div className={classes.sheet} id="hot-app2">
-                            <HotTable 
-                                data={this.state.newRoster} 
-                                colHeaders={this.generateColumnHeaders()}
-                                columns={this.generateColumnDefs()}
-                                rowHeaders={false} 
-                                afterChange={this.onCellValueChange}
-                                minSpareRows={1}
-                                columnSorting={true}
-                                height="calc(100vh - 300px)"
-                                licenseKey='non-commercial-and-evaluation' />
-                        </div>
-                    </Grid>
-                </Grid>
                 </CardContent>
             </Card>
         );
