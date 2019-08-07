@@ -18,7 +18,7 @@ const DELETE_FROM_ALL_SNAPSHOTS = 'Delete from all snapshots'
 
 const styles = theme => ({
     card: {
-        maxHeight: 40
+        marginBottom: 1,
     },
     cardHeader: {
         paddingLeft: 10,
@@ -90,7 +90,7 @@ export class Item extends Component {
     getNote = () => {
         const item = this.props.real.items.find(x => x._id === this.props.item._id);
         if ('notes' in item && item.notes) {
-            return " [" + item.notes + "]";
+            return item.notes;
         }
     }
 
@@ -120,10 +120,14 @@ export class Item extends Component {
                             <CardHeader
                                 className={classes.cardHeader}
                                 title={
-                                    <Typography variant="body1" align="left">
-                                        { this.props.item.name }
-                                        { this.props.arrangementSettings.isDisplayNotes ? this.getNote() : "" }
-                                    </Typography>
+                                    <div>
+                                        <Typography variant="body1" align="left">
+                                            { this.props.item.name }
+                                        </Typography>
+                                        <Typography variant="caption" align="left">
+                                            { this.props.arrangementSettings.isDisplayNotes ? this.getNote() : "" }
+                                        </Typography>
+                                    </div>
                                 }
                                 onDoubleClick={this.handleItemDoubleClick}
                                 action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
