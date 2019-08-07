@@ -16,9 +16,9 @@ class Tools extends Component {
         document.title = "Tools - Arrange.Space";
 
         return (
-        <div>
-            <RosterChecker />
-        </div>
+            <div>
+                <RosterChecker />
+            </div>
         );
     }
 }
