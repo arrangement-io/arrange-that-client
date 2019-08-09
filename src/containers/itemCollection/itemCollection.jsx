@@ -205,11 +205,8 @@ export class ItemCollection extends Component {
                                                 return (
                                                     <Grid item xs = {12} key = {id}>
                                                         <Item 
-                                                            item = {item}
-                                                            index={index} 
-                                                            getDragItemColor={this.props.getDragItemColor} 
-                                                            containerId="itemcollection"
-                                                        />
+                                                            item={item}
+                                                            index={index} />
                                                     </Grid>
                                                 )
                                             }
