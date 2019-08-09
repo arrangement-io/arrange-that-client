@@ -88,9 +88,8 @@ export class Item extends Component {
     }
 
     getNote = () => {
-        const item = this.props.real.items.find(x => x._id === this.props.item._id);
-        if ('notes' in item && item.notes) {
-            return item.notes;
+        if ('notes' in this.props.item && this.props.item.notes) {
+            return this.props.item.notes;
         }
     }
 
@@ -163,8 +162,7 @@ Item.propTypes = {
         name: PropTypes.string,
         size: PropTypes.number
     }),
-    getDragItemColor: PropTypes.func,
-    containerId: PropTypes.string
+    index: PropTypes.number
 }
 
 const mapStateToProps = (state, ownProps) => {

@@ -194,9 +194,7 @@ export class Container extends Component {
                                                 <Grid item xs={12} key={item._id}>
                                                     <Item 
                                                         item={item} 
-                                                        index={index} 
-                                                        getDragItemColor={this.props.getDragItemColor} 
-                                                        containerId={this.props.container._id} />
+                                                        index={index} />
                                                 </Grid>
                                             )
                                         return {}
