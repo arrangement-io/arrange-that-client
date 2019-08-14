@@ -66,6 +66,10 @@ export class ItemCollection extends Component {
         })
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.unsnapshot_items != nextProps.unsnapshot_items;
+    }
+
     // This function splits a string by tabs/newlines and individually
     // submits each item and then adds another edit item.
     handleEditItemPaste = (pasteString) => {
@@ -188,6 +192,9 @@ export class ItemCollection extends Component {
     render () {
         const { classes } = this.props;
 
+        const indexedItems = {};
+        this.props.items.forEach(item => indexedItems[item._id] = item);
+
         return (
             <Card className={classes.card}>
                 <CardHeader className={classes.cardHeader} title="People"/>
@@ -199,7 +206,7 @@ export class ItemCollection extends Component {
                                 <Grid container spacing={0}>
                                     {
                                         this.props.unsnapshot_items.map((id, index) => {
-                                            const item = this.props.items.find(ele => ele._id === id)
+                                            const item = indexedItems[id];
                                             // Check for null items
                                             if (item) {
                                                 return (

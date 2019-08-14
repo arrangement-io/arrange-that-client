@@ -3,16 +3,15 @@ import PropTypes from 'prop-types'
 import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core'
 import MoreMenu from 'components/moremenu/moremenu'
 import { connect } from 'react-redux'
-import {SortableHandle} from 'react-sortable-hoc';
+import { SortableHandle } from 'react-sortable-hoc';
 
 import Item from 'components/item/item'
 import EditContainer from 'components/editContainer/editContainer'
 import OccupancyDisplay from 'components/container/occupancyDisplay'
-import { editContainer } from 'actions/container/container'
+import { editContainer, deleteContainer } from 'actions/container/container'
 import { bulkSetUnassignedItems, bulkSetContainerItems, saveArrangementState } from 'actions/real/real'
 
 import { withStyles } from '@material-ui/core/styles'
-import { getSnapshotContainer } from 'utils'
 import { Droppable } from 'react-beautiful-dnd'
 
 const EDIT = "Edit";
@@ -94,22 +93,6 @@ export class Container extends Component {
         })
     }
 
-    getItemIds = () => {
-        return getSnapshotContainer(this.props.snapshot, this.props.container._id).items
-    }
-
-    getItems = (items) => {
-        const itemsInContainer = []
-        for (let itemId of this.getItemIds()) {
-            const item = items.find(ele => ele._id === itemId)
-            // Check if item exists
-            if (item) {
-                itemsInContainer.push(item)
-            }
-        }
-        return itemsInContainer
-    }
-
     addAllItemToUnassigned = () => {
         const updatedItemsList = [...this.props.snapshot.unassigned];
 
@@ -170,7 +153,6 @@ export class Container extends Component {
             REMOVE_ALL,
             DELETE_FROM_ALL_SNAPSHOTS
         ]
-        const items = this.getItems(this.props.items)
 
         const containerCard = (
             <Card className={classes.card}>
@@ -181,14 +163,14 @@ export class Container extends Component {
                     }
                     onDoubleClick={this.handleContainerDoubleClick}
                     action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
-                    avatar={<OccupancyDisplay total={this.props.container.size} count={items.length} />}
+                    avatar={<OccupancyDisplay total={this.props.container.size} count={this.props.items.length} />}
                 />
                 <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true} type={"item"}>
                     {(provided, snapshot) => (
                         <div ref={provided.innerRef}>
                             <CardContent className={classes.cardContent}>
                                 {
-                                    items.map((item, index) => {
+                                    this.props.items.map((item, index) => {
                                         if (typeof item !== 'undefined')
                                             return (
                                                 <Grid item xs={12} key={item._id}>
@@ -233,18 +215,16 @@ Container.propTypes = {
         name: PropTypes.string,
         snapshot: PropTypes.object
     }),
-    items: PropTypes.arrayOf(PropTypes.shape({
-        _id: PropTypes.string,
-        name: PropTypes.string,
-        size: PropTypes.number
-    })),
     container: PropTypes.shape({
         _id: PropTypes.string,
         name: PropTypes.string,
         size: PropTypes.number
     }),
-    deleteContainer: PropTypes.func,
-    getDragItemColor: PropTypes.func
+    items: PropTypes.arrayOf(PropTypes.shape({
+        _id: PropTypes.string,
+        name: PropTypes.string,
+        size: PropTypes.number
+    }))
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -256,6 +236,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         editContainer: (container) => {
             dispatch(editContainer(container))
+        },
+        deleteContainer: (id) => {
+            dispatch(deleteContainer(id))
         },
         bulkSetUnassignedItems: (snapshotId, unassigned) => {
             dispatch(bulkSetUnassignedItems(snapshotId, unassigned))

@@ -131,10 +131,6 @@ class Snapshot extends Component {
         }
     }
 
-    getDragItemColor(sourceId, destId) {
-        return 'white'
-    }
-
     render () {
         const { classes } = this.props;
 
@@ -146,15 +142,13 @@ class Snapshot extends Component {
                         <Grid item xs={5} sm={4} md={3} lg={2}>
                             <ItemCollection 
                                 items={this.props.real.items} 
-                                unsnapshot_items={unassigned_items} 
-                                getDragItemColor={this.getDragItemColor} />   
+                                unsnapshot_items={unassigned_items} />   
                         </Grid>
                         <Grid item xs={7} sm={8} md={9} lg={10}>
                             <ContainerCollection 
                                 snapshot={this.getSnapshot(this.props.snapshotId)} 
                                 containers={this.props.real.containers} 
-                                items={this.props.real.items} 
-                                getDragItemColor={this.getDragItemColor} />
+                                items={this.props.real.items} />
                         </Grid>
                     </Grid>
                 </DragDropContext>
