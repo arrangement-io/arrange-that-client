@@ -66,10 +66,6 @@ export class ItemCollection extends Component {
         })
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.props.unsnapshot_items != nextProps.unsnapshot_items;
-    }
-
     // This function splits a string by tabs/newlines and individually
     // submits each item and then adds another edit item.
     handleEditItemPaste = (pasteString) => {
