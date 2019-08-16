@@ -55,7 +55,7 @@ export class EditContainerNote extends Component {
                 onChange={this.props.handleNoteChange}
                 onBlur={() => this.props.handleNoteEnter(null)}
                 onPaste={this.handlePasteText}
-                value= "hi"//{this.props.containerNote}
+                value= {this.props.containerNote}
             />
         )
     }
