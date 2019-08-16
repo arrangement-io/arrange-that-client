@@ -28,9 +28,6 @@ exports[`moremenu loads 1`] = `
         />
       </svg>
     </span>
-    <span
-      class="MuiTouchRipple-root-19"
-    />
   </button>
 </div>
 `;

@@ -3,7 +3,6 @@ import {
     SNAPSHOT_DELETE,
     SNAPSHOT_RENAME,
     SNAPSHOT_REPOSITION,
-    CONTAINER_NOTE_ADD,
     CONTAINER_NOTE_DELETE,
     CONTAINER_NOTE_EDIT,
     SNAPSHOT_SET_CONTAINERS
@@ -29,12 +28,6 @@ export const snapshotReposition = (a, b) => ({
     type: SNAPSHOT_REPOSITION,
     a,
     b
-})
-
-export const addSnapshotContainerNote = (snapshotId, note) => ({
-    type: CONTAINER_NOTE_ADD,
-    snapshotId,
-    note
 })
 
 export const deleteSnapshotContainerNote = (snapshotId, noteId) => ({

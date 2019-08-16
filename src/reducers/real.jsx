@@ -6,7 +6,6 @@ import {
     ITEM_UPDATE,
     CONTAINER_ADD,
     CONTAINER_DELETE,
-    CONTAINER_NOTE_ADD,
     CONTAINER_NOTE_DELETE,
     CONTAINER_NOTE_EDIT,
     CONTAINER_EDIT,
@@ -144,43 +143,38 @@ const realReducer = (state = initialState, action) => {
             return deleteContainerState
         }
 
-        case CONTAINER_NOTE_ADD: {
+        case CONTAINER_NOTE_DELETE: {
+            const snapshotDeleteNoteState = cloneDeep(state);
+
+            const index = getSnapshotIndex(snapshotDeleteNoteState, action.snapshotId);
+            var containerNotesList = snapshotDeleteNoteState.snapshots[index].containerNotes;
+            var noteIndex = containerNotesList.findIndex(x => (x && x._id === action.noteId));
+            containerNotesList.splice(noteIndex, 1);
+            exportState(snapshotDeleteNoteState);
+            return snapshotDeleteNoteState;
+        }
+
+        case CONTAINER_NOTE_EDIT: {
             const snapshotAddNoteState = cloneDeep(state);
 
+            const newNote = action.note;
+            
             const index = getSnapshotIndex(snapshotAddNoteState, action.snapshotId);
+            var notesList = snapshotAddNoteState.snapshots[index].containerNotes;
 
-            if (snapshotAddNoteState.snapshots[index].containerNotes !== undefined) {
-                snapshotAddNoteState.snapshots[index].containerNotes.push(action.note);
+            if (notesList !== undefined) {
+                var oldNote = notesList.find(x => (x && x.containerId === newNote.containerId))
+                if (oldNote !== undefined) {
+                    oldNote.text = action.note.text;
+                } else {
+                    notesList.push(action.note);
+                }
             } else {
                 snapshotAddNoteState.snapshots[index].containerNotes = [action.note];
             }
             
             exportState(snapshotAddNoteState);
             return snapshotAddNoteState;
-        }
-
-        case CONTAINER_NOTE_DELETE: {
-            const snapshotDeleteNoteState = cloneDeep(state);
-
-            const index = getSnapshotIndex(snapshotDeleteNoteState, action.snapshotId);
-
-            // snapshotDeleteState.snapshots.splice(index, 1)
-            exportState(snapshotDeleteNoteState);
-            return snapshotDeleteNoteState;
-        }
-
-        case CONTAINER_NOTE_EDIT: {
-            const snapshotEditNoteState = cloneDeep(state);
-
-            const index = getSnapshotIndex(snapshotEditNoteState, action.snapshotId)
-            const note = getContainerNotes(snapshotEditNoteState.snapshots[index], action.note._id)
-            
-            if (note) {
-                note.text = action.note.text;
-            }
-
-            exportState(snapshotEditNoteState);
-            return snapshotEditNoteState;
         }
 
         case CONTAINER_EDIT: {

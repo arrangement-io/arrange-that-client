@@ -49,7 +49,7 @@ export class EditContainerNote extends Component {
 
         return (
             <TextField
-                multiline margin="none" variant="filled" placeholder="Add Note here" 
+                multiline margin="none" placeholder="Add Note here" 
                 autoFocus={true}
                 onKeyPress={this.handleKeyPress}
                 onChange={this.props.handleNoteChange}

@@ -10,14 +10,15 @@ import EditContainer from 'components/editContainer/editContainer'
 import OccupancyDisplay from 'components/container/occupancyDisplay'
 import { editContainer, deleteContainer } from 'actions/container/container'
 import { bulkSetUnassignedItems, bulkSetContainerItems, saveArrangementState } from 'actions/real/real'
-import { addSnapshotContainerNote, editSnapshotContainerNote } from 'actions/snapshot/snapshot'
+import { editSnapshotContainerNote, deleteSnapshotContainerNote } from 'actions/snapshot/snapshot'
 import EditContainerNote from 'components/container/editContainerNote'
 
 import { withStyles } from '@material-ui/core/styles'
 import { Droppable } from 'react-beautiful-dnd'
 import { uuid } from '../../utils';
 
-const ADD_NOTE = "Add Note"
+const EDIT_NOTE = "Edit Note"
+const DELETE_NOTE = "Delete Note"
 const EDIT = "Edit";
 const REMOVE_ALL = "Remove all";
 const DELETE_FROM_ALL_SNAPSHOTS = "Delete from all snapshots";
@@ -56,7 +57,8 @@ export class Container extends Component {
             isEdit: false,
             editName: this.props.container.name,
             editSize: this.props.container.size,
-            isEditNote: false
+            isEditNote: false, 
+            containerNote: this.findContainerNote()
         }
     }
 
@@ -140,11 +142,14 @@ export class Container extends Component {
                 editSize: this.props.container.size,
             })
         }
-        else if (option === ADD_NOTE) {
+        else if (option === EDIT_NOTE) {
             this.setState({
                 ...this.state,
                 isEditNote: true,
             })
+        } else if (option === DELETE_NOTE) {
+            var noteObject = this.props.snapshot.containerNotes.find(x => (x && x.containerId === this.props.container._id))
+            this.props.deleteSnapshotContainerNote(this.props.snapshot._id, noteObject._id)
         }
     }
 
@@ -167,13 +172,10 @@ export class Container extends Component {
     }
 
     handleEditNoteSubmit = () => {
-        console.log(this.props);
-        console.log("submit!");
-        // this.props.editSnapshotContainerNote(this.props.snapshot._id, this.state.containerNote);
-        this.props.addSnapshotContainerNote(this.props.snapshot._id, this.createNewContainerNote(this.state.containerNote))
+        this.props.editSnapshotContainerNote(this.props.snapshot._id, this.createNewContainerNote(this.state.containerNote))
         this.setState({
             ...this.state,
-            // isEditNote: false
+            isEditNote: false
         })
     }
 
@@ -192,21 +194,43 @@ export class Container extends Component {
     }
 
     findContainerNote = () => {
-        var text = this.props.snapshot.containerNotes.find(x => (x && x._id === this.props.container._id))
-        if (text === undefined) {
+        if (this.props.snapshot.containerNotes === undefined) {
             return ""
         }
-        return text;
+        var noteObject = this.props.snapshot.containerNotes.find(x => (x && x.containerId === this.props.container._id))
+        if (noteObject === undefined) {
+            return ""
+        }
+        return noteObject.text;
     }
 
     render () {
         const { classes } = this.props
         const options = [
             EDIT,
-            ADD_NOTE,
+            EDIT_NOTE,
+            DELETE_NOTE,
             REMOVE_ALL,
             DELETE_FROM_ALL_SNAPSHOTS,
         ]
+
+        // https://www.notion.so/atk/Add-notes-to-containers-83257eccdc7a4e1e9da4e0d322d4dc8e
+        const noteText = this.findContainerNote() 
+        const noteObject = (noteText !== "" ? (
+            <Typography variant="body1" align="center" gutterBottom
+                onDoubleClick={() => (this.setState({
+                    ...this.state,
+                    isEditNote: true,
+                }))}>
+                { noteText }
+            </Typography>
+        /*<TextField
+            hiddenLabel multiline margin="dense" variant="filled" InputProps={{ readOnly: true, }}
+            value={noteText} onDoubleClick={() => (this.setState({
+                ...this.state,
+                isEditNote: true,
+            }))}
+        />*/) : null)
 
         const notes = (this.state.isEditNote 
             ? (
@@ -217,12 +241,7 @@ export class Container extends Component {
                     handleNoteEnter={this.handleEditNoteSubmit}
                 />
             ) 
-            : null
-            // : this.findContainerNote
-            // : (<TextField
-            //     multiline margin="none" variant="filled" 
-            //     value={this.findContainerNote}
-            // />)
+            : noteObject
         )
 
         const containerCard = (
@@ -309,11 +328,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         editContainer: (container) => {
             dispatch(editContainer(container))
         },
-        addSnapshotContainerNote: (note) => {
-            dispatch(addSnapshotContainerNote(note))
+        editSnapshotContainerNote: (snapshotId, note) => {
+            dispatch(editSnapshotContainerNote(snapshotId, note))
         },
-        editSnapshotContainerNote: (snapshot) => {
-            dispatch(editSnapshotContainerNote(snapshot))
+        deleteSnapshotContainerNote: (snapshotId, noteId) => {
+            dispatch(deleteSnapshotContainerNote(snapshotId, noteId))
         },
         deleteContainer: (id) => {
             dispatch(deleteContainer(id))
