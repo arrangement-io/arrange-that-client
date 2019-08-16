@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Typography, Card, CardHeader, CardContent, TextField } from '@material-ui/core'
+import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core'
 import MoreMenu from 'components/moremenu/moremenu'
 import { connect } from 'react-redux'
 import { SortableHandle } from 'react-sortable-hoc';
@@ -58,7 +58,8 @@ export class Container extends Component {
             editName: this.props.container.name,
             editSize: this.props.container.size,
             isEditNote: false, 
-            containerNote: this.findContainerNote()
+            containerNote: this.findContainerNote(),
+            containerNoteText: this.findContainerNoteText()
         }
     }
 
@@ -103,9 +104,9 @@ export class Container extends Component {
     addAllItemToUnassigned = () => {
         const updatedItemsList = [...this.props.snapshot.unassigned];
 
-        this.getItemIds().forEach(itemId => {
-            if (!this.props.snapshot.unassigned.includes(itemId)) {
-                updatedItemsList.push(itemId);
+        this.props.items.forEach(item => {
+            if (!this.props.snapshot.unassigned.includes(item._id)) {
+                updatedItemsList.push(item._id);
             }
             else {
                 console.log("Item was found in unassigned when it shouldn't be!");
@@ -116,8 +117,7 @@ export class Container extends Component {
     
     removeAllItemFromContainer = () => {
         const snapshotContainer = this.props.snapshot.snapshotContainers.find(container => container._id === this.props.container._id);
-        const itemIds = this.getItemIds();
-        const updatedItemsList = snapshotContainer.items.filter(item => !itemIds.includes(item));
+        const updatedItemsList = snapshotContainer.items.filter(itemId => !this.props.items.find(itemToRemove => itemToRemove._id === itemId));
         this.props.bulkSetContainerItems(this.props.snapshot._id, this.props.container._id, updatedItemsList);
     }
 
@@ -127,7 +127,7 @@ export class Container extends Component {
         this.props.saveArrangementState();
     }
 
-    handleItemClick = option => {
+    handleMenuSelection = (option) => {
         if (option === DELETE_FROM_ALL_SNAPSHOTS) {
             this.props.deleteContainer(this.props.container._id)
         }
@@ -143,14 +143,43 @@ export class Container extends Component {
             })
         }
         else if (option === EDIT_NOTE) {
-            this.setState({
-                ...this.state,
-                isEditNote: true,
-            })
+            this.editNote();
         } else if (option === DELETE_NOTE) {
-            var noteObject = this.props.snapshot.containerNotes.find(x => (x && x.containerId === this.props.container._id))
+            this.deleteNote();   
+        }
+    }
+
+    editNote = () => {
+        this.setState({
+            ...this.state,
+            isEditNote: true,
+        });
+    }
+
+    deleteNote = () => {
+        var noteObject = this.findContainerNote()
+        if (noteObject !== undefined) {
             this.props.deleteSnapshotContainerNote(this.props.snapshot._id, noteObject._id)
         }
+        this.setState({
+            ...this.state,
+            containerNote: null,
+            containerNoteText: "",
+            isEditNote: false,
+        })
+    }
+
+    saveNote = () => {
+        if (this.state.containerNote) {
+            this.props.editSnapshotContainerNote(this.props.snapshot._id, {...this.state.containerNote, text: this.state.containerNoteText})
+        } else {
+            this.props.editSnapshotContainerNote(this.props.snapshot._id, this.createNewContainerNote(this.state.containerNoteText))
+        }
+        this.setState({
+            ...this.state,
+            isEditNote: false,
+            containerNote: this.findContainerNote()
+        })
     }
 
     handleContainerDoubleClick = () => {
@@ -172,70 +201,77 @@ export class Container extends Component {
     }
 
     handleEditNoteSubmit = () => {
-        this.props.editSnapshotContainerNote(this.props.snapshot._id, this.createNewContainerNote(this.state.containerNote))
-        this.setState({
-            ...this.state,
-            isEditNote: false
-        })
+        if (this.state.containerNoteText) {
+            this.saveNote();
+        } else {
+            this.deleteNote();
+        }
     }
 
     handleEditNoteChange = (e) => {
         this.setState({
             ...this.state,
-            containerNote: e.target.value
+            containerNoteText: e.target.value
         })
     }
 
     handleEditNoteEsc = () => {
         this.setState({
             ...this.state,
-            containerNote: ""
+            isEditNote: false,
+            containerNoteText: this.findContainerNoteText()
         })
     }
 
     findContainerNote = () => {
-        if (this.props.snapshot.containerNotes === undefined) {
-            return ""
-        }
-        var noteObject = this.props.snapshot.containerNotes.find(x => (x && x.containerId === this.props.container._id))
-        if (noteObject === undefined) {
-            return ""
-        }
-        return noteObject.text;
+        if (this.props.snapshot.containerNotes !== undefined) {
+            return this.props.snapshot.containerNotes.find(x => (x && x.containerId === this.props.container._id))    
+        } 
     }
 
-    render () {
-        const { classes } = this.props
-        const options = [
+    // Find the container note text if a note exists
+    findContainerNoteText = () => {
+        const noteObject = this.findContainerNote();
+        if (noteObject !== undefined) {
+            return noteObject.text;
+        }
+        return ""
+    }
+
+    // Render the container options. If Note doesn't exist don't give option to delete note.
+    getContainerOptions = () => {
+        return this.findContainerNoteText() !== "" ? 
+        [
             EDIT,
             EDIT_NOTE,
             DELETE_NOTE,
             REMOVE_ALL,
-            DELETE_FROM_ALL_SNAPSHOTS,
-        ]
+            DELETE_FROM_ALL_SNAPSHOTS
+        ] : 
+        [
+            EDIT,
+            EDIT_NOTE,
+            REMOVE_ALL,
+            DELETE_FROM_ALL_SNAPSHOTS]
+    }
+
+    render () {
+        const { classes } = this.props
+
+        const options = this.getContainerOptions();
 
         // https://www.notion.so/atk/Add-notes-to-containers-83257eccdc7a4e1e9da4e0d322d4dc8e
-        const noteText = this.findContainerNote() 
+        const noteText = this.findContainerNoteText();
         const noteObject = (noteText !== "" ? (
-            <Typography variant="body1" align="center" gutterBottom
-                onDoubleClick={() => (this.setState({
-                    ...this.state,
-                    isEditNote: true,
-                }))}>
+            <Typography variant="body1" align="left" gutterBottom onDoubleClick={this.editNote}>
                 { noteText }
             </Typography>
-        /*<TextField
-            hiddenLabel multiline margin="dense" variant="filled" InputProps={{ readOnly: true, }}
-            value={noteText} onDoubleClick={() => (this.setState({
-                ...this.state,
-                isEditNote: true,
-            }))}
-        />*/) : null)
+        ) : null)
 
         const notes = (this.state.isEditNote 
             ? (
                 <EditContainerNote 
-                    containerNote={this.state.containerNote}
+                    containerNote={this.state.containerNoteText}
                     handleNoteChange={this.handleEditNoteChange}
                     handleNoteEsc={this.handleEditNoteEsc}
                     handleNoteEnter={this.handleEditNoteSubmit}
@@ -252,10 +288,10 @@ export class Container extends Component {
                         <DragHandle name={this.props.container.name} />
                     }
                     onDoubleClick={this.handleContainerDoubleClick}
-                    action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
+                    action={<MoreMenu options = {options} handleItemClick = {this.handleMenuSelection} />}
                     avatar={<OccupancyDisplay total={this.props.container.size} count={this.props.items.length} />}
                 />
-                {notes}
+                <CardContent className={classes.cardContent}>{notes}</CardContent>
                 <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true} type={"item"}>
                     {(provided, snapshot) => (
                         <div ref={provided.innerRef}>

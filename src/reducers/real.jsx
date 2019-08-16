@@ -22,7 +22,7 @@ import {
 } from 'actions/actionTypes'
 
 import { updateArrangement } from 'services/arrangementService'
-import { getSnapshotIndex, getSnapshotContainerIndex, getContainerNotes } from 'utils'
+import { getSnapshotIndex, getSnapshotContainerIndex } from 'utils'
 
 const initialState = {
     _id: '',

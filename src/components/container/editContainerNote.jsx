@@ -2,15 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { TextField } from '@material-ui/core'
 
-import { withStyles } from '@material-ui/core/styles'
-
 const ENTER_KEY = 'Enter';
 const ESC_KEY = 27;
 const KEYDOWN = 'keydown';
-
-const styles = theme => ({
-    
-})
 
 export class EditContainerNote extends Component {
     constructor (props) {
@@ -45,15 +39,12 @@ export class EditContainerNote extends Component {
     }
   
     render () {
-        const { classes } = this.props;
-
         return (
-            <TextField
-                multiline margin="none" placeholder="Add Note here" 
+                <TextField
+                multiline margin="none" placeholder="Add Note here"
                 autoFocus={true}
                 onKeyPress={this.handleKeyPress}
                 onChange={this.props.handleNoteChange}
-                onBlur={() => this.props.handleNoteEnter(null)}
                 onPaste={this.handlePasteText}
                 value= {this.props.containerNote}
             />
@@ -68,4 +59,4 @@ EditContainerNote.propTypes = {
     handleEsc: PropTypes.func,
 }
 
-export default withStyles(styles)(EditContainerNote)
+export default EditContainerNote;
