@@ -3,22 +3,24 @@ import PropTypes from 'prop-types'
 import { Grid, Typography, Card, CardHeader, CardContent, TextField } from '@material-ui/core'
 import MoreMenu from 'components/moremenu/moremenu'
 import { connect } from 'react-redux'
+import { SortableHandle } from 'react-sortable-hoc';
 
 import Item from 'components/item/item'
 import EditContainer from 'components/editContainer/editContainer'
 import OccupancyDisplay from 'components/container/occupancyDisplay'
-import { editContainer } from 'actions/container/container'
+import { editContainer, deleteContainer } from 'actions/container/container'
+import { bulkSetUnassignedItems, bulkSetContainerItems, saveArrangementState } from 'actions/real/real'
 import { addSnapshotContainerNote, editSnapshotContainerNote } from 'actions/snapshot/snapshot'
 import EditContainerNote from 'components/container/editContainerNote'
 
 import { withStyles } from '@material-ui/core/styles'
-import { getSnapshotContainer } from 'utils'
 import { Droppable } from 'react-beautiful-dnd'
 import { uuid } from '../../utils';
 
-const EDIT = "Edit"
-const DELETE_FROM_ALL_SNAPSHOTS = "Delete from all snapshots"
 const ADD_NOTE = "Add Note"
+const EDIT = "Edit";
+const REMOVE_ALL = "Remove all";
+const DELETE_FROM_ALL_SNAPSHOTS = "Delete from all snapshots";
 
 const styles = theme => ({
     card: {
@@ -37,6 +39,14 @@ const styles = theme => ({
         paddingRight: 10
     }
 })
+
+// Create a drag handle out of the name of the container
+const DragHandle = SortableHandle(({name}) => (
+    <div style={{cursor: "grab"}}>
+        <Typography variant="body1" align="left">
+            <b>{name}</b>
+        </Typography>
+    </div>));
 
 export class Container extends Component {
     constructor(props) {
@@ -88,25 +98,39 @@ export class Container extends Component {
         })
     }
 
-    getItemIds = (containerId) => {
-        return getSnapshotContainer(this.props.snapshot, containerId).items
+    addAllItemToUnassigned = () => {
+        const updatedItemsList = [...this.props.snapshot.unassigned];
+
+        this.getItemIds().forEach(itemId => {
+            if (!this.props.snapshot.unassigned.includes(itemId)) {
+                updatedItemsList.push(itemId);
+            }
+            else {
+                console.log("Item was found in unassigned when it shouldn't be!");
+            }
+        })
+        this.props.bulkSetUnassignedItems(this.props.snapshot._id, updatedItemsList);  
+    }
+    
+    removeAllItemFromContainer = () => {
+        const snapshotContainer = this.props.snapshot.snapshotContainers.find(container => container._id === this.props.container._id);
+        const itemIds = this.getItemIds();
+        const updatedItemsList = snapshotContainer.items.filter(item => !itemIds.includes(item));
+        this.props.bulkSetContainerItems(this.props.snapshot._id, this.props.container._id, updatedItemsList);
     }
 
-    getItems = (items, containerId) => {
-        const itemsInContainer = []
-        for (let itemId of this.getItemIds(containerId)) {
-            const item = items.find(ele => ele._id === itemId)
-            // Check if item exists
-            if (item) {
-                itemsInContainer.push(item)
-            }
-        }
-        return itemsInContainer
+    removeAllItems = () => {
+        this.addAllItemToUnassigned();
+        this.removeAllItemFromContainer();
+        this.props.saveArrangementState();
     }
 
     handleItemClick = option => {
         if (option === DELETE_FROM_ALL_SNAPSHOTS) {
             this.props.deleteContainer(this.props.container._id)
+        }
+        if (option === REMOVE_ALL) {
+            this.removeAllItems();
         }
         else if (option === EDIT) {
             this.setState({
@@ -180,9 +204,9 @@ export class Container extends Component {
         const options = [
             EDIT,
             ADD_NOTE,
+            REMOVE_ALL,
             DELETE_FROM_ALL_SNAPSHOTS,
         ]
-        const items = this.getItems(this.props.items, this.props.container._id)
 
         const notes = (this.state.isEditNote 
             ? (
@@ -202,33 +226,29 @@ export class Container extends Component {
         )
 
         const containerCard = (
-            <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true}>
-                {(provided, snapshot) => (
-                    <div ref={provided.innerRef}>
-                        <Card className={classes.card}>
-                            <CardHeader
-                                className={classes.cardHeader}
-                                title={
-                                    <Typography variant="body1" align="left">
-                                        <b>{this.props.container.name}</b>
-                                    </Typography>
-                                }
-                                onDoubleClick={this.handleContainerDoubleClick}
-                                action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
-                                avatar={<OccupancyDisplay total={this.props.container.size} count={items.length} />}
-                            />
-                            {notes}
+            <Card className={classes.card}>
+                <CardHeader
+                    className={classes.cardHeader}
+                    title={
+                        <DragHandle name={this.props.container.name} />
+                    }
+                    onDoubleClick={this.handleContainerDoubleClick}
+                    action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
+                    avatar={<OccupancyDisplay total={this.props.container.size} count={this.props.items.length} />}
+                />
+                {notes}
+                <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true} type={"item"}>
+                    {(provided, snapshot) => (
+                        <div ref={provided.innerRef}>
                             <CardContent className={classes.cardContent}>
                                 {
-                                    items.map((item, index) => {
+                                    this.props.items.map((item, index) => {
                                         if (typeof item !== 'undefined')
                                             return (
                                                 <Grid item xs={12} key={item._id}>
                                                     <Item 
                                                         item={item} 
-                                                        index={index} 
-                                                        getDragItemColor={this.props.getDragItemColor} 
-                                                        containerId={this.props.container._id} />
+                                                        index={index} />
                                                 </Grid>
                                             )
                                         return {}
@@ -236,10 +256,10 @@ export class Container extends Component {
                                 }
                                 {provided.placeholder}
                             </CardContent>
-                        </Card>
-                    </div>
-                )}
-            </Droppable>
+                        </div>
+                    )}
+                </Droppable>
+            </Card>      
         )
 
         const editContainer = (
@@ -267,27 +287,21 @@ Container.propTypes = {
         name: PropTypes.string,
         snapshot: PropTypes.object
     }),
-    items: PropTypes.arrayOf(PropTypes.shape({
-        _id: PropTypes.string,
-        name: PropTypes.string,
-        size: PropTypes.number
-    })),
     container: PropTypes.shape({
         _id: PropTypes.string,
         name: PropTypes.string,
         size: PropTypes.number
     }),
-    deleteContainer: PropTypes.func,
-    getDragItemColor: PropTypes.func
+    items: PropTypes.arrayOf(PropTypes.shape({
+        _id: PropTypes.string,
+        name: PropTypes.string,
+        size: PropTypes.number
+    }))
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const {
-        real
-    } = state
-    return {
-        real
-    }
+    const { real } = state;
+    return { real };
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -300,7 +314,19 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         editSnapshotContainerNote: (snapshot) => {
             dispatch(editSnapshotContainerNote(snapshot))
-        }
+        },
+        deleteContainer: (id) => {
+            dispatch(deleteContainer(id))
+        },
+        bulkSetUnassignedItems: (snapshotId, unassigned) => {
+            dispatch(bulkSetUnassignedItems(snapshotId, unassigned))
+        },
+        bulkSetContainerItems: (snapshotId, containerId, items) => {
+            dispatch(bulkSetContainerItems(snapshotId, containerId, items))
+        },
+        saveArrangementState: () => {
+            dispatch(saveArrangementState())
+        },
     }
 }
 

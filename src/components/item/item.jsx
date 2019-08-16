@@ -9,7 +9,7 @@ import MoreMenu from 'components/moremenu/moremenu'
 import { Draggable } from 'react-beautiful-dnd'
 import { withStyles } from '@material-ui/core/styles'
 
-import { renameItem, deleteItem } from 'actions/item/item'
+import { updateItem, deleteItem } from 'actions/item/item'
 
 import EditItem from 'components/editItem/editItem'
 
@@ -18,7 +18,7 @@ const DELETE_FROM_ALL_SNAPSHOTS = 'Delete from all snapshots'
 
 const styles = theme => ({
     card: {
-        maxHeight: 40
+        marginBottom: 1,
     },
     cardHeader: {
         paddingLeft: 10,
@@ -63,7 +63,7 @@ export class Item extends Component {
 
     handleEditItemSubmit = () => {
 
-        this.props.renameItem({
+        this.props.updateItem({
             ...this.props.item,
             name: this.state.name
         })
@@ -87,6 +87,12 @@ export class Item extends Component {
         })
     }
 
+    getNote = () => {
+        if ('notes' in this.props.item && this.props.item.notes) {
+            return this.props.item.notes;
+        }
+    }
+
     render = () => {
         const { classes } = this.props;
 
@@ -100,20 +106,27 @@ export class Item extends Component {
                 key={this.props.item._id}
                 draggableId={this.props.item._id}
                 index={this.props.index}
+
             >
                 {(provided, snapshot) => (
                     <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
+
                     >
                         <Card className={classes.card} raised={snapshot.isDragging}>
                             <CardHeader
                                 className={classes.cardHeader}
                                 title={
-                                    <Typography variant="body1" align="left">
-                                        {this.props.item.name}
-                                    </Typography>
+                                    <div>
+                                        <Typography variant="body1" align="left">
+                                            { this.props.item.name }
+                                        </Typography>
+                                        <Typography variant="caption" align="left">
+                                            { this.props.arrangementSettings.isDisplayNotes ? this.getNote() : "" }
+                                        </Typography>
+                                    </div>
                                 }
                                 onDoubleClick={this.handleItemDoubleClick}
                                 action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
@@ -149,23 +162,24 @@ Item.propTypes = {
         name: PropTypes.string,
         size: PropTypes.number
     }),
-    getDragItemColor: PropTypes.func,
-    containerId: PropTypes.string
+    index: PropTypes.number
 }
 
 const mapStateToProps = (state, ownProps) => {
     const {
-        real
+        real,
+        arrangementSettings
     } = state
     return {
-        real
+        real,
+        arrangementSettings
     }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        renameItem: (item) => {
-            dispatch(renameItem(item))
+        updateItem: (item) => {
+            dispatch(updateItem(item))
         },
         deleteItem: (item) => {
             dispatch(deleteItem(item))

@@ -41,7 +41,8 @@ export function generateItem(name, allItems) {
         const item = {
             _id: uuid('item'),
             name: name,
-            size: 1
+            size: 1,
+            notes: ""
         }
         if (checkDuplicate(item, allItems)) {
             return item;

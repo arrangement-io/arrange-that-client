@@ -7,6 +7,9 @@
         "REACT_APP_PROD_API_HOST": "https://arrangement-server.herokuapp.com"
     },
     "alias": "arrange.space",
+    "builds": [
+        { "src": "build/**", "use": "@now/static" }
+    ],
     "routes": [
         {
             "src": "^/static/(.*)",

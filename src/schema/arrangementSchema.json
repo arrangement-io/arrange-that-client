@@ -23,9 +23,10 @@
                 "properties": {
                     "_id": {"type": "string"},
                     "name": {"type": "string"},
-                    "size": {"type": "integer"}
+                    "size": {"type": "integer"},
+                    "notes": {"type": "string"}
                 },
-                "additionalProperties": false,
+                "additionalProperties": true,
                 "required": ["_id", "name", "size"]
             }
         },

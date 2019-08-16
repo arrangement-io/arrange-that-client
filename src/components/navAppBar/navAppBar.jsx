@@ -8,7 +8,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { setAccount, logout } from 'actions/account/account'
-import { setRealData } from 'actions/real/real'
+import { setRealData, saveArrangementState } from 'actions/real/real'
 import { uuid } from 'utils'
 import config from 'config.json'
 import { withSnackbar } from 'notistack';
@@ -48,6 +48,10 @@ class NavAppBar extends Component {
         this.props.history.push("/feedback")
     }
 
+    goToTools = () => {
+        this.props.history.push("/tools")
+    }
+
     createNewArrangement = () => {
         var d = new Date()
         const arrangement_id = uuid("arrangement")
@@ -70,16 +74,14 @@ class NavAppBar extends Component {
             timestamp: d.getTime() / 1000,
             modified_timestamp: d.getTime() / 1000
         }
-
-        this.props.setRealData(real)
-        this.props.history.push('/arrangement/' + arrangement_id)
+        this.props.setRealData(real);
+        this.props.saveArrangementState(real);
+        this.props.history.push('/arrangement/' + arrangement_id);
     }
 
     onFailure = (error) => {
         this.props.enqueueSnackbar('Could not login')
     }
-
-
 
     googleResponse = (response) => {
         const data = {
@@ -121,6 +123,9 @@ class NavAppBar extends Component {
                     </Button>
                     <Button onClick={this.goToViewAllArrangements} color="inherit">
                         View All
+                    </Button>
+                    <Button onClick={this.goToTools} color="inherit">
+                        Tools
                     </Button>
                     <Button onClick={this.goToFeedback} color="inherit">
                         Feedback
@@ -184,6 +189,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         setRealData: (data) => {
             dispatch(setRealData(data))
+        },
+        saveArrangementState: (data) => {
+            dispatch(saveArrangementState(data))
         }
     }
 }

@@ -6,6 +6,7 @@ import {
     CONTAINER_NOTE_ADD,
     CONTAINER_NOTE_DELETE,
     CONTAINER_NOTE_EDIT,
+    SNAPSHOT_SET_CONTAINERS
 } from 'actions/actionTypes'
 
 export const snapshotAdd = (snapshot) => ({
@@ -46,4 +47,10 @@ export const editSnapshotContainerNote = (snapshotId, note) => ({
     type: CONTAINER_NOTE_EDIT,
     snapshotId,
     note
+})
+
+export const snapshotSetContainers = (snapshotId, snapshotContainers) => ({
+    type: SNAPSHOT_SET_CONTAINERS,
+    snapshotId,
+    snapshotContainers
 })

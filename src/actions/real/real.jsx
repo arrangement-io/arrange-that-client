@@ -41,7 +41,7 @@ export const bulkSetContainerItems = (snapshotId, containerId, items) => ({
     bulk: true
 })
 
-export const saveState = (data) => ({
+export const saveArrangementState = (data) => ({
     type: SAVE_STATE,
     data
 })

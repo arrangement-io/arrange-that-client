@@ -3,7 +3,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import {
     ITEM_ADD,
     ITEM_DELETE,
-    ITEM_RENAME,
+    ITEM_UPDATE,
     CONTAINER_ADD,
     CONTAINER_DELETE,
     CONTAINER_NOTE_ADD,
@@ -18,7 +18,8 @@ import {
     SNAPSHOT_ADD,
     SNAPSHOT_DELETE,
     SNAPSHOT_RENAME,
-    SNAPSHOT_REPOSITION
+    SNAPSHOT_REPOSITION,
+    SNAPSHOT_SET_CONTAINERS
 } from 'actions/actionTypes'
 
 import { updateArrangement } from 'services/arrangementService'
@@ -97,12 +98,13 @@ const realReducer = (state = initialState, action) => {
             return deleteItemState
         }
 
-        case ITEM_RENAME: {
+        case ITEM_UPDATE: {
             const resultItemRename = cloneDeep(state);
             const item = resultItemRename.items.find(ele => ele._id === action.item._id)
-            item.name = action.item.name
+            item.name = action.item.name;
+            item.notes = action.item.notes;
             if (!action.bulk) {
-                exportState(resultItemRename)
+                exportState(resultItemRename);
             }
             return resultItemRename
         }
@@ -192,7 +194,6 @@ const realReducer = (state = initialState, action) => {
         }
 
         case SET_REAL_DATA: {
-            exportState(action.data)
             return cloneDeep(action.data)
         }
         
@@ -271,6 +272,15 @@ const realReducer = (state = initialState, action) => {
 
             exportState(snapshotReposition)
             return snapshotReposition
+        }
+
+        case SNAPSHOT_SET_CONTAINERS: {
+            const setSnapshotContainersState = cloneDeep(state);
+            const index = getSnapshotIndex(setSnapshotContainersState, action.snapshotId);
+            setSnapshotContainersState.snapshots[index].snapshotContainers = action.snapshotContainers;
+
+            exportState(setSnapshotContainersState);
+            return setSnapshotContainersState;
         }
 
         default: {
