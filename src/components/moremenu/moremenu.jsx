@@ -4,7 +4,7 @@ import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 
-const ITEM_HEIGHT = 30
+const ITEM_HEIGHT = 100
 
 class MoreMenu extends React.Component {
     constructor (props) {
@@ -12,55 +12,49 @@ class MoreMenu extends React.Component {
         this.state = {
             anchorEl: null,
         }
-
-        this.handleClose = this.handleClose.bind(this)
     }
-  
 
-  handleClick = event => {
-      this.setState({ anchorEl: event.currentTarget })
-  }
+    openMenu = (event) => {
+        this.setState({ anchorEl: event.currentTarget })
+    }
 
-  handleClose (event, option) {
-      this.setState({ anchorEl: null })
-      this.props.handleItemClick(option)
-  }
+    closeMenu = (event, option) => {
+        this.setState({ anchorEl: null })
+        this.props.handleItemClick(option)
+    }
 
-  render() {
-      const { anchorEl } = this.state
-      const open = Boolean(anchorEl)
+    render() {
+        const open = Boolean(this.state.anchorEl)
 
-      return (
-          <div>
-              <IconButton
-                  aria-label = "More"
-                  aria-owns = {open ? 'long-menu' : null}
-                  aria-haspopup = "true"
-                  onClick = {this.handleClick}
-              >
-                  <MoreVertIcon />
-              </IconButton>
-              <Menu
-                  id = "long-menu"
-                  anchorEl = {anchorEl}
-                  open = {open}
-                  onClose = {this.handleClose}
-                  PaperProps = {{
-                      style: {
-                          maxHeight: ITEM_HEIGHT * 4.5 * this.props.options.length,
-                          width: 200,
-                      },
-                  }}
-              >
-                  {this.props.options.map(option => (
-                      <MenuItem key = {option} onClick = {(event) => this.handleClose(event, option)} >
-                          {option}
-                      </MenuItem>
-                  ))}
-              </Menu>
-          </div>
-      );
-  }
+        const menu = open 
+            ? (<Menu
+                id = "long-menu"
+                anchorEl = {this.state.anchorEl}
+                open = {open}
+                onClose = {this.closeMenu}
+                PaperProps = {{
+                    style: {
+                        maxHeight: ITEM_HEIGHT * this.props.options.length,
+                        width: 200,
+                    },
+                }}>
+                {this.props.options.map(option => (
+                    <MenuItem key = {option} onClick = {(event) => this.closeMenu(event, option)} >
+                        {option}
+                    </MenuItem>
+                ))}
+            </Menu>)
+            : null;
+
+        return (
+            <div>
+                <IconButton onClick = {this.openMenu}>
+                    <MoreVertIcon />
+                </IconButton>
+                {menu}
+            </div>
+        );
+    }
 }
 
 export default MoreMenu
