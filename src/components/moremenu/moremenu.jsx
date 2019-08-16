@@ -28,22 +28,22 @@ class MoreMenu extends React.Component {
 
         const menu = open 
             ? (<Menu
-                    id = "long-menu"
-                    anchorEl = {this.state.anchorEl}
-                    open = {open}
-                    onClose = {this.closeMenu}
-                    PaperProps = {{
-                        style: {
-                            maxHeight: ITEM_HEIGHT * this.props.options.length,
-                            width: 200,
-                        },
-                    }}>
-                    {this.props.options.map(option => (
-                        <MenuItem key = {option} onClick = {(event) => this.closeMenu(event, option)} >
-                            {option}
-                        </MenuItem>
-                    ))}
-                </Menu>)
+                id = "long-menu"
+                anchorEl = {this.state.anchorEl}
+                open = {open}
+                onClose = {this.closeMenu}
+                PaperProps = {{
+                    style: {
+                        maxHeight: ITEM_HEIGHT * this.props.options.length,
+                        width: 200,
+                    },
+                }}>
+                {this.props.options.map(option => (
+                    <MenuItem key = {option} onClick = {(event) => this.closeMenu(event, option)} >
+                        {option}
+                    </MenuItem>
+                ))}
+            </Menu>)
             : null;
 
         return (
