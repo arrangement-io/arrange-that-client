@@ -6,6 +6,8 @@ import {
     ITEM_UPDATE,
     CONTAINER_ADD,
     CONTAINER_DELETE,
+    CONTAINER_NOTE_DELETE,
+    CONTAINER_NOTE_EDIT,
     CONTAINER_EDIT,
     SET_REAL_DATA,
     ARRANGEMENT_RENAME,
@@ -139,6 +141,40 @@ const realReducer = (state = initialState, action) => {
             }
             exportState(deleteContainerState)
             return deleteContainerState
+        }
+
+        case CONTAINER_NOTE_DELETE: {
+            const snapshotDeleteNoteState = cloneDeep(state);
+
+            const index = getSnapshotIndex(snapshotDeleteNoteState, action.snapshotId);
+            var containerNotesList = snapshotDeleteNoteState.snapshots[index].containerNotes;
+            var noteIndex = containerNotesList.findIndex(x => (x && x._id === action.noteId));
+            containerNotesList.splice(noteIndex, 1);
+            exportState(snapshotDeleteNoteState);
+            return snapshotDeleteNoteState;
+        }
+
+        case CONTAINER_NOTE_EDIT: {
+            const snapshotAddNoteState = cloneDeep(state);
+
+            const newNote = action.note;
+            
+            const index = getSnapshotIndex(snapshotAddNoteState, action.snapshotId);
+            var notesList = snapshotAddNoteState.snapshots[index].containerNotes;
+
+            if (notesList !== undefined) {
+                var oldNote = notesList.find(x => (x && x.containerId === newNote.containerId))
+                if (oldNote !== undefined) {
+                    oldNote.text = action.note.text;
+                } else {
+                    notesList.push(action.note);
+                }
+            } else {
+                snapshotAddNoteState.snapshots[index].containerNotes = [action.note];
+            }
+            
+            exportState(snapshotAddNoteState);
+            return snapshotAddNoteState;
         }
 
         case CONTAINER_EDIT: {

@@ -70,6 +70,11 @@ exports[`renders without crashing 1`] = `
               exact={true}
               path="/feedback"
             />
+            <PrivateRoute
+              component={[Function]}
+              exact={true}
+              path="/tools"
+            />
           </Switch>
         </Default>
       </Router>

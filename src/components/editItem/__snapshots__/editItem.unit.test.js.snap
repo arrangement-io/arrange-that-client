@@ -12,18 +12,18 @@ exports[`EditItem renders 1`] = `
         class="MuiCardHeader-content-34"
       >
         <h1
-          class="MuiTypography-root-37 MuiTypography-headline-42 MuiTypography-alignCenter-51"
+          class="MuiTypography-root-37 MuiTypography-headline-42 MuiTypography-alignCenter-60"
         >
           <div
-            class="MuiFormControl-root-63"
+            class="MuiFormControl-root-73"
           >
             <div
-              class="MuiInputBase-root-80 MuiInput-root-67 MuiInput-underline-71 MuiInputBase-formControl-81 MuiInput-formControl-68"
+              class="MuiInputBase-root-90 MuiInput-root-77 MuiInput-underline-81 MuiInputBase-formControl-91 MuiInput-formControl-78"
             >
               <input
                 aria-invalid="false"
                 autofocus=""
-                class="MuiInputBase-input-90 MuiInput-input-75"
+                class="MuiInputBase-input-100 MuiInput-input-85"
                 placeholder="Name"
                 type="text"
                 value="person"

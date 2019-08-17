@@ -8,6 +8,8 @@ export function uuid (type) {
         text = "s"
     else if (type === "arrangement")
         text = "a"
+    else if (type === "note")
+        text = "n"
     else
         return ''
     
@@ -116,4 +118,8 @@ export function getSnapshotContainerIndex (snapshot, containerId) {
 
 export function getSnapshotContainer (snapshot, containerId) {
     return snapshot.snapshotContainers.find(x => (x && x._id === containerId))
+}
+
+export function getContainerNotes (snapshot, noteId) {
+    return snapshot.containerNotes.find(x => x._id === noteId)
 }

@@ -2,35 +2,39 @@
 
 exports[`EditArrangementTitle renders 1`] = `
 <h1
-  class="MuiTypography-root-1 MuiTypography-headline-6 MuiTypography-alignLeft-14"
+  class="MuiTypography-root-1 MuiTypography-headline-6 MuiTypography-alignLeft-23"
 >
   <div
-    class="MuiFormControl-root-27 MuiFormControl-marginNormal-28"
+    class="MuiFormControl-root-37 MuiFormControl-marginNormal-38"
   >
     <label
-      class="MuiFormLabel-root-38 MuiFormLabel-filled-42 MuiInputLabel-root-31 MuiInputLabel-formControl-32 MuiInputLabel-animated-35 MuiInputLabel-shrink-34 MuiInputLabel-outlined-37"
+      class="MuiFormLabel-root-52 MuiFormLabel-filled-56 MuiInputLabel-root-41 MuiInputLabel-formControl-46 MuiInputLabel-animated-49 MuiInputLabel-shrink-48 MuiInputLabel-outlined-51"
       data-shrink="true"
       for="outlined-name"
     >
       Arrangement Name
     </label>
     <div
-      class="MuiInputBase-root-58 MuiOutlinedInput-root-45 MuiInputBase-formControl-59"
+      class="MuiInputBase-root-72 MuiOutlinedInput-root-59 MuiInputBase-formControl-73"
     >
       <fieldset
         aria-hidden="true"
-        class="MuiNotchedOutline-root-75 MuiOutlinedInput-notchedOutline-52"
+        class="MuiPrivateNotchedOutline-root-89 MuiOutlinedInput-notchedOutline-66"
         style="padding-left:8px"
       >
         <legend
-          class="MuiNotchedOutline-legend-76"
+          class="MuiPrivateNotchedOutline-legend-90"
           style="width:0"
-        />
+        >
+          <span>
+            ​
+          </span>
+        </legend>
       </fieldset>
       <input
         aria-invalid="false"
         autofocus=""
-        class="MuiInputBase-input-68 MuiOutlinedInput-input-53"
+        class="MuiInputBase-input-82 MuiOutlinedInput-input-67"
         id="outlined-name"
         type="text"
         value="First arrangement"

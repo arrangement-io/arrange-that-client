@@ -59,6 +59,18 @@
                             },
                             "required": ["_id", "items"]
                         }
+                    },
+                    "containerNotes": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "_id": {"type": "string"},
+                                "containerId": {"type": "string"},
+                                "text": {"type": "string"}
+                            }
+                        },
+                        "required": ["_id", "containerId"]
                     }
                 },
                 "additionalProperties":false,

@@ -12,17 +12,17 @@ exports[`EditContainer renders 1`] = `
         class="MuiCardHeader-avatar-31"
       >
         <h1
-          class="MuiTypography-root-36 MuiTypography-headline-41 MuiTypography-alignCenter-50"
+          class="MuiTypography-root-36 MuiTypography-headline-41 MuiTypography-alignCenter-59"
         >
           <div
-            class="MuiFormControl-root-62 EditContainer-sizeField-1"
+            class="MuiFormControl-root-72 EditContainer-sizeField-1"
           >
             <div
-              class="MuiInputBase-root-79 MuiInput-root-66 MuiInput-underline-70 MuiInputBase-formControl-80 MuiInput-formControl-67"
+              class="MuiInputBase-root-89 MuiInput-root-76 MuiInput-underline-80 MuiInputBase-formControl-90 MuiInput-formControl-77"
             >
               <input
                 aria-invalid="false"
-                class="MuiInputBase-input-89 MuiInput-input-74 MuiInputBase-inputType-92 MuiInput-inputType-77"
+                class="MuiInputBase-input-99 MuiInput-input-84 MuiInputBase-inputType-102 MuiInput-inputType-87"
                 placeholder="Size"
                 type="number"
                 value="8"
@@ -35,18 +35,18 @@ exports[`EditContainer renders 1`] = `
         class="MuiCardHeader-content-33"
       >
         <h1
-          class="MuiTypography-root-36 MuiTypography-headline-41 MuiTypography-alignCenter-50"
+          class="MuiTypography-root-36 MuiTypography-headline-41 MuiTypography-alignCenter-59"
         >
           <div
-            class="MuiFormControl-root-62"
+            class="MuiFormControl-root-72"
           >
             <div
-              class="MuiInputBase-root-79 MuiInput-root-66 MuiInput-underline-70 MuiInputBase-formControl-80 MuiInput-formControl-67"
+              class="MuiInputBase-root-89 MuiInput-root-76 MuiInput-underline-80 MuiInputBase-formControl-90 MuiInput-formControl-77"
             >
               <input
                 aria-invalid="false"
                 autofocus=""
-                class="MuiInputBase-input-89 MuiInput-input-74"
+                class="MuiInputBase-input-99 MuiInput-input-84"
                 placeholder="Name"
                 type="text"
                 value="van"
