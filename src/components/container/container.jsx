@@ -12,6 +12,7 @@ import { editContainer, deleteContainer } from 'actions/container/container'
 import { bulkSetUnassignedItems, bulkSetContainerItems, saveArrangementState } from 'actions/real/real'
 import { editSnapshotContainerNote, deleteSnapshotContainerNote } from 'actions/snapshot/snapshot'
 import EditContainerNote from 'components/container/editContainerNote'
+import { SortableItemCollection } from 'components/item/sortableItem';
 
 import { withStyles } from '@material-ui/core/styles'
 import { Droppable } from 'react-beautiful-dnd'
@@ -292,28 +293,12 @@ export class Container extends Component {
                     avatar={<OccupancyDisplay total={this.props.container.size} count={this.props.items.length} />}
                 />
                 <CardContent className={classes.cardContent}>{notes}</CardContent>
-                <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true} type={"item"}>
-                    {(provided, snapshot) => (
-                        <div ref={provided.innerRef}>
-                            <CardContent className={classes.cardContent}>
-                                {
-                                    this.props.items.map((item, index) => {
-                                        if (typeof item !== 'undefined')
-                                            return (
-                                                <Grid item xs={12} key={item._id}>
-                                                    <Item 
-                                                        item={item} 
-                                                        index={index} />
-                                                </Grid>
-                                            )
-                                        return {}
-                                    })
-                                }
-                                {provided.placeholder}
-                            </CardContent>
-                        </div>
-                    )}
-                </Droppable>
+                <CardContent className={classes.cardContent}>
+                    <SortableItemCollection
+                        itemsInContainer={this.props.items}
+                        displayEditItem={()=>{return}}
+                        />
+                </CardContent>
             </Card>      
         )
 

@@ -10,11 +10,11 @@ import EditItem from 'components/editItem/editItem'
 
 import { addItem } from 'actions/item/item'
 
-import { Droppable } from 'react-beautiful-dnd'
 import { withStyles } from '@material-ui/core/styles'
 
 import { uuid, validateName, checkDuplicate } from 'utils'
 import { withSnackbar } from 'notistack';
+import { SortableItemCollection } from 'components/item/sortableItem';
 
 const styles = theme => ({
     card: {
@@ -190,40 +190,21 @@ export class ItemCollection extends Component {
 
         const indexedItems = {};
         this.props.items.forEach(item => indexedItems[item._id] = item);
+        
+        const unassignedItems = this.props.unsnapshot_items.map(itemId => indexedItems[itemId]);
 
         return (
             <Card className={classes.card}>
                 <CardHeader className={classes.cardHeader} title="People"/>
                 <CardContent>Unassigned: {this.props.unsnapshot_items.length}/{this.props.items.length}</CardContent>
-                <Droppable droppableId="itemcollection" type={"item"}>
-                    {(provided, snapshot) => (
-                        <div ref={provided.innerRef}>
-                            <CardContent className={classes.cardContent}>
-                                <Grid container spacing={0}>
-                                    {
-                                        this.props.unsnapshot_items.map((id, index) => {
-                                            const item = indexedItems[id];
-                                            // Check for null items
-                                            if (item) {
-                                                return (
-                                                    <Grid item xs = {12} key = {id}>
-                                                        <Item 
-                                                            item={item}
-                                                            index={index} />
-                                                    </Grid>
-                                                )
-                                            }
-                                            console.log("attempted to render null item")
-                                            return
-                                        })
-                                    }
-                                    { this.displayEditItem() }
-                                    {provided.placeholder}
-                                </Grid>
-                            </CardContent>
-                        </div>
-                    )}
-                </Droppable>
+                    <CardContent className={classes.cardContent}>
+                        <Grid container spacing={0}>
+                            <SortableItemCollection
+                                itemsInContainer={unassignedItems}
+                                displayEditItem={this.displayEditItem}
+                            />
+                        </Grid>
+                    </CardContent>
                 <CardActions>
                     <Button variant="text" color="default" onClick={this.addEditItem}>
                         <Typography variant="body1" align="left">

@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 import { Card, CardHeader, Typography } from '@material-ui/core'
 import MoreMenu from 'components/moremenu/moremenu'
 
-import { Draggable } from 'react-beautiful-dnd'
 import { withStyles } from '@material-ui/core/styles'
 
 import { updateItem, deleteItem } from 'actions/item/item'
@@ -102,39 +101,24 @@ export class Item extends Component {
         ]
         
         const item = (
-            <Draggable
-                key={this.props.item._id}
-                draggableId={this.props.item._id}
-                index={this.props.index}
-
-            >
-                {(provided, snapshot) => (
-                    <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-
-                    >
-                        <Card className={classes.card} raised={snapshot.isDragging}>
-                            <CardHeader
-                                className={classes.cardHeader}
-                                title={
-                                    <div>
-                                        <Typography variant="body1" align="left">
-                                            { this.props.item.name }
-                                        </Typography>
-                                        <Typography variant="caption" align="left">
-                                            { this.props.arrangementSettings.isDisplayNotes ? this.getNote() : "" }
-                                        </Typography>
-                                    </div>
-                                }
-                                onDoubleClick={this.handleItemDoubleClick}
-                                action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
-                            />
-                        </Card>
-                    </div>
-                )}
-            </Draggable>
+            // <Card className={classes.card} raised={snapshot.isDragging}>
+            <Card className={classes.card}>
+                <CardHeader
+                    className={classes.cardHeader}
+                    title={
+                        <div>
+                            <Typography variant="body1" align="left">
+                                { this.props.item.name }
+                            </Typography>
+                            <Typography variant="caption" align="left">
+                                { this.props.arrangementSettings.isDisplayNotes ? this.getNote() : "" }
+                            </Typography>
+                        </div>
+                    }
+                    onDoubleClick={this.handleItemDoubleClick}
+                    action={<MoreMenu options = {options} handleItemClick = {this.handleItemClick} />}
+                />
+            </Card>
         );
 
         const editItem = (
