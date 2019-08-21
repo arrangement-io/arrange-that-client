@@ -202,6 +202,7 @@ export class ItemCollection extends Component {
                         <SortableItemCollection
                             itemsInContainer={unassignedItems}
                             displayEditItem={this.displayEditItem}
+                            helperClass='sortableHelper'
                         />
                     </Grid>
                 </CardContent>

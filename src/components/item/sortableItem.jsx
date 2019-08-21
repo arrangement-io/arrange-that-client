@@ -1,5 +1,4 @@
 import React from 'react'
-import { Grid } from '@material-ui/core'
 
 import Item from 'components/item/item'
 
@@ -7,11 +6,9 @@ import { SortableElement, SortableContainer } from 'react-sortable-hoc';
 
 export const SortableItemElement = SortableElement(({item}) => {
     return (
-        <Grid item xs={12} key={item._id}>
             <Item 
                 item={item}
                 index={0} />
-        </Grid>
     )
 });
 
@@ -20,7 +17,6 @@ export const SortableItemElement = SortableElement(({item}) => {
 
 // Using react-sortable-hoc to create a container for the sortable containers
 export const SortableItemCollection = SortableContainer(({itemsInContainer, displayEditItem}) => {
-
     return (
         // It needs to be wrapped in a div to prevent an error
         <div>

@@ -297,6 +297,7 @@ export class Container extends Component {
                     <SortableItemCollection
                         itemsInContainer={this.props.items}
                         displayEditItem={()=>{return}}
+                        helperClass='sortableHelper'
                     />
                 </CardContent>
             </Card>      
