@@ -197,14 +197,14 @@ export class ItemCollection extends Component {
             <Card className={classes.card}>
                 <CardHeader className={classes.cardHeader} title="People"/>
                 <CardContent>Unassigned: {this.props.unsnapshot_items.length}/{this.props.items.length}</CardContent>
-                    <CardContent className={classes.cardContent}>
-                        <Grid container spacing={0}>
-                            <SortableItemCollection
-                                itemsInContainer={unassignedItems}
-                                displayEditItem={this.displayEditItem}
-                            />
-                        </Grid>
-                    </CardContent>
+                <CardContent className={classes.cardContent}>
+                    <Grid container spacing={0}>
+                        <SortableItemCollection
+                            itemsInContainer={unassignedItems}
+                            displayEditItem={this.displayEditItem}
+                        />
+                    </Grid>
+                </CardContent>
                 <CardActions>
                     <Button variant="text" color="default" onClick={this.addEditItem}>
                         <Typography variant="body1" align="left">
