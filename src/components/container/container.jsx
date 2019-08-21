@@ -177,7 +177,7 @@ export class Container extends Component {
         this.setState({
             ...this.state,
             isEditNote: false,
-            containerNote: savedContainerNote
+            containerNote: this.findContainerNote()
         })
     }
 
@@ -240,18 +240,18 @@ export class Container extends Component {
     // Render the container options. If Note doesn't exist don't give option to delete note.
     getContainerOptions = () => {
         return this.findContainerNoteText() !== "" ? 
-        [
-            EDIT,
-            EDIT_NOTE,
-            DELETE_NOTE,
-            REMOVE_ALL,
-            DELETE_FROM_ALL_SNAPSHOTS
-        ] : 
-        [
-            EDIT,
-            EDIT_NOTE,
-            REMOVE_ALL,
-            DELETE_FROM_ALL_SNAPSHOTS]
+            [
+                EDIT,
+                EDIT_NOTE,
+                DELETE_NOTE,
+                REMOVE_ALL,
+                DELETE_FROM_ALL_SNAPSHOTS
+            ] : 
+            [
+                EDIT,
+                EDIT_NOTE,
+                REMOVE_ALL,
+                DELETE_FROM_ALL_SNAPSHOTS]
     }
 
     render () {
