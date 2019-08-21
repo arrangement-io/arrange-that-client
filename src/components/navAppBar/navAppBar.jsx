@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ReactGA from 'react-ga';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import { GoogleLogin } from 'react-google-login'
@@ -13,6 +14,7 @@ import { uuid } from 'utils'
 import config from 'config.json'
 import { withSnackbar } from 'notistack';
 import { isAuthenticated } from 'services/authService'
+import { LOGIN_FAILED_ACTION, LOGIN_SUCCEEDED_ACTION, USER_CATEGORY, LOGIN_ACTION } from '../../analytics/gaUserConstants';
 
 const styles = {
     root: {
@@ -84,6 +86,10 @@ class NavAppBar extends Component {
     }
 
     googleResponse = (response) => {
+        ReactGA.event({
+            category: USER_CATEGORY,
+            action: LOGIN_ACTION
+        });
         const data = {
             access_token: response.accessToken,
             user_data: response.profileObj
@@ -94,16 +100,25 @@ class NavAppBar extends Component {
             data: data
         })
             .then(res => {
+                ReactGA.event({
+                    category: USER_CATEGORY,
+                    action: LOGIN_SUCCEEDED_ACTION
+                });
                 const account = {
                     user: response.profileObj, 
                     token: response.accessToken, 
                     tokenId: response.tokenId
                 }
+                ReactGA.set({ userId: account.user.googleId });
                 this.props.setAccount(account)
                 this.goToViewAllArrangements()
                 Promise.resolve()
             })
             .catch(err => {
+                ReactGA.event({
+                    category: 'User',
+                    action: LOGIN_FAILED_ACTION
+                });
                 console.log(err)
                 Promise.reject(err)
             })

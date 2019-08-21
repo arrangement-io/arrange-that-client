@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import store from 'store/store'
+import ReactGA from 'react-ga';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+ReactGA.initialize('UA-146133959-1');
 
 function handleChange () {
     // handle change

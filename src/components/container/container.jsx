@@ -354,9 +354,8 @@ Container.propTypes = {
     }))
 }
 
-const mapStateToProps = (state, ownProps) => {
-    const { real } = state;
-    return { real };
+const mapStateToProps = () => {
+    return {}
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
