@@ -43,6 +43,7 @@ export class EditContainerNote extends Component {
                 <TextField
                 multiline margin="none" placeholder="Add Note here"
                 autoFocus={true}
+                onBlur={() => this.props.handleNoteEnter(null)}
                 onKeyPress={this.handleKeyPress}
                 onChange={this.props.handleNoteChange}
                 onPaste={this.handlePasteText}
