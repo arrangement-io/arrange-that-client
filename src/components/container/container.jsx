@@ -170,11 +170,10 @@ export class Container extends Component {
     }
 
     saveNote = () => {
-        if (this.state.containerNote) {
-            this.props.editSnapshotContainerNote(this.props.snapshot._id, {...this.state.containerNote, text: this.state.containerNoteText})
-        } else {
-            this.props.editSnapshotContainerNote(this.props.snapshot._id, this.createNewContainerNote(this.state.containerNoteText))
-        }
+        const savedContainerNote = (this.state.containerNote)
+            ? {...this.state.containerNote, text: this.state.containerNoteText}
+            : this.createNewContainerNote(this.state.containerNoteText);
+        this.props.editSnapshotContainerNote(this.props.snapshot._id, savedContainerNote);
         this.setState({
             ...this.state,
             isEditNote: false,
