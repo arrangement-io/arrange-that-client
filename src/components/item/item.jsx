@@ -167,11 +167,9 @@ Item.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
     const {
-        real,
         arrangementSettings
     } = state
     return {
-        real,
         arrangementSettings
     }
 }

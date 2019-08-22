@@ -40,7 +40,7 @@ export class EditContainerNote extends Component {
   
     render () {
         return (
-                <TextField
+            <TextField
                 multiline margin="none" placeholder="Add Note here"
                 autoFocus={true}
                 onKeyPress={this.handleKeyPress}

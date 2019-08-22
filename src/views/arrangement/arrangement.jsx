@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ReactGA from 'react-ga';
 
 import { connect } from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep';
@@ -22,6 +23,7 @@ import { uuid } from 'utils'
 import { withStyles } from '@material-ui/core/styles'
 
 import Tabs, { Tab } from 'react-awesome-tabs';
+import { ARRANGEMENT_CATEGORY, NEW_SNAPSHOT_ACTION, CLONE_SNAPSHOT_ACTION } from '../../analytics/gaArrangementConstants';
 
 const styles = theme => ({
     header: {
@@ -125,6 +127,10 @@ export class Arrange extends Component {
     }
 
     createNewSnapshot = () => {
+        ReactGA.event({
+            category: ARRANGEMENT_CATEGORY,
+            action: NEW_SNAPSHOT_ACTION
+        });
         const numberOfCurrentSnapshots = this.props.real.snapshots.length
         const newSnapshotSnapshot = {}
         const newSnapshotContainers = []
@@ -149,6 +155,10 @@ export class Arrange extends Component {
     }
 
     cloneSnapshot = (snapshotId) => {
+        ReactGA.event({
+            category: ARRANGEMENT_CATEGORY,
+            action: CLONE_SNAPSHOT_ACTION
+        });
         const numberOfCurrentSnapshots = this.props.real.snapshots.length
         const snapshotToClone = this.props.real.snapshots.find(s => s._id === snapshotId)
         const clone = {
