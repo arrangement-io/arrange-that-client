@@ -61,7 +61,6 @@ export class Item extends Component {
     }
 
     handleEditItemSubmit = () => {
-
         this.props.updateItem({
             ...this.props.item,
             name: this.state.name
@@ -145,17 +144,14 @@ Item.propTypes = {
         _id: PropTypes.string,
         name: PropTypes.string,
         size: PropTypes.number
-    }),
-    index: PropTypes.number
+    })
 }
 
 const mapStateToProps = (state, ownProps) => {
     const {
-        real,
         arrangementSettings
     } = state
     return {
-        real,
         arrangementSettings
     }
 }

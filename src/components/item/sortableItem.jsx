@@ -6,9 +6,7 @@ import { SortableElement, SortableContainer } from 'react-sortable-hoc';
 
 export const SortableItemElement = SortableElement(({item}) => {
     return (
-        <Item 
-            item={item}
-            index={0} />
+        <Item item={item} />
     )
 });
 

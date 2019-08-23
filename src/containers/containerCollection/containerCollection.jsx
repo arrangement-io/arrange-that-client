@@ -6,14 +6,13 @@ import PropTypes from 'prop-types'
 import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Button } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack';
-import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 
-import Container from 'components/container/container'
+
 import EditContainer from 'components/editContainer/editContainer'
 import { addContainer } from 'actions/container/container'
 import { snapshotSetContainers } from 'actions/snapshot/snapshot'
-import { uuid, validateName, checkDuplicate, reorder, getSnapshotContainer } from 'utils'
-
+import { uuid, validateName, checkDuplicate, reorder } from 'utils'
+import { SortableContainerCollection } from 'components/container/sortableContainer';
 
 const styles = theme => ({
     card: {
@@ -31,58 +30,6 @@ const styles = theme => ({
     }
 })
 
-// Using react-sortable-hoc to create a sortable container element
-const SortableContainerElement = SortableElement(({container, snapshot, items}) => {
-    return (
-        <Grid item xs={12} sm={6} md={3} lg={2} key={container._id}>
-            <Container 
-                container={container}
-                snapshot={snapshot}
-                items={items}
-            /> 
-        </Grid>
-    )
-});
-
-// Using react-sortable-hoc to create a container for the sortable containers
-const SortableContainerCollection = SortableContainer(({snapshot, containers, items, displayEditContainer}) => {
-    const indexedItems = {};
-    items.forEach(item => indexedItems[item._id] = item);
-
-    return (
-        // It needs to be wrapped in a div to prevent an error
-        <div>
-            <Grid container spacing={8}>
-                {
-                    snapshot.snapshotContainers.map((snapshotContainer, index) => {
-                        const container = containers.find(c => c._id === snapshotContainer._id);
-
-                        if (container) {
-                            // Convert the itemIds into items
-                            const itemsInContainer = []
-                            for (let itemId of snapshotContainer.items) {
-                                const item = indexedItems[itemId];
-                                if (item) {
-                                    itemsInContainer.push(item);
-                                }
-                            }
-                            return (          
-                                <SortableContainerElement 
-                                    key={container._id} 
-                                    index={index} 
-                                    container={container}
-                                    snapshot={snapshot}
-                                    items={itemsInContainer}
-                                />
-                            )  
-                        }
-                    })
-                }
-                { displayEditContainer() }
-            </Grid>        
-        </div>
-    )
-});
 
 export class ContainerCollection extends Component {
     constructor (props) {
