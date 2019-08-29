@@ -5,7 +5,6 @@ import { withRouter } from 'react-router'
 import PropTypes from 'prop-types'
 import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Button } from '@material-ui/core'
 
-import Item from 'components/item/item'
 import EditItem from 'components/editItem/editItem'
 
 import { addItem } from 'actions/item/item'
@@ -14,7 +13,7 @@ import { withStyles } from '@material-ui/core/styles'
 
 import { uuid, validateName, checkDuplicate } from 'utils'
 import { withSnackbar } from 'notistack';
-import { SortableItemCollection } from 'components/item/sortableItem';
+import { SortableItemCollection, dragLayer } from 'components/item/sortableItem';
 
 const styles = theme => ({
     card: {
@@ -184,6 +183,11 @@ export class ItemCollection extends Component {
         }
     }
 
+    onSortItemsEnd = (event) => {
+        console.log("onSortItemsEnd");
+        console.log(event);
+    }
+
     //TODO The snackbar alert seems to hide itself prematurely on click away from a duplicated item.
     render () {
         const { classes } = this.props;
@@ -200,10 +204,17 @@ export class ItemCollection extends Component {
                 <CardContent className={classes.cardContent}>
                     <Grid container spacing={0}>
                         <SortableItemCollection
-                            itemsInContainer={unassignedItems}
+                            id={"unassigned"}
+                            key={"unassigned"}
+                            items={unassignedItems}
                             displayEditItem={this.displayEditItem}
-                            helperClass='sortableHelper'
-                        />
+                            helperClass='selected'
+                            dragLayer={dragLayer}
+                            isMultiple={true}
+                            onMultipleSortEnd={this.onSortItemsEnd}
+                            distance={10}
+                            helperCollision={{ top: 0, bottom: 0 }}
+                            axis="y" />
                     </Grid>
                 </CardContent>
                 <CardActions>

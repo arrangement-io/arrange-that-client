@@ -18,6 +18,12 @@ code {
   z-index: 999;
 }
 
+.selected {
+  z-index: 9999;
+  position: relative;
+  background-color: green;
+}
+
 .itemcollection {
   border: 1px solid black;
   padding: 12px;

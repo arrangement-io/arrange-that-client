@@ -12,10 +12,9 @@ import { editContainer, deleteContainer } from 'actions/container/container'
 import { bulkSetUnassignedItems, bulkSetContainerItems, saveArrangementState } from 'actions/real/real'
 import { editSnapshotContainerNote, deleteSnapshotContainerNote } from 'actions/snapshot/snapshot'
 import EditContainerNote from 'components/container/editContainerNote'
-import { SortableItemCollection } from 'components/item/sortableItem';
+import { SortableItemCollection, dragLayer } from 'components/item/sortableItem';
 
 import { withStyles } from '@material-ui/core/styles'
-import { Droppable } from 'react-beautiful-dnd'
 import { uuid } from '../../utils';
 
 const EDIT_NOTE = "Edit Note"
@@ -256,6 +255,11 @@ export class Container extends Component {
                 DELETE_FROM_ALL_SNAPSHOTS]
     }
 
+    onSortItemsEnd = (event) => {
+        console.log("container - onSortItemsEnd");
+        console.log(event);    
+    }
+
     render () {
         const { classes } = this.props
 
@@ -295,9 +299,17 @@ export class Container extends Component {
                 <CardContent className={classes.cardContent}>{notes}</CardContent>
                 <CardContent className={classes.cardContent}>
                     <SortableItemCollection
-                        itemsInContainer={this.props.items}
+                        id={this.props.container._id}
+                        key={this.props.container._id}
+                        items={this.props.items}
                         displayEditItem={()=>{return}}
-                        helperClass='sortableHelper'
+                        helperClass='selected'
+                        dragLayer={dragLayer}
+                        onMultipleSortEnd={this.onSortItemsEnd}
+                        isMultiple={true}
+                        helperCollision={{ top: 0, bottom: 0 }}
+                        distance={10}
+                        axis="y"
                     />
                 </CardContent>
             </Card>      

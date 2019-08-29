@@ -335,7 +335,7 @@ export default function sortableContainer(
           node.style.opacity = 0
         }
 
-        if (helperClass && !this.props.isMultiple) {
+        if (helperClass) { // && !this.props.isMultiple) {
           this.dragLayer.helper.classList.add(...helperClass.split(' '))
         }
 

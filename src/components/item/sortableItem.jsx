@@ -2,11 +2,16 @@ import React from 'react'
 
 import Item from 'components/item/item'
 
-import { SortableElement, SortableContainer } from 'react-sortable-hoc';
+import { sortableElement, sortableContainer } from 'libraries/react-sortable-multiple-hoc';
+import { DragLayer } from 'libraries/react-sortable-multiple-hoc';
 
-export const SortableItemElement = SortableElement(({item}) => {
+export const dragLayer = new DragLayer();
+
+export const SortableItemElement = sortableElement(props => {
     return (
-        <Item item={item} />
+        <div onClick={props.onSelect} className={props.className}> 
+            <Item item={props.item} />
+        </div>
     )
 });
 
@@ -14,17 +19,16 @@ export const SortableItemElement = SortableElement(({item}) => {
 // console.log(dragLayer);
 
 // Using react-sortable-hoc to create a container for the sortable containers
-export const SortableItemCollection = SortableContainer(({itemsInContainer, displayEditItem}) => {
+export const SortableItemCollection = sortableContainer(({items, displayEditItem}) => {
     return (
         // It needs to be wrapped in a div to prevent an error
         <div>
-            {
-                itemsInContainer.map((item, index) => {
+            {items.map((item, index) => {
                     // Check for null items
                     if (item) {
                         return (
                             <SortableItemElement
-                                key={item._id}
+                                key={index}
                                 index={index}
                                 item={item}
                             />
@@ -37,4 +41,4 @@ export const SortableItemCollection = SortableContainer(({itemsInContainer, disp
             { displayEditItem() }   
         </div>
     )
-});
+}); 

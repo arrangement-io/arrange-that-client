@@ -101,7 +101,7 @@ export class Item extends Component {
         
         const item = (
             // <Card className={classes.card} raised={snapshot.isDragging}>
-            <Card className={classes.card}>
+            <Card className={classes.card} key={ this.props.item._id }>
                 <CardHeader
                     className={classes.cardHeader}
                     title={

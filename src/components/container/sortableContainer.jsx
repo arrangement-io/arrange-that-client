@@ -1,25 +1,25 @@
 import React from 'react'
 import { Grid } from '@material-ui/core'
 
-import { SortableContainer, SortableElement } from 'react-sortable-hoc';
+import { sortableElement, sortableContainer } from 'libraries/react-sortable-multiple-hoc';
 
 import Container from 'components/container/container'
 
 // Using react-sortable-hoc to create a sortable container element
-export const SortableContainerElement = SortableElement(({container, snapshot, items}) => {
+export const SortableContainerElement = sortableElement(props => {
     return (
-        <Grid item xs={12} sm={6} md={3} lg={2} key={container._id}>
+        <Grid item xs={12} sm={6} md={3} lg={2} key={props.container._id}>
             <Container 
-                container={container}
-                snapshot={snapshot}
-                items={items}
+                container={props.container}
+                snapshot={props.snapshot}
+                items={props.items}
             /> 
         </Grid>
     )
 });
 
 // Using react-sortable-hoc to create a container for the sortable containers
-export const SortableContainerCollection = SortableContainer(({snapshot, containers, items, displayEditContainer}) => {
+export const SortableContainerCollection = sortableContainer(({snapshot, containers, items, displayEditContainer}) => {
     const indexedItems = {};
     items.forEach(item => indexedItems[item._id] = item);
 
