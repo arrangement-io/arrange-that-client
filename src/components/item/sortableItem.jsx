@@ -2,8 +2,8 @@ import React from 'react'
 
 import Item from 'components/item/item'
 
-import { sortableElement, sortableContainer } from 'libraries/react-sortable-multiple-hoc';
-import { DragLayer } from 'libraries/react-sortable-multiple-hoc';
+import { sortableElement, sortableContainer , DragLayer } from 'libraries/react-sortable-multiple-hoc';
+
 
 export const dragLayer = new DragLayer();
 
@@ -24,19 +24,19 @@ export const SortableItemCollection = sortableContainer(({items, displayEditItem
         // It needs to be wrapped in a div to prevent an error
         <div>
             {items.map((item, index) => {
-                    // Check for null items
-                    if (item) {
-                        return (
-                            <SortableItemElement
-                                key={index}
-                                index={index}
-                                item={item}
-                            />
-                        )
-                    }
-                    console.log("attempted to render null item")
-                    return
-                })
+                // Check for null items
+                if (item) {
+                    return (
+                        <SortableItemElement
+                            key={index}
+                            index={index}
+                            item={item}
+                        />
+                    )
+                }
+                console.log("attempted to render null item")
+                return
+            })
             }
             { displayEditItem() }   
         </div>
