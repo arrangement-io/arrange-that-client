@@ -23,65 +23,83 @@ class Snapshot extends Component {
         this.healUnassignedItems(this.props.snapshotId)
     }
 
-    onDragEnd = (result) => {
-        const { source, destination, type } = result
-        const snapshot = this.getSnapshot(this.props.snapshotId)
-        if (!destination) { // dropped outside the list
-            return
-        }
-        if (type === "item") {
-            if (source.droppableId === destination.droppableId) { // dropped in same list
-                let items = []
-                if (source.droppableId === 'itemcollection') { // dropped in items' list, only reorder the items in list
-                    items = snapshot.unassigned
-                    items = reorder(
-                        items,
-                        source.index,
-                        destination.index
-                    )
-                    this.props.setUnassignedItems(this.props.snapshotId, items)
-                } else { // dropped in a container, only reorder the items in a container
-                    items = getSnapshotContainer(snapshot, source.droppableId).items
-                    items = reorder(
-                        items,
-                        source.index,
-                        destination.index
-                    )
-                    this.props.setContainerItems(this.props.snapshotId, source.droppableId, items)
-                }
-            } else { // dropped in other list
-                let result
-                if (source.droppableId === 'itemcollection') { // dropped in a container from items' list, move
-                    result = move(
-                        snapshot.unassigned,
-                        getSnapshotContainer(snapshot, destination.droppableId).items,
-                        source,
-                        destination
-                    )
-                    this.props.setUnassignedItems(this.props.snapshotId, result['source'])
-                    this.props.setContainerItems(this.props.snapshotId, destination.droppableId, result['destination'])
-                } else if (destination.droppableId === 'itemcollection') { // dropped in items' list from a container, move item from a container to items' list
-                    result = move(
-                        getSnapshotContainer(snapshot, source.droppableId).items,
-                        snapshot.unassigned,
-                        source,
-                        destination
-                    )
-                    this.props.setContainerItems(this.props.snapshotId, source.droppableId, result['source'])
-                    this.props.setUnassignedItems(this.props.snapshotId, result['destination'])
-                } else { // dropped in a container from another container, move item from a container to another container
-                    result = move(
-                        getSnapshotContainer(snapshot, source.droppableId).items,
-                        getSnapshotContainer(snapshot, destination.droppableId).items,
-                        source,
-                        destination
-                    )
-                    this.props.setContainerItems(this.props.snapshotId, source.droppableId, result['source'])
-                    this.props.setContainerItems(this.props.snapshotId, destination.droppableId, result['destination'])
-                }
-            }
-        }
+    onMultipleSortEnd = (event) => {
+        console.log("multiplesortend");
+        console.log(event);
+
     }
+
+    addItemToContainer = (itemId, containerId, postion) => {
+
+    }
+
+    removeItemFromUnassigned = (itemId) => {
+
+    }
+
+    removeItemFromContainer = (itemId, containerId) => {
+        
+    }
+
+    // onMultipleSortEnd = (result) => {
+    //     const { source, destination, type } = result
+    //     const snapshot = this.getSnapshot(this.props.snapshotId)
+    //     if (!destination) { // dropped outside the list
+    //         return
+    //     }
+    //     if (type === "item") {
+    //         if (source.droppableId === destination.droppableId) { // dropped in same list
+    //             let items = []
+    //             if (source.droppableId === 'itemcollection') { // dropped in items' list, only reorder the items in list
+    //                 items = snapshot.unassigned
+    //                 items = reorder(
+    //                     items,
+    //                     source.index,
+    //                     destination.index
+    //                 )
+    //                 this.props.setUnassignedItems(this.props.snapshotId, items)
+    //             } else { // dropped in a container, only reorder the items in a container
+    //                 items = getSnapshotContainer(snapshot, source.droppableId).items
+    //                 items = reorder(
+    //                     items,
+    //                     source.index,
+    //                     destination.index
+    //                 )
+    //                 this.props.setContainerItems(this.props.snapshotId, source.droppableId, items)
+    //             }
+    //         } else { // dropped in other list
+    //             let result
+    //             if (source.droppableId === 'itemcollection') { // dropped in a container from items' list, move
+    //                 result = move(
+    //                     snapshot.unassigned,
+    //                     getSnapshotContainer(snapshot, destination.droppableId).items,
+    //                     source,
+    //                     destination
+    //                 )
+    //                 this.props.setUnassignedItems(this.props.snapshotId, result['source'])
+    //                 this.props.setContainerItems(this.props.snapshotId, destination.droppableId, result['destination'])
+    //             } else if (destination.droppableId === 'itemcollection') { // dropped in items' list from a container, move item from a container to items' list
+    //                 result = move(
+    //                     getSnapshotContainer(snapshot, source.droppableId).items,
+    //                     snapshot.unassigned,
+    //                     source,
+    //                     destination
+    //                 )
+    //                 this.props.setContainerItems(this.props.snapshotId, source.droppableId, result['source'])
+    //                 this.props.setUnassignedItems(this.props.snapshotId, result['destination'])
+    //             } else { // dropped in a container from another container, move item from a container to another container
+    //                 result = move(
+    //                     getSnapshotContainer(snapshot, source.droppableId).items,
+    //                     getSnapshotContainer(snapshot, destination.droppableId).items,
+    //                     source,
+    //                     destination
+    //                 )
+    //                 this.props.setContainerItems(this.props.snapshotId, source.droppableId, result['source'])
+    //                 this.props.setContainerItems(this.props.snapshotId, destination.droppableId, result['destination'])
+    //             }
+    //         }
+    //     }
+    // }
 
     healUnassignedItems = (snapshotId) => {
         const snap = this.getSnapshot(snapshotId)
@@ -140,15 +158,17 @@ class Snapshot extends Component {
                 <DragDropContext onDragEnd={this.onDragEnd}>
                     <Grid container spacing={8}>
                         <Grid item xs={5} sm={4} md={3} lg={2}>
-                            <ItemCollection 
+                            <ItemCollection
                                 items={this.props.real.items} 
-                                unsnapshot_items={unassigned_items} />   
+                                unsnapshot_items={unassigned_items} 
+                                onMultipleSortEnd={this.onMultipleSortEnd}/>
                         </Grid>
                         <Grid item xs={7} sm={8} md={9} lg={10}>
                             <ContainerCollection 
                                 snapshot={this.getSnapshot(this.props.snapshotId)} 
                                 containers={this.props.real.containers} 
-                                items={this.props.real.items} />
+                                items={this.props.real.items} 
+                                onMultipleSortEnd={this.onMultipleSortEnd} />
                         </Grid>
                     </Grid>
                 </DragDropContext>

@@ -13,13 +13,14 @@ export const SortableContainerElement = sortableElement(props => {
                 container={props.container}
                 snapshot={props.snapshot}
                 items={props.items}
+                onMultipleSortEnd={props.onMultipleSortEnd}
             /> 
         </Grid>
     )
 });
 
 // Using react-sortable-hoc to create a container for the sortable containers
-export const SortableContainerCollection = sortableContainer(({snapshot, containers, items, displayEditContainer}) => {
+export const SortableContainerCollection = sortableContainer(({snapshot, containers, items, displayEditContainer, onMultipleSortEnd}) => {
     const indexedItems = {};
     items.forEach(item => indexedItems[item._id] = item);
 
@@ -47,6 +48,7 @@ export const SortableContainerCollection = sortableContainer(({snapshot, contain
                                     container={container}
                                     snapshot={snapshot}
                                     items={itemsInContainer}
+                                    onMultipleSortEnd={onMultipleSortEnd}
                                 />
                             )  
                         }

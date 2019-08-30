@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core'
+import { Typography, Card, CardHeader, CardContent } from '@material-ui/core'
 import MoreMenu from 'components/moremenu/moremenu'
 import { connect } from 'react-redux'
 import { SortableHandle } from 'react-sortable-hoc';
 
-import Item from 'components/item/item'
 import EditContainer from 'components/editContainer/editContainer'
 import OccupancyDisplay from 'components/container/occupancyDisplay'
 import { editContainer, deleteContainer } from 'actions/container/container'
@@ -255,11 +254,6 @@ export class Container extends Component {
                 DELETE_FROM_ALL_SNAPSHOTS]
     }
 
-    onSortItemsEnd = (event) => {
-        console.log("container - onSortItemsEnd");
-        console.log(event);    
-    }
-
     render () {
         const { classes } = this.props
 
@@ -305,10 +299,10 @@ export class Container extends Component {
                         displayEditItem={()=>{return}}
                         helperClass='selected'
                         dragLayer={dragLayer}
-                        onMultipleSortEnd={this.onSortItemsEnd}
+                        onMultipleSortEnd={this.props.onMultipleSortEnd}
                         isMultiple={true}
                         helperCollision={{ top: 0, bottom: 0 }}
-                        distance={10}
+                        distance={3}
                         axis="y"
                     />
                 </CardContent>
@@ -325,7 +319,6 @@ export class Container extends Component {
                 handleEsc={this.handleEditContainerEscKey}
             />
         )
-
 
         if (this.state.isEdit) {
             return editContainer

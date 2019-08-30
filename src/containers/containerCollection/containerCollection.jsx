@@ -231,6 +231,7 @@ export class ContainerCollection extends Component {
                             displayEditContainer={this.displayEditContainer}
                             classes={classes} 
                             onSortEnd={this.onSortEnd}
+                            onMultipleSortEnd={this.props.onMultipleSortEnd}
                             useDragHandle={true}
                             helperClass='sortableHelper'
                             axis="xy" />

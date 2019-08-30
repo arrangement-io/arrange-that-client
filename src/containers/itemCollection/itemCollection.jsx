@@ -183,11 +183,6 @@ export class ItemCollection extends Component {
         }
     }
 
-    onSortItemsEnd = (event) => {
-        console.log("onSortItemsEnd");
-        console.log(event);
-    }
-
     //TODO The snackbar alert seems to hide itself prematurely on click away from a duplicated item.
     render () {
         const { classes } = this.props;
@@ -202,20 +197,18 @@ export class ItemCollection extends Component {
                 <CardHeader className={classes.cardHeader} title="People"/>
                 <CardContent>Unassigned: {this.props.unsnapshot_items.length}/{this.props.items.length}</CardContent>
                 <CardContent className={classes.cardContent}>
-                    <Grid container spacing={0}>
-                        <SortableItemCollection
-                            id={"unassigned"}
-                            key={"unassigned"}
-                            items={unassignedItems}
-                            displayEditItem={this.displayEditItem}
-                            helperClass='selected'
-                            dragLayer={dragLayer}
-                            isMultiple={true}
-                            onMultipleSortEnd={this.onSortItemsEnd}
-                            distance={10}
-                            helperCollision={{ top: 0, bottom: 0 }}
-                            axis="y" />
-                    </Grid>
+                    <SortableItemCollection
+                        id={"unassigned"}
+                        key={"unassigned"}
+                        items={unassignedItems}
+                        displayEditItem={this.displayEditItem}
+                        helperClass='selected'
+                        dragLayer={dragLayer}
+                        isMultiple={true}
+                        onMultipleSortEnd={this.props.onMultipleSortEnd}
+                        distance={3}
+                        helperCollision={{ top: 0, bottom: 0 }}
+                        axis="y" />
                 </CardContent>
                 <CardActions>
                     <Button variant="text" color="default" onClick={this.addEditItem}>
