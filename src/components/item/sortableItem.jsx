@@ -19,20 +19,20 @@ export const SortableItemElement = sortableElement(props => {
 // For Virtualized List, high performance but buggy..., disabled for now
 const Rowy = (items) => {
     const Row = ({ index, style }) => {
-            if (items[index]) {
-                return (
-                    <div style={style}>
-                        <SortableItemElement
-                            key={index}
-                            index={index}
-                            item={items[index]}
-                        />
-                    </div>
-                )
-            }
-            console.log("attempted to render null item")
-            return
-        };
+        if (items[index]) {
+            return (
+                <div style={style}>
+                    <SortableItemElement
+                        key={index}
+                        index={index}
+                        item={items[index]}
+                    />
+                </div>
+            )
+        }
+        console.log("attempted to render null item")
+        return
+    };
     return Row
 }
 
