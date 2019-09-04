@@ -19,6 +19,10 @@ const styles = theme => ({
     card: {
         marginBottom: 1,
     },
+    selectedCard: {
+        marginBottom: 1,
+        backgroundColor: "#ddd"
+    },
     cardHeader: {
         paddingLeft: 10,
         paddingTop: 0,
@@ -100,8 +104,7 @@ export class Item extends Component {
         ]
         
         const item = (
-            // <Card className={classes.card} raised={snapshot.isDragging}>
-            <Card className={classes.card} key={ this.props.item._id }>
+            <Card className={this.props.isSelected ? classes.selectedCard : classes.card} key={ this.props.item._id }>
                 <CardHeader
                     className={classes.cardHeader}
                     title={
@@ -144,7 +147,8 @@ Item.propTypes = {
         _id: PropTypes.string,
         name: PropTypes.string,
         size: PropTypes.number
-    })
+    }),
+    isSelected: PropTypes.bool
 }
 
 const mapStateToProps = (state, ownProps) => {

@@ -408,6 +408,7 @@ export default function sortableContainer(
     }
 
     handleSortEnd = (e, newList = null) => {
+      
       const { hideSortableGhost, onSortEnd, onMultipleSortEnd } = this.props
 
       if (!this.manager.active) {
@@ -424,6 +425,7 @@ export default function sortableContainer(
 
       const nodes = this.manager.refs[collection]
 
+      
       for (let i = 0, len = nodes.length; i < len; i++) {
         const node = nodes[i]
         const el = node.node
@@ -435,24 +437,29 @@ export default function sortableContainer(
         el.style[`${vendorPrefix}Transform`] = ''
         el.style[`${vendorPrefix}TransitionDuration`] = ''
       }
+      
 
       // Stop autoscroll
       clearInterval(this.autoscrollInterval)
       this.autoscrollInterval = null
 
       // Update state
-
+      
       this.setState({
         sorting: false,
         sortingIndex: null
       })
+      
+      
       if (newList) {
         if (!newList.manager.active) {
           newList.manager.active = {}
         }
+        
         newList.manager.active.item = this.manager.active.item
         this.newIndex = newList.getClosestNodeIndexHack(e)
         newList.handleSortSwap(this.newIndex, this.state.items[this.index])
+        
         this.setState({
           items: arrayMove(this.state.items, this.index, -1)
         })
@@ -497,7 +504,7 @@ export default function sortableContainer(
 
     handleSortSwap = (index, item) => {
       this.setState({
-        items: arrayInsert(this.state.items, index, item)
+        items: [...this.state.items, item] //arrayInsert(this.state.items, index, item) gchia perf
       })
       const { onSortSwap } = this.props
 

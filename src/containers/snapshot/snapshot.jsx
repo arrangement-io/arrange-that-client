@@ -6,10 +6,12 @@ import { Grid } from '@material-ui/core'
 import ItemCollection from 'containers/itemCollection/itemCollection'
 import ContainerCollection from 'containers/containerCollection/containerCollection'
 import { DragDropContext } from 'react-beautiful-dnd'
-import { saveArrangementState, setUnassignedItems, setContainerItems } from 'actions/real/real'
+import { saveArrangementState, setUnassignedItems, setContainerItems, bulkSetUnassignedItems, bulkSetContainerItems  } from 'actions/real/real'
 import { snapshotSetContainers } from 'actions/snapshot/snapshot'
-import { reorder, move, getSnapshotContainer } from 'utils'
 import { withStyles } from '@material-ui/core/styles'
+import { getSnapshotIndex, getSnapshotContainer } from 'utils'
+
+const UNASSIGNED = "unassigned"
 
 const styles = theme => ({
     snapshotBody: {
@@ -24,22 +26,78 @@ class Snapshot extends Component {
     }
 
     onMultipleSortEnd = (event) => {
-        console.log("multiplesortend");
-        console.log(event);
-
+        const itemsToMove = [];
+        for (let item of event.items) {
+            // item: {listId: <listId>, id: <index in old list>, _id: <itemId>}
+            itemsToMove.push({...item, _id: this.getItemFromContainer(item.listId, item.id)});
+        }
+        itemsToMove.forEach(({_id, listId}) => this.removeItemFromContainer(_id, listId));
+        this.addItemsToContainer(itemsToMove.map(item => item._id), event.newListIndex, event.newIndex)
+        this.props.saveArrangementState();
     }
 
-    addItemToContainer = (itemId, containerId, postion) => {
-
+    getSnapshot = (snapshotId) => {
+        return this.props.real.snapshots.find(x => x._id === snapshotId)
     }
 
-    removeItemFromUnassigned = (itemId) => {
-
+    // pushes all the itemIds into containerId at position
+    addItemsToContainer = (itemIds, containerId, postion) => {
+        if (containerId === UNASSIGNED) {
+            const snapshot = this.getSnapshot(this.props.snapshotId);
+            const updatedItemsList = snapshot.unassigned.filter(i => !itemIds.includes(i));
+            updatedItemsList.splice(postion, 0, ...itemIds)
+            this.props.bulkSetUnassignedItems(this.props.snapshotId, updatedItemsList);
+        } else {
+            const snapshotContainer = getSnapshotContainer(
+                this.props.real.snapshots[getSnapshotIndex(this.props.real, this.props.snapshotId)],
+                containerId);
+            const updatedItemsList = snapshotContainer.items.filter(i => !itemIds.includes(i));
+            updatedItemsList.splice(postion, 0, ...itemIds)
+            this.props.bulkSetContainerItems(this.props.snapshotId, containerId, updatedItemsList);
+        }                    
     }
 
+    // Gets the item id to push
+    getItemFromContainer = (containerId, position) => {
+        if (containerId === UNASSIGNED) {
+            const snapshot = this.getSnapshot(this.props.snapshotId);
+            return snapshot.unassigned[position];
+        }
+        else {
+            const container = getSnapshotContainer(
+                this.props.real.snapshots[getSnapshotIndex(this.props.real, this.props.snapshotId)],
+                containerId);
+            return container.items[position];
+        }
+    }
+
+    // Filters out that particular id
     removeItemFromContainer = (itemId, containerId) => {
-        
+        if (containerId === UNASSIGNED) {
+            const snapshot = this.getSnapshot(this.props.snapshotId);
+            if (snapshot.unassigned.includes(itemId)) {
+                const updatedItemsList = snapshot.unassigned.filter(item => item !== itemId);
+                this.props.bulkSetUnassignedItems(this.props.snapshotId, updatedItemsList);
+            }
+            else {
+                console.log("Item was not found in unassigned when it should be!");
+            }
+        }
+        else {
+            const snapshotContainer = getSnapshotContainer(
+                this.props.real.snapshots[getSnapshotIndex(this.props.real, this.props.snapshotId)],
+                containerId);
+            if (snapshotContainer.items.includes(itemId)) {
+                const updatedItemsList = snapshotContainer.items.filter(item => item !== itemId);
+                this.props.bulkSetContainerItems(this.props.snapshotId, containerId, updatedItemsList);
+            }
+            else {
+                console.log("Item was not found in container when it should be!");
+            }
+        }
     }
+
+
 
     // onMultipleSortEnd = (result) => {
     //     const { source, destination, type } = result
@@ -133,7 +191,7 @@ class Snapshot extends Component {
         for (let container of snap.snapshotContainers) {
             container.items = container.items.filter(n => this.props.real.items.find(i => i._id === n))
         }
-        this.props.saveArrangementState(this.props.real);
+        this.props.saveArrangementState();
     }
 
     getSnapshot = (snapshotId) => {
@@ -185,8 +243,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        saveArrangementState: (data) => {
-            dispatch(saveArrangementState(data));
+        saveArrangementState: () => {
+            dispatch(saveArrangementState());
         },
         setUnassignedItems: (snapshotId, unassigned) => {
             dispatch(setUnassignedItems(snapshotId, unassigned));
@@ -196,6 +254,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         snapshotSetContainers: (snapshotId, snapshotContainers) => {
             dispatch(snapshotSetContainers(snapshotId, snapshotContainers));
+        },
+        bulkSetUnassignedItems: (snapshotId, unassigned) => {
+            dispatch(bulkSetUnassignedItems(snapshotId, unassigned))
+        },
+        bulkSetContainerItems: (snapshotId, containerId, items) => {
+            dispatch(bulkSetContainerItems(snapshotId, containerId, items))
         }
     }
 }

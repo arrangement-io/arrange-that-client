@@ -19,9 +19,7 @@ code {
 }
 
 .selected {
-  z-index: 9999;
-  position: relative;
-  background-color: green;
+  z-index: 999;
 }
 
 .itemcollection {

@@ -13,8 +13,6 @@ import { bulkAddItem, bulkUpdateItem, bulkDeleteItem } from 'actions/item/item'
 import { generateItem } from 'utils'
 
 
-
-
 const NAME_FIELD = "name";
 const CONTAINER_FIELD = "container";
 const NOTES_FIELD = "notes";
