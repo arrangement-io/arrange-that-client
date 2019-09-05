@@ -6,10 +6,13 @@ import { Grid } from '@material-ui/core'
 import ItemCollection from 'containers/itemCollection/itemCollection'
 import ContainerCollection from 'containers/containerCollection/containerCollection'
 import { DragDropContext } from 'react-beautiful-dnd'
-import { saveArrangementState, setUnassignedItems, setContainerItems } from 'actions/real/real'
+import { saveArrangementState, setUnassignedItems, setContainerItems, bulkSetUnassignedItems, bulkSetContainerItems } from 'actions/real/real'
+import { snapshotDndReset, snapshotDndSetDragItem, snapshotDndUnselectItems } from 'actions/snapshotDndActions'
 import { snapshotSetContainers } from 'actions/snapshot/snapshot'
-import { reorder, move, getSnapshotContainer } from 'utils'
+import { getSnapshotIndex, getSnapshotContainer } from 'utils'
 import { withStyles } from '@material-ui/core/styles'
+
+const UNASSIGNED = "unassigned"
 
 const styles = theme => ({
     snapshotBody: {
@@ -21,64 +24,126 @@ class Snapshot extends Component {
     componentDidMount () {
         this.healSnapshotContainers(this.props.snapshotId)
         this.healUnassignedItems(this.props.snapshotId)
+        window.addEventListener('click', this.onWindowClick);
+        window.addEventListener('keydown', this.onWindowKeyDown);
+        window.addEventListener('touchend', this.onWindowTouchEnd);
+        this.props.snapshotDndReset();
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('click', this.onWindowClick);
+        window.removeEventListener('keydown', this.onWindowKeyDown);
+        window.removeEventListener('touchend', this.onWindowTouchEnd);
+    }
+
+    onWindowKeyDown = (event) => {
+        if (event.defaultPrevented) {
+            return;
+        }
+    
+        if (event.key === 'Escape') {
+            this.props.snapshotDndUnselectItems();
+        }
+    };
+    
+      onWindowClick = (event) => {
+          if (event.defaultPrevented) {
+              return;
+          }
+          this.props.snapshotDndUnselectItems();
+      };
+    
+      onWindowTouchEnd = (event) => {
+          if (event.defaultPrevented) {
+              return;
+          }
+          this.props.snapshotDndUnselectItems();
+      };
+
+    onDragStart = (start) => {
+        const id = start.draggableId;
+        const selected = this.props.snapshotDnd.selectedItems.some(item => item.itemId === id);
+    
+        // if dragging an item that is not selected - unselect all items
+        if (!selected) {
+            this.props.snapshotDndUnselectItems();
+        }
+
+        this.props.snapshotDndSetDragItem(start.draggableId);
+    };
+
     onDragEnd = (result) => {
-        const { source, destination, type } = result
-        const snapshot = this.getSnapshot(this.props.snapshotId)
-        if (!destination) { // dropped outside the list
+        const { destination, source, draggableId, type } = result
+        // dropped outside the list
+        if (!destination) { 
             return
         }
         if (type === "item") {
-            if (source.droppableId === destination.droppableId) { // dropped in same list
-                let items = []
-                if (source.droppableId === 'itemcollection') { // dropped in items' list, only reorder the items in list
-                    items = snapshot.unassigned
-                    items = reorder(
-                        items,
-                        source.index,
-                        destination.index
-                    )
-                    this.props.setUnassignedItems(this.props.snapshotId, items)
-                } else { // dropped in a container, only reorder the items in a container
-                    items = getSnapshotContainer(snapshot, source.droppableId).items
-                    items = reorder(
-                        items,
-                        source.index,
-                        destination.index
-                    )
-                    this.props.setContainerItems(this.props.snapshotId, source.droppableId, items)
-                }
-            } else { // dropped in other list
-                let result
-                if (source.droppableId === 'itemcollection') { // dropped in a container from items' list, move
-                    result = move(
-                        snapshot.unassigned,
-                        getSnapshotContainer(snapshot, destination.droppableId).items,
-                        source,
-                        destination
-                    )
-                    this.props.setUnassignedItems(this.props.snapshotId, result['source'])
-                    this.props.setContainerItems(this.props.snapshotId, destination.droppableId, result['destination'])
-                } else if (destination.droppableId === 'itemcollection') { // dropped in items' list from a container, move item from a container to items' list
-                    result = move(
-                        getSnapshotContainer(snapshot, source.droppableId).items,
-                        snapshot.unassigned,
-                        source,
-                        destination
-                    )
-                    this.props.setContainerItems(this.props.snapshotId, source.droppableId, result['source'])
-                    this.props.setUnassignedItems(this.props.snapshotId, result['destination'])
-                } else { // dropped in a container from another container, move item from a container to another container
-                    result = move(
-                        getSnapshotContainer(snapshot, source.droppableId).items,
-                        getSnapshotContainer(snapshot, destination.droppableId).items,
-                        source,
-                        destination
-                    )
-                    this.props.setContainerItems(this.props.snapshotId, source.droppableId, result['source'])
-                    this.props.setContainerItems(this.props.snapshotId, destination.droppableId, result['destination'])
-                }
+            const itemsToMove = this.props.snapshotDnd.selectedItems;
+            // Multi
+            if (itemsToMove.length > 0) {
+                itemsToMove.sort((a,b) => {
+                    if (a.containerId === b.containerId) {
+                        return a.index - b.index;
+                    }
+                    return a.containerId < b.containerId ? 1 : -1});
+                itemsToMove.forEach(({itemId, containerId}) => this.removeItemFromContainer(itemId, containerId));
+                this.addItemsToContainer(itemsToMove.map(item => item.itemId), destination.droppableId, destination.index)
+                this.props.saveArrangementState();
+            }
+            // Single
+            else {
+                this.removeItemFromContainer(draggableId, source.droppableId);
+                this.addItemsToContainer([draggableId], destination.droppableId, destination.index)
+                this.props.saveArrangementState();
+            }
+        }
+        this.props.snapshotDndReset();
+    }
+
+    getSnapshot = (snapshotId) => {
+        return this.props.real.snapshots.find(x => x._id === snapshotId)
+    }
+
+    // pushes all the itemIds into containerId at position
+    addItemsToContainer = (itemIds, containerId, postion) => {
+        if (containerId === UNASSIGNED) {
+            const snapshot = this.getSnapshot(this.props.snapshotId);
+            const updatedItemsList = snapshot.unassigned.filter(i => !itemIds.includes(i));
+            updatedItemsList.splice(postion, 0, ...itemIds)
+            this.props.bulkSetUnassignedItems(this.props.snapshotId, updatedItemsList);
+        } else {
+            const snapshotContainer = getSnapshotContainer(
+                this.getSnapshot(this.props.snapshotId),
+                containerId);
+            const updatedItemsList = snapshotContainer.items.filter(i => !itemIds.includes(i));
+            updatedItemsList.splice(postion, 0, ...itemIds)
+            this.props.bulkSetContainerItems(this.props.snapshotId, containerId, updatedItemsList);
+        }                    
+    }
+
+    // Filters out that particular id
+    removeItemFromContainer = (itemId, containerId) => {
+        if (containerId === UNASSIGNED) {
+            const snapshot = this.getSnapshot(this.props.snapshotId);
+            if (snapshot.unassigned.includes(itemId)) {
+                const updatedItemsList = snapshot.unassigned.filter(item => item !== itemId);
+                this.props.bulkSetUnassignedItems(this.props.snapshotId, updatedItemsList);
+            }
+            else {
+                console.log("Item was not found in unassigned when it should be!");
+            }
+        }
+        else {
+            const snapshotContainer = getSnapshotContainer(
+                this.props.real.snapshots[getSnapshotIndex(this.props.real, this.props.snapshotId)],
+                containerId);
+            if (snapshotContainer.items.includes(itemId)) {
+                const updatedItemsList = snapshotContainer.items.filter(item => item !== itemId);
+                this.props.bulkSetContainerItems(this.props.snapshotId, containerId, updatedItemsList);
+            }
+            else {
+                console.log("Item was not found in container when it should be!");
             }
         }
     }
@@ -115,7 +180,8 @@ class Snapshot extends Component {
         for (let container of snap.snapshotContainers) {
             container.items = container.items.filter(n => this.props.real.items.find(i => i._id === n))
         }
-        this.props.saveArrangementState(this.props.real);
+        // Saving to snapshotContainers
+        this.props.snapshotSetContainers(snapshotId, snap.snapshotContainers);
     }
 
     getSnapshot = (snapshotId) => {
@@ -137,12 +203,13 @@ class Snapshot extends Component {
         const unassigned_items = this.getUnassignedItems(this.props.snapshotId)
         return (
             <div className={classes.snapshotBody}>
-                <DragDropContext onDragEnd={this.onDragEnd}>
+                <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
                     <Grid container spacing={8}>
                         <Grid item xs={5} sm={4} md={3} lg={2}>
                             <ItemCollection 
                                 items={this.props.real.items} 
-                                unsnapshot_items={unassigned_items} />   
+                                unsnapshot_items={unassigned_items} 
+                                snapshotId={this.props.snapshotId} />   
                         </Grid>
                         <Grid item xs={7} sm={8} md={9} lg={10}>
                             <ContainerCollection 
@@ -159,23 +226,38 @@ class Snapshot extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const { real } = state
-    return { real }
+    const { real, snapshotDnd } = state
+    return { real, snapshotDnd }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        saveArrangementState: (data) => {
-            dispatch(saveArrangementState(data));
+        saveArrangementState: () => {
+            dispatch(saveArrangementState());
         },
         setUnassignedItems: (snapshotId, unassigned) => {
             dispatch(setUnassignedItems(snapshotId, unassigned));
+        },
+        bulkSetUnassignedItems: (snapshotId, unassigned) => {
+            dispatch(bulkSetUnassignedItems(snapshotId, unassigned))
+        },
+        bulkSetContainerItems: (snapshotId, containerId, items) => {
+            dispatch(bulkSetContainerItems(snapshotId, containerId, items))
         },
         setContainerItems: (snapshotId, containerId, items) => {
             dispatch(setContainerItems(snapshotId, containerId, items));
         },
         snapshotSetContainers: (snapshotId, snapshotContainers) => {
             dispatch(snapshotSetContainers(snapshotId, snapshotContainers));
+        },
+        snapshotDndReset: () => {
+            dispatch(snapshotDndReset());
+        },
+        snapshotDndSetDragItem: (itemId) => {
+            dispatch(snapshotDndSetDragItem(itemId));
+        },
+        snapshotDndUnselectItems: () => {
+            dispatch(snapshotDndUnselectItems());
         }
     }
 }

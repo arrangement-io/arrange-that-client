@@ -16,6 +16,8 @@ import { withStyles } from '@material-ui/core/styles'
 import { uuid, validateName, checkDuplicate } from 'utils'
 import { withSnackbar } from 'notistack';
 
+const UNASSIGNED = "unassigned"
+
 const styles = theme => ({
     card: {
         background:"#fafafa"
@@ -195,7 +197,7 @@ export class ItemCollection extends Component {
             <Card className={classes.card}>
                 <CardHeader className={classes.cardHeader} title="People"/>
                 <CardContent>Unassigned: {this.props.unsnapshot_items.length}/{this.props.items.length}</CardContent>
-                <Droppable droppableId="itemcollection" type={"item"}>
+                <Droppable droppableId={UNASSIGNED} type={"item"}>
                     {(provided, snapshot) => (
                         <div ref={provided.innerRef}>
                             <CardContent className={classes.cardContent}>
@@ -209,7 +211,9 @@ export class ItemCollection extends Component {
                                                     <Grid item xs = {12} key = {id}>
                                                         <Item 
                                                             item={item}
-                                                            index={index} />
+                                                            index={index} 
+                                                            containerId={UNASSIGNED}
+                                                            snapshotId={this.props.snapshotId} />
                                                     </Grid>
                                                 )
                                             }
@@ -243,7 +247,8 @@ ItemCollection.propTypes = {
         size: PropTypes.number
     })),
     unsnapshot_items: PropTypes.array,
-    getDragItemColor: PropTypes.func
+    getDragItemColor: PropTypes.func,
+    snapshotId: PropTypes.string
 }
 
 const mapStateToProps = (state, ownProps) => {

@@ -6,6 +6,7 @@ import arrangements from './arrangements'
 import exportData from './exportData'
 import users from './users'
 import arrangementSettings from "./arrangementSettings"
+import snapshotDnd from "./snapshotDnd"
 
 const rootReducer = combineReducers({
     real,
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
     arrangements,
     exportData,
     users,
-    arrangementSettings
+    arrangementSettings,
+    snapshotDnd
 })
 
 export default rootReducer
