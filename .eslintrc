@@ -4,6 +4,10 @@
         "airbnb-base",
         "eslint:recommended"
     ],
+    "env": {
+        "browser": true,
+        "node": true
+    },
     "rules": {
         "indent": ["error", 4, {"SwitchCase": 1}],
         "react/jsx-indent": ["error", 4],
@@ -25,7 +29,8 @@
     "globals": {
         "document": true,
         "window": true,
-        "alert": true
+        "alert": true,
+        "navigator": true
     },
     "plugins": [
         "react"

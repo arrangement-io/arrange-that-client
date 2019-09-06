@@ -302,7 +302,9 @@ export class Container extends Component {
                                                 <Grid item xs={12} key={item._id}>
                                                     <Item 
                                                         item={item} 
-                                                        index={index} />
+                                                        index={index} 
+                                                        containerId={this.props.container._id} 
+                                                        snapshotId={this.props.snapshot._id} />
                                                 </Grid>
                                             )
                                         return {}
