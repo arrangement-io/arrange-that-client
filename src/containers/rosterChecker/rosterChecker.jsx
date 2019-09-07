@@ -192,9 +192,9 @@ class SheetView extends Component {
                     />
                 </CardContent>
                 <CardContent className={classes.cardContent}>
-                    <Grid container spacing={8} className={classes.header}>
+                    <Grid container spacing={1} className={classes.header}>
                         <Grid item xs={6} sm={6}>
-                            <Typography variant="headline">
+                            <Typography variant="h5">
                                 Current Roster  
                             </Typography>
                             <div className={classes.sheet} id="hot-app">
@@ -212,7 +212,7 @@ class SheetView extends Component {
                             </div>
                         </Grid>
                         <Grid item xs={6} sm={6}>
-                            <Typography variant="headline">
+                            <Typography variant="h5">
                                 Roster to Check
                             </Typography>
                             <div className={classes.sheet} id="hot-app2">

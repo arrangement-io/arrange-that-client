@@ -269,7 +269,7 @@ export class Item extends Component {
                                                 <Typography variant="body1" align="left">
                                                     { this.props.item.name }
                                                 </Typography>
-                                                <Typography variant="caption" align="left">
+                                                <Typography variant="body2" align="left" color="textSecondary">
                                                     { this.props.arrangementSettings.isDisplayNotes ? this.getNote() : "" }
                                                 </Typography>
                                             </div>

@@ -86,7 +86,7 @@ export class EditContainer extends Component {
                 <Card ref={containerRef => this.containerRef = containerRef}>
                     <CardHeader
                         avatar={
-                            <Typography variant="headline" align="center">
+                            <Typography variant="h5" align="center">
                                 <TextField
                                     type="number"
                                     className={classes.sizeField}
@@ -102,7 +102,7 @@ export class EditContainer extends Component {
                         }
                         
                         title={
-                            <Typography variant="headline" align="center">
+                            <Typography variant="h5" align="center">
                                 <TextField
                                     inputRef={field => this.inputName = field}
                                     onKeyPress={this.handleNameKeyPress}

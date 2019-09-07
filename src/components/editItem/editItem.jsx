@@ -66,7 +66,7 @@ export class EditItem extends Component {
                     <CardHeader 
                         className={classes.cardHeader}
                         title={
-                            <Typography variant="headline" align="center">
+                            <Typography variant="h5" align="center">
                                 <TextField
                                     autoFocus={true}
                                     onKeyPress={this.handleKeyPress}
