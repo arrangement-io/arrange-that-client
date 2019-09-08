@@ -268,7 +268,7 @@ export class Arrange extends Component {
                                 </Typography>
                             </ToggleButton>
                             <ToggleButton key={2} value={ARRANGE}>
-                            <Typography variant="button">
+                                <Typography variant="button">
                                     arrange
                                 </Typography>
                             </ToggleButton>
@@ -293,13 +293,13 @@ export class Arrange extends Component {
                     <ExportView />
                 ) : (
                     <Tabs
-                    className={classes.tabContent} 
-                    active={this.state.activeTab}
-                    onTabSwitch={this.handleTabSwitch}
-                    onTabAdd={this.handleTabAdd}
-                    showAdd={true}
-                    draggable={true}
-                    onTabPositionChange={this.handleTabPositionChange}
+                        className={classes.tabContent} 
+                        active={this.state.activeTab}
+                        onTabSwitch={this.handleTabSwitch}
+                        onTabAdd={this.handleTabAdd}
+                        showAdd={true}
+                        draggable={true}
+                        onTabPositionChange={this.handleTabPositionChange}
                     >
                         {this.props.real.snapshots.map((snapshot, index) => {
                             return (
