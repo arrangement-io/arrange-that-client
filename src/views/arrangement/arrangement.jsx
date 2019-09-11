@@ -7,12 +7,10 @@ import cloneDeep from 'lodash/cloneDeep';
 import { Grid, Typography } from '@material-ui/core'
 import Snapshot from 'containers/snapshot/snapshot'
 import SheetView from 'containers/listView/sheetView'
+import ExportView from 'containers/exportView/exportView'
 
 import EditArrangementTitle from 'components/editArrangementTitle/editArrangementTitle'
-import ExportButton from 'components/exportbutton/exportbutton'
 import SnapshotTitle from 'components/snapshotTitle/snapshotTitle'
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { getArrangement } from 'services/arrangementService'
 
@@ -21,6 +19,8 @@ import { snapshotAdd, snapshotDelete, snapshotRename, snapshotReposition } from 
 import { setDisplayNotes } from 'actions/arrangementSettingsActions'
 import { uuid } from 'utils'
 import { withStyles } from '@material-ui/core/styles'
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import Tabs, { Tab } from 'react-awesome-tabs';
 import { ARRANGEMENT_CATEGORY, NEW_SNAPSHOT_ACTION, CLONE_SNAPSHOT_ACTION } from '../../analytics/gaArrangementConstants';
@@ -31,8 +31,15 @@ const styles = theme => ({
         paddingRight: "24px",
         paddingTop: "15px",
         minHeight: "64px"
+    },
+    buttonGroup: {
+        marginBottom: "8px"
     }
 });
+
+const ARRANGE = "arrange";
+const SHEET = "sheet";
+const EXPORT = "export"
 
 export class Arrange extends Component {
     constructor(props) {
@@ -42,9 +49,15 @@ export class Arrange extends Component {
             isEdit: false,
             name: this.props.real.name,
             isListView: false,
+            viewType: ARRANGE
         };
     }
 
+    handleViewChange = (event, newViewType) => {
+        this.setState({ viewType: newViewType });
+    };
+
+    
     handleActivateListView = () => event => {
         this.setState({ isListView: event.target.checked });
     }
@@ -119,7 +132,7 @@ export class Arrange extends Component {
         }
         else {
             return (
-                <Typography variant="headline" gutterBottom align="left">
+                <Typography variant="h5" gutterBottom align="left">
                     {this.props.real.name}
                 </Typography>
             )
@@ -204,66 +217,67 @@ export class Arrange extends Component {
 
         return (
             <div>
-                <Grid container spacing={8} className={classes.header}>
-                    <Grid item xs={12} sm={4}>
+                <Grid container spacing={1} className={classes.header}>
+                    <Grid item xs={6} sm={7} md={8} lg={9} xl={10}>
                         <div className="arrangementTitle" onClick={this.addEditArrangementTitle}>
                             {this.displayEditArrangementTitle()}
                         </div>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <Typography variant="headline" gutterBottom align="center">
-                            <ExportButton handleExport={this.exportToTSV} />
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={6} sm={2}>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={this.props.arrangementSettings.isDisplayNotes}
-                                    onChange={this.handleActivateDisplayNotes()}
-                                />
-                            }
-                            label="Display Notes"
-                        />
-                    </Grid>
-                    <Grid item xs={6} sm={2}>
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={this.state.isListView}
-                                    onChange={this.handleActivateListView()}
-                                />
-                            }
-                            label="Sheet View"
-                        />
+                    <Grid item xs={6} sm={5} md={4} lg={3} xl={2}>
+                        <ToggleButtonGroup 
+                            className={classes.buttonGroup}
+                            value={this.state.viewType} 
+                            onChange={this.handleViewChange} 
+                            exclusive 
+                            size="small">
+                            <ToggleButton key={1} value={SHEET}>
+                                <Typography variant="button">
+                                    sheet
+                                </Typography>
+                            </ToggleButton>
+                            <ToggleButton key={2} value={ARRANGE}>
+                                <Typography variant="button">
+                                    arrange
+                                </Typography>
+                            </ToggleButton>
+                            <ToggleButton key={3} value={EXPORT}>
+                                <Typography variant="button">
+                                    export
+                                </Typography>
+                            </ToggleButton>
+                        </ToggleButtonGroup>
                     </Grid>
                 </Grid>
-                <Tabs
-                    className={classes.tabContent} 
-                    active={this.state.activeTab}
-                    onTabSwitch={this.handleTabSwitch}
-                    onTabAdd={this.handleTabAdd}
-                    showAdd={true}
-                    draggable={true}
-                    onTabPositionChange={this.handleTabPositionChange}
-                >
-                    {this.props.real.snapshots.map((snapshot, index) => {
-                        return (
-                            <Tab key={index} title={
-                                <SnapshotTitle
-                                    snapshot={snapshot}
-                                    onDelete={this.deleteSnapshot}
-                                    onClone={this.cloneSnapshot}
-                                    onSave={this.props.snapshotRename} />}>
-                                {this.state.isListView ? (
-                                    <SheetView snapshotId={snapshot._id} />
-                                ) : (
-                                    <Snapshot snapshotId={snapshot._id} />
-                                )}
-                            </Tab>
-                        )
-                    })}
-                </Tabs>
+                {this.state.viewType === EXPORT ? (
+                    <ExportView />
+                ) : (
+                    <Tabs
+                        className={classes.tabContent} 
+                        active={this.state.activeTab}
+                        onTabSwitch={this.handleTabSwitch}
+                        onTabAdd={this.handleTabAdd}
+                        showAdd={true}
+                        draggable={true}
+                        onTabPositionChange={this.handleTabPositionChange}
+                    >
+                        {this.props.real.snapshots.map((snapshot, index) => {
+                            return (
+                                <Tab key={index} title={
+                                    <SnapshotTitle
+                                        snapshot={snapshot}
+                                        onDelete={this.deleteSnapshot}
+                                        onClone={this.cloneSnapshot}
+                                        onSave={this.props.snapshotRename} />}>
+                                    {this.state.viewType === SHEET ? (
+                                        <SheetView snapshotId={snapshot._id} />
+                                    ) : (
+                                        <Snapshot snapshotId={snapshot._id} />
+                                    )}
+                                </Tab>
+                            )
+                        })}
+                    </Tabs>
+                )}
             </div>
         )
     }

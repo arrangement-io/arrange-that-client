@@ -52,7 +52,7 @@ const SortableContainerCollection = SortableContainer(({snapshot, containers, it
     return (
         // It needs to be wrapped in a div to prevent an error
         <div>
-            <Grid container spacing={8}>
+            <Grid container spacing={1}>
                 {
                     snapshot.snapshotContainers.map((snapshotContainer, index) => {
                         const container = containers.find(c => c._id === snapshotContainer._id);
@@ -271,7 +271,7 @@ export class ContainerCollection extends Component {
                 <Card className={classes.card}>
                     <CardHeader className={classes.cardHeader} title="Spaces"/>
                     <CardContent>
-                        <Grid container spacing={8}>
+                        <Grid container spacing={1}>
                             <Grid item xs>Free space: {totalAvailableSpaces - numberUsedSpaces}/{totalAvailableSpaces}</Grid>
                             <Grid item xs>Total number of containers: {this.props.containers.length}</Grid>
                         </Grid>

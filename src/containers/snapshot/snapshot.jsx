@@ -204,7 +204,7 @@ class Snapshot extends Component {
         return (
             <div className={classes.snapshotBody}>
                 <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
-                    <Grid container spacing={8}>
+                    <Grid container spacing={1}>
                         <Grid item xs={5} sm={4} md={3} lg={2}>
                             <ItemCollection 
                                 items={this.props.real.items} 

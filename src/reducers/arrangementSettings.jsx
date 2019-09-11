@@ -3,7 +3,7 @@ import {
 } from 'actions/actionTypes'
 
 const initialState = {
-    isDisplayNotes: false,
+    isDisplayNotes: true,
 }
 
 const arrangementSettingsReducer = (state = initialState, action) => {

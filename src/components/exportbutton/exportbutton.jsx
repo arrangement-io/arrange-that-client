@@ -68,7 +68,7 @@ class SimpleModal extends React.Component {
                 </Button>
                 <Modal open={this.state.open} onClose={this.handleClose}>
                     <div className={classes.paper}>
-                        <Typography variant="headline" id="modal-title" gutterBottom align="center">
+                        <Typography variant="h5" id="modal-title" gutterBottom align="center">
                         Exported Arrangement
                         </Typography>
                         <div>

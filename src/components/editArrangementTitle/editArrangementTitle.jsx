@@ -55,7 +55,7 @@ export class EditArrangementTitle extends Component {
 
     render () {
         return (
-            <Typography variant="headline" align="left">
+            <Typography variant="h5" align="left">
                 <TextField
                     id="outlined-name"
                     label="Arrangement Name"

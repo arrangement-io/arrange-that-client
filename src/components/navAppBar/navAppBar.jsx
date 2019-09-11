@@ -170,7 +170,7 @@ class NavAppBar extends Component {
             <div className={classes.root}>
                 <AppBar position="static">
                     <Toolbar>
-                        <Typography variant="headline" color="inherit" align="left" className={classes.grow}>
+                        <Typography variant="h5" color="inherit" align="left" className={classes.grow}>
                             Arrange.Space
                         </Typography>
                         {buttons}
