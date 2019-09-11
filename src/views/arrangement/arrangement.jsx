@@ -10,7 +10,6 @@ import SheetView from 'containers/listView/sheetView'
 import ExportView from 'containers/exportView/exportView'
 
 import EditArrangementTitle from 'components/editArrangementTitle/editArrangementTitle'
-import ExportButton from 'components/exportbutton/exportbutton'
 import SnapshotTitle from 'components/snapshotTitle/snapshotTitle'
 
 import { getArrangement } from 'services/arrangementService'
@@ -22,10 +21,6 @@ import { uuid } from 'utils'
 import { withStyles } from '@material-ui/core/styles'
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
 
 import Tabs, { Tab } from 'react-awesome-tabs';
 import { ARRANGEMENT_CATEGORY, NEW_SNAPSHOT_ACTION, CLONE_SNAPSHOT_ACTION } from '../../analytics/gaArrangementConstants';
@@ -228,34 +223,7 @@ export class Arrange extends Component {
                             {this.displayEditArrangementTitle()}
                         </div>
                     </Grid>
-                    {/* <Grid item xs={12} sm={4}>
-                        <Typography variant="headline" gutterBottom align="center">
-                            <ExportButton handleExport={this.exportToTSV} />
-                        </Typography>
-                    </Grid> */}
                     <Grid item xs={6} sm={5} md={4} lg={3} xl={2}>
-                        {/* <FormControl>
-                            <RadioGroup 
-                                value={this.state.viewType} 
-                                onChange={this.handleViewChange} 
-                                row >
-                                <FormControlLabel
-                                    value={SHEET}
-                                    control={<Radio color="primary" />}
-                                    label={SHEET}
-                                    labelPlacement="end" />
-                                <FormControlLabel
-                                    value={ARRANGE}
-                                    control={<Radio color="primary" />}
-                                    label={ARRANGE}
-                                    labelPlacement="end" />
-                                <FormControlLabel
-                                    value={EXPORT}
-                                    control={<Radio color="primary" />}
-                                    label={EXPORT}
-                                    labelPlacement="end" />
-                            </RadioGroup>
-                        </FormControl> */}
                         <ToggleButtonGroup 
                             className={classes.buttonGroup}
                             value={this.state.viewType} 
@@ -278,15 +246,6 @@ export class Arrange extends Component {
                                 </Typography>
                             </ToggleButton>
                         </ToggleButtonGroup>
-                        {/* <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={this.state.isListView}
-                                    onChange={this.handleActivateListView()}
-                                />
-                            }
-                            label="Sheet View"
-                        /> */}
                     </Grid>
                 </Grid>
                 {this.state.viewType === EXPORT ? (
