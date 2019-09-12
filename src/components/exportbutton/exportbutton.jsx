@@ -2,15 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography, Button, Modal, TextField, List, ListItem, ListItemText} from '@material-ui/core'
-import { get } from 'services/request'
-import { setTSVExport } from 'actions/exportData/exportData'
-import { getExportArrangement } from 'services/arrangementService'
+import { Typography, Button, Modal, TextField, List, ListItem, ListItemText } from '@material-ui/core';
+import { get } from 'services/request';
+import { setTSVExport } from 'actions/exportData/exportData';
+import { getExportArrangement } from 'services/arrangementService';
 
 const styles = theme => ({
     paper: {
-        top: `30%`,
-        left: `30%`,
+        top: '30%',
+        left: '30%',
         position: 'absolute',
         width: theme.spacing.unit * 50,
         backgroundColor: theme.palette.background.paper,
@@ -31,23 +31,23 @@ class SimpleModal extends React.Component {
     }
 
     exportToTSV() {
-        getExportArrangement(this.props.real, "tsv")
-            .then(response => {
+        getExportArrangement(this.props.real, 'tsv')
+            .then((response) => {
                 this.props.setTSVExport(response.data);
                 this.setState({
-                    open: true
+                    open: true,
                 });
-                Promise.resolve()
-            })
+                Promise.resolve();
+            });
     }
 
     handleOpen = () => {
-        this.exportToTSV()
+        this.exportToTSV();
     };
 
     handleClose = () => {
         this.setState({
-            open: false
+            open: false,
         });
     };
 
@@ -55,8 +55,7 @@ class SimpleModal extends React.Component {
         return [0, 1, 2].map(value =>
             React.cloneElement(element, {
                 key: value,
-            }),
-        );
+            }));
     }
 
     render() {
@@ -85,12 +84,12 @@ class SimpleModal extends React.Component {
                                 </ListItem>
                             </List>
                         </div>
-                        <Button color="primary" onClick={() => {this.textRef.select(); document.execCommand('copy');}}>
+                        <Button color="primary" onClick={() => { this.textRef.select(); document.execCommand('copy'); }}>
                         Copy to Clipboard
                         </Button>
-                        <TextField variant="outlined" margin="normal" rows="4" ref={this.textRef} 
-                            InputProps={{ readOnly: true, }} fullWidth multiline 
-                            value={this.props.exportData.TSV} inputRef={(e) => {this.textRef = e}}/>        
+                        <TextField variant="outlined" margin="normal" rows="4" ref={this.textRef}
+                            InputProps={{ readOnly: true }} fullWidth multiline
+                            value={this.props.exportData.TSV} inputRef={(e) => { this.textRef = e; }}/>
                     </div>
                 </Modal>
             </div>
@@ -105,21 +104,19 @@ SimpleModal.propTypes = {
 const mapStateToProps = (state, ownProps) => {
     const {
         real,
-        exportData
-    } = state
+        exportData,
+    } = state;
     return {
         real,
-        exportData
-    }
-}
+        exportData,
+    };
+};
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-        setTSVExport: (tsvData) => {
-            dispatch(setTSVExport(tsvData))
-        },
-    }
-}
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    setTSVExport: (tsvData) => {
+        dispatch(setTSVExport(tsvData));
+    },
+});
 
 // We need an intermediary variable for handling the recursive nesting.
 const ExportButton = withStyles(styles)(SimpleModal);

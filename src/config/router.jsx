@@ -1,18 +1,18 @@
-import React from 'react'
+import React from 'react';
 
-import {Router, Switch, Route} from 'react-router-dom'
-import PrivateRoute from 'config/privateRoute'
+import { Router, Switch, Route } from 'react-router-dom';
+import PrivateRoute from 'config/privateRoute';
 
-import createHistory from 'history/createBrowserHistory'
+import createHistory from 'history/createBrowserHistory';
 
-import Layout from 'layout'
-import HomePage from 'views/homePage/homePage'
-import Arrangement from 'views/arrangement/arrangement'
-import AllArrangements from 'views/allArrangements/allArrangements'
-import Feedback from 'views/feedback/feedback'
-import Tools from 'views/tools/tools'
+import Layout from 'layout';
+import HomePage from 'views/homePage/homePage';
+import Arrangement from 'views/arrangement/arrangement';
+import AllArrangements from 'views/allArrangements/allArrangements';
+import Feedback from 'views/feedback/feedback';
+import Tools from 'views/tools/tools';
 
-const history = createHistory()
+const history = createHistory();
 
 const router = (
     <Router history={history}>
@@ -26,6 +26,6 @@ const router = (
             </Switch>
         </Layout>
     </Router>
-)
+);
 
-export default router
+export default router;

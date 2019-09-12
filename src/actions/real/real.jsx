@@ -3,49 +3,49 @@ import {
     SAVE_STATE,
     ARRANGEMENT_RENAME,
     SET_UNASSIGNED_ITEMS,
-    SET_CONTAINER_ITEMS
-} from 'actions/actionTypes'
+    SET_CONTAINER_ITEMS,
+} from 'actions/actionTypes';
 
-export const setRealData = (data) => ({
+export const setRealData = data => ({
     type: SET_REAL_DATA,
-    data
-})
+    data,
+});
 
 export const setUnassignedItems = (snapshotId, unassigned) => ({
     type: SET_UNASSIGNED_ITEMS,
     snapshotId,
     unassigned,
-    bulk: false
-})
+    bulk: false,
+});
 
 export const bulkSetUnassignedItems = (snapshotId, unassigned) => ({
     type: SET_UNASSIGNED_ITEMS,
     snapshotId,
     unassigned,
     bulk: true,
-})
+});
 
 export const setContainerItems = (snapshotId, containerId, items) => ({
     type: SET_CONTAINER_ITEMS,
     snapshotId,
     containerId,
     items,
-    bulk: false
-})
+    bulk: false,
+});
 
 export const bulkSetContainerItems = (snapshotId, containerId, items) => ({
     type: SET_CONTAINER_ITEMS,
     snapshotId,
     containerId,
     items,
-    bulk: true
-})
+    bulk: true,
+});
 
 export const saveArrangementState = () => ({
-    type: SAVE_STATE
-})
+    type: SAVE_STATE,
+});
 
-export const arrangementRename = (name) => ({
+export const arrangementRename = name => ({
     type: ARRANGEMENT_RENAME,
-    name
-})
+    name,
+});

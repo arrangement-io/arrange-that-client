@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { Card, CardHeader, Typography, TextField } from '@material-ui/core'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Card, CardHeader, Typography, TextField } from '@material-ui/core';
 
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles';
 
 const ENTER_KEY = 'Enter';
 const ESC_KEY = 27;
@@ -10,21 +10,21 @@ const KEYDOWN = 'keydown';
 
 const styles = theme => ({
     card: {
-        maxHeight: 40
+        maxHeight: 40,
     },
     cardHeader: {
         paddingLeft: 10,
         paddingTop: 0,
         paddingBottom: 0,
-        paddingRight: 10
-    }
-})
+        paddingRight: 10,
+    },
+});
 
 export class EditItem extends Component {
-    constructor (props) {
-        super(props)
+    constructor(props) {
+        super(props);
 
-        this.handleKeyPress = this.handleKeyPress.bind(this)
+        this.handleKeyPress = this.handleKeyPress.bind(this);
         this.escFunction = this.escFunction.bind(this);
     }
 
@@ -39,31 +39,31 @@ export class EditItem extends Component {
     }
 
     handlePasteText = (e) => {
-        var pastedText = e.clipboardData.getData('Text');
+        const pastedText = e.clipboardData.getData('Text');
         this.props.handlePaste(pastedText);
     }
 
     escFunction = (event) => {
-        if(event.keyCode === ESC_KEY) {
+        if (event.keyCode === ESC_KEY) {
             this.props.handleEsc();
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         document.addEventListener(KEYDOWN, this.escFunction, false);
     }
 
-    componentWillUnmount(){
-        document.removeEventListener("keydown", this.escFunction, false);
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this.escFunction, false);
     }
-  
-    render () {
+
+    render() {
         const { classes } = this.props;
 
         return (
             <div>
                 <Card className={classes.card}>
-                    <CardHeader 
+                    <CardHeader
                         className={classes.cardHeader}
                         title={
                             <Typography variant="h5" align="center">
@@ -81,7 +81,7 @@ export class EditItem extends Component {
                     />
                 </Card>
             </div>
-        )
+        );
     }
 }
 
@@ -90,6 +90,6 @@ EditItem.propTypes = {
     handleChange: PropTypes.func,
     handleEnter: PropTypes.func,
     handleEsc: PropTypes.func,
-}
+};
 
-export default withStyles(styles)(EditItem)
+export default withStyles(styles)(EditItem);

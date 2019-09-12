@@ -1,32 +1,32 @@
-import React from 'react'
-import IconButton from '@material-ui/core/IconButton'
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
+import React from 'react';
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-const ITEM_HEIGHT = 100
+const ITEM_HEIGHT = 100;
 
 class MoreMenu extends React.Component {
-    constructor (props) {
-        super(props)
+    constructor(props) {
+        super(props);
         this.state = {
             anchorEl: null,
-        }
+        };
     }
 
     openMenu = (event) => {
-        this.setState({ anchorEl: event.currentTarget })
+        this.setState({ anchorEl: event.currentTarget });
     }
 
     closeMenu = (event, option) => {
-        this.setState({ anchorEl: null })
-        this.props.handleItemClick(option)
+        this.setState({ anchorEl: null });
+        this.props.handleItemClick(option);
     }
 
     render() {
-        const open = Boolean(this.state.anchorEl)
+        const open = Boolean(this.state.anchorEl);
 
-        const menu = open 
+        const menu = open
             ? (<Menu
                 id = "long-menu"
                 anchorEl = {this.state.anchorEl}
@@ -39,7 +39,7 @@ class MoreMenu extends React.Component {
                     },
                 }}>
                 {this.props.options.map(option => (
-                    <MenuItem key = {option} onClick = {(event) => this.closeMenu(event, option)} >
+                    <MenuItem key = {option} onClick = {event => this.closeMenu(event, option)} >
                         {option}
                     </MenuItem>
                 ))}
@@ -57,4 +57,4 @@ class MoreMenu extends React.Component {
     }
 }
 
-export default MoreMenu
+export default MoreMenu;

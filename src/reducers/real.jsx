@@ -18,11 +18,11 @@ import {
     SNAPSHOT_DELETE,
     SNAPSHOT_RENAME,
     SNAPSHOT_REPOSITION,
-    SNAPSHOT_SET_CONTAINERS
-} from 'actions/actionTypes'
+    SNAPSHOT_SET_CONTAINERS,
+} from 'actions/actionTypes';
 
-import { updateArrangement } from 'services/arrangementService'
-import { getSnapshotIndex, getSnapshotContainerIndex } from 'utils'
+import { updateArrangement } from 'services/arrangementService';
+import { getSnapshotIndex, getSnapshotContainerIndex } from 'utils';
 
 const initialState = {
     _id: '',
@@ -32,25 +32,25 @@ const initialState = {
     containers: [],
     is_deleted: false,
     timestamp: '',
-    snapshots: []
-}
+    snapshots: [],
+};
 
-function exportState (real) {
-    var d = new Date()
-    var seconds = d.getTime() / 1000
-    let arrangement = {
+function exportState(real) {
+    const d = new Date();
+    const seconds = d.getTime() / 1000;
+    const arrangement = {
         ...real,
-        modified_timestamp: seconds
-    }
+        modified_timestamp: seconds,
+    };
     // Test arrangement based on json validation
     updateArrangement(arrangement)
-        .then(response => {
-            Promise.resolve()
+        .then((response) => {
+            Promise.resolve();
         })
-        .catch(err => {
-            console.log(err)
-            Promise.reject(err)
-        })
+        .catch((err) => {
+            console.log(err);
+            Promise.reject(err);
+        });
 }
 
 const realReducer = (state = initialState, action) => {
@@ -62,25 +62,25 @@ const realReducer = (state = initialState, action) => {
                 items: [
                     ...state.items,
                     action.item,
-                ]
-            }
+                ],
+            };
 
             // Add item to all snapshot unassigned
             for (const snapshot of addItemState.snapshots) {
-                snapshot.unassigned.push(action.item._id)
+                snapshot.unassigned.push(action.item._id);
             }
 
             if (!action.bulk) {
-                exportState(addItemState)
+                exportState(addItemState);
             }
-            return addItemState
+            return addItemState;
         }
-                
+
         case ITEM_DELETE: {
             const deleteItemState = cloneDeep(state);
 
             // Remove item from global items list
-            deleteItemState.items = deleteItemState.items.filter(ele => ele._id !== action.id)
+            deleteItemState.items = deleteItemState.items.filter(ele => ele._id !== action.id);
 
             // Remove item from all snapshots
             for (const snapshotItemDelete of deleteItemState.snapshots) {
@@ -92,20 +92,20 @@ const realReducer = (state = initialState, action) => {
                 snapshotItemDelete.unassigned = snapshotItemDelete.unassigned.filter(ele => ele !== action.id);
             }
             if (!action.bulk) {
-                exportState(deleteItemState)
+                exportState(deleteItemState);
             }
-            return deleteItemState
+            return deleteItemState;
         }
 
         case ITEM_UPDATE: {
             const resultItemRename = cloneDeep(state);
-            const item = resultItemRename.items.find(ele => ele._id === action.item._id)
+            const item = resultItemRename.items.find(ele => ele._id === action.item._id);
             item.name = action.item.name;
             item.notes = action.item.notes;
             if (!action.bulk) {
                 exportState(resultItemRename);
             }
-            return resultItemRename
+            return resultItemRename;
         }
 
         case CONTAINER_ADD: {
@@ -114,41 +114,41 @@ const realReducer = (state = initialState, action) => {
                 ...state,
                 containers: [
                     ...state.containers,
-                    action.container
-                ]
-            }
+                    action.container,
+                ],
+            };
             // Add container to all snapshots
-            for (let snapshot of addContainerState.snapshots) {
-                snapshot.snapshotContainers.push({_id: action.container._id, items: []})
+            for (const snapshot of addContainerState.snapshots) {
+                snapshot.snapshotContainers.push({ _id: action.container._id, items: [] });
             }
 
-            exportState(addContainerState)
-            return addContainerState
+            exportState(addContainerState);
+            return addContainerState;
         }
 
         case CONTAINER_DELETE: {
             const deleteContainerState = cloneDeep(state);
             // Remove container from global
-            deleteContainerState.containers = deleteContainerState.containers.filter(ele => ele._id !== action.id)
+            deleteContainerState.containers = deleteContainerState.containers.filter(ele => ele._id !== action.id);
 
             // Delete container to all snapshots
-            for (let snapshot of deleteContainerState.snapshots) {
-                const containerIndex = getSnapshotContainerIndex(snapshot, action.id)
-                for (let item of snapshot.snapshotContainers[containerIndex].items) {
-                    snapshot.unassigned.push(item)
+            for (const snapshot of deleteContainerState.snapshots) {
+                const containerIndex = getSnapshotContainerIndex(snapshot, action.id);
+                for (const item of snapshot.snapshotContainers[containerIndex].items) {
+                    snapshot.unassigned.push(item);
                 }
-                snapshot.snapshotContainers.splice(containerIndex, 1)
+                snapshot.snapshotContainers.splice(containerIndex, 1);
             }
-            exportState(deleteContainerState)
-            return deleteContainerState
+            exportState(deleteContainerState);
+            return deleteContainerState;
         }
 
         case CONTAINER_NOTE_DELETE: {
             const snapshotDeleteNoteState = cloneDeep(state);
 
             const index = getSnapshotIndex(snapshotDeleteNoteState, action.snapshotId);
-            var containerNotesList = snapshotDeleteNoteState.snapshots[index].containerNotes;
-            var noteIndex = containerNotesList.findIndex(x => (x && x._id === action.noteId));
+            const containerNotesList = snapshotDeleteNoteState.snapshots[index].containerNotes;
+            const noteIndex = containerNotesList.findIndex(x => (x && x._id === action.noteId));
             containerNotesList.splice(noteIndex, 1);
             exportState(snapshotDeleteNoteState);
             return snapshotDeleteNoteState;
@@ -158,12 +158,12 @@ const realReducer = (state = initialState, action) => {
             const snapshotAddNoteState = cloneDeep(state);
 
             const newNote = action.note;
-            
+
             const index = getSnapshotIndex(snapshotAddNoteState, action.snapshotId);
-            var notesList = snapshotAddNoteState.snapshots[index].containerNotes;
+            const notesList = snapshotAddNoteState.snapshots[index].containerNotes;
 
             if (notesList !== undefined) {
-                var oldNote = notesList.find(x => (x && x.containerId === newNote.containerId))
+                const oldNote = notesList.find(x => (x && x.containerId === newNote.containerId));
                 if (oldNote !== undefined) {
                     oldNote.text = action.note.text;
                 } else {
@@ -172,77 +172,77 @@ const realReducer = (state = initialState, action) => {
             } else {
                 snapshotAddNoteState.snapshots[index].containerNotes = [action.note];
             }
-            
+
             exportState(snapshotAddNoteState);
             return snapshotAddNoteState;
         }
 
         case CONTAINER_EDIT: {
             const resultContainerRename = cloneDeep(state);
-            const container = resultContainerRename.containers.find(ele => ele && ele._id === action.container._id)
-            container.name = action.container.name
-            container.size = action.container.size
+            const container = resultContainerRename.containers.find(ele => ele && ele._id === action.container._id);
+            container.name = action.container.name;
+            container.size = action.container.size;
 
-            exportState(resultContainerRename)
-            return resultContainerRename
+            exportState(resultContainerRename);
+            return resultContainerRename;
         }
 
         case SET_REAL_DATA: {
-            return cloneDeep(action.data)
+            return cloneDeep(action.data);
         }
-        
+
 
         case SET_UNASSIGNED_ITEMS: {
             const setUnassignedState = cloneDeep(state);
 
-            const index = getSnapshotIndex(setUnassignedState, action.snapshotId)
-            setUnassignedState.snapshots[index].unassigned = action.unassigned
-            
+            const index = getSnapshotIndex(setUnassignedState, action.snapshotId);
+            setUnassignedState.snapshots[index].unassigned = action.unassigned;
+
             if (!action.bulk) {
-                exportState(setUnassignedState)
+                exportState(setUnassignedState);
             }
-            return setUnassignedState
+            return setUnassignedState;
         }
 
         case SET_CONTAINER_ITEMS: {
             const setContainerItemsState = cloneDeep(state);
 
-            const index = getSnapshotIndex(setContainerItemsState, action.snapshotId)
-            const containerIndex = getSnapshotContainerIndex(setContainerItemsState.snapshots[index], action.containerId)
-            setContainerItemsState.snapshots[index].snapshotContainers[containerIndex].items = action.items
+            const index = getSnapshotIndex(setContainerItemsState, action.snapshotId);
+            const containerIndex = getSnapshotContainerIndex(setContainerItemsState.snapshots[index], action.containerId);
+            setContainerItemsState.snapshots[index].snapshotContainers[containerIndex].items = action.items;
 
             if (!action.bulk) {
-                exportState(setContainerItemsState)
+                exportState(setContainerItemsState);
             }
-            return setContainerItemsState
+            return setContainerItemsState;
         }
 
         case SAVE_STATE: {
-            exportState(state)
-            return state
+            exportState(state);
+            return state;
         }
-            
+
         case SNAPSHOT_ADD: {
             const snapshotAddState = cloneDeep(state);
 
-            snapshotAddState.snapshots.push(action.snapshot)
-            exportState(snapshotAddState)
-            return snapshotAddState
+            snapshotAddState.snapshots.push(action.snapshot);
+            exportState(snapshotAddState);
+            return snapshotAddState;
         }
 
         case SNAPSHOT_DELETE: {
             const snapshotDeleteState = cloneDeep(state);
 
-            const index = getSnapshotIndex(snapshotDeleteState, action.snapshotId)
-            snapshotDeleteState.snapshots.splice(index, 1)
-            exportState(snapshotDeleteState)
-            return snapshotDeleteState
+            const index = getSnapshotIndex(snapshotDeleteState, action.snapshotId);
+            snapshotDeleteState.snapshots.splice(index, 1);
+            exportState(snapshotDeleteState);
+            return snapshotDeleteState;
         }
 
         case ARRANGEMENT_RENAME: {
             const arrangementRenameState = cloneDeep(state);
             arrangementRenameState.name = action.name;
-            
+
             exportState(arrangementRenameState);
             return arrangementRenameState;
         }
@@ -250,22 +250,22 @@ const realReducer = (state = initialState, action) => {
         case SNAPSHOT_RENAME: {
             const snapshotRenameState = cloneDeep(state);
 
-            const index = getSnapshotIndex(snapshotRenameState, action.snapshotId)
-            snapshotRenameState.snapshots[index].name = action.name
-            exportState(snapshotRenameState)
-            return snapshotRenameState
+            const index = getSnapshotIndex(snapshotRenameState, action.snapshotId);
+            snapshotRenameState.snapshots[index].name = action.name;
+            exportState(snapshotRenameState);
+            return snapshotRenameState;
         }
 
         // ability to drag tabs
         case SNAPSHOT_REPOSITION: {
             const snapshotReposition = cloneDeep(state);
 
-            let c = snapshotReposition.snapshots[action.a];
+            const c = snapshotReposition.snapshots[action.a];
             snapshotReposition.snapshots[action.a] = snapshotReposition.snapshots[action.b];
             snapshotReposition.snapshots[action.b] = c;
 
-            exportState(snapshotReposition)
-            return snapshotReposition
+            exportState(snapshotReposition);
+            return snapshotReposition;
         }
 
         case SNAPSHOT_SET_CONTAINERS: {
@@ -278,9 +278,9 @@ const realReducer = (state = initialState, action) => {
         }
 
         default: {
-            return state
+            return state;
         }
     }
-}
+};
 
-export default realReducer
+export default realReducer;

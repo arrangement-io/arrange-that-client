@@ -1,16 +1,16 @@
-import { SET_USERS } from 'actions/actionTypes'
+import { SET_USERS } from 'actions/actionTypes';
 
-const initialState = []
+const initialState = [];
 
 const usersReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_USERS: {
-            return action.users
+            return action.users;
         }
         default: {
-            return state
+            return state;
         }
     }
-}
+};
 
-export default usersReducer
+export default usersReducer;

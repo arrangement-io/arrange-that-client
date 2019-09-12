@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { Typography, Button } from '@material-ui/core';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -9,12 +9,12 @@ const styles = {
     },
     feedbackButton: {
         margin: 16,
-    }
+    },
 };
 
 class Feedback extends Component {
     render = () => {
-        document.title = "Feedback - Arrange.Space";
+        document.title = 'Feedback - Arrange.Space';
 
         const { classes } = this.props;
         return (
@@ -38,8 +38,8 @@ class Feedback extends Component {
                     - List view of people
                 </Typography>
             </main>
-        )
+        );
     }
 }
 
-export default withStyles(styles)(Feedback)
+export default withStyles(styles)(Feedback);

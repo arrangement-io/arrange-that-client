@@ -1,23 +1,23 @@
 import {
     SET_TSV_EXPORT,
-} from 'actions/actionTypes'
+} from 'actions/actionTypes';
 
 const initialState = {
-    TSV: "",
-    CSV: "",
-}
+    TSV: '',
+    CSV: '',
+};
 
 const exportTSVDataReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_TSV_EXPORT:
             const TSVExportDataState = {
                 ...state,
-                TSV: action.data
-            }
-            return TSVExportDataState
+                TSV: action.data,
+            };
+            return TSVExportDataState;
         default:
-            return state
+            return state;
     }
-}
+};
 
-export default exportTSVDataReducer
+export default exportTSVDataReducer;

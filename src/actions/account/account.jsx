@@ -1,13 +1,13 @@
 import {
     SET_ACCOUNT,
-    LOGOUT
-} from 'actions/actionTypes'
+    LOGOUT,
+} from 'actions/actionTypes';
 
-export const setAccount = (account) => ({
+export const setAccount = account => ({
     type: SET_ACCOUNT,
-    account
-})
+    account,
+});
 
 export const logout = () => ({
-    type: LOGOUT
-})
+    type: LOGOUT,
+});

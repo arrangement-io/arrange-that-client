@@ -1,20 +1,20 @@
 import {
     CONTAINER_ADD,
     CONTAINER_DELETE,
-    CONTAINER_EDIT
-} from 'actions/actionTypes'
+    CONTAINER_EDIT,
+} from 'actions/actionTypes';
 
-export const addContainer = (container) => ({
+export const addContainer = container => ({
     type: CONTAINER_ADD,
-    container
-})
+    container,
+});
 
-export const deleteContainer = (id) => ({
+export const deleteContainer = id => ({
     type: CONTAINER_DELETE,
-    id
-})
+    id,
+});
 
-export const editContainer = (container) => ({
+export const editContainer = container => ({
     type: CONTAINER_EDIT,
-    container
-})
+    container,
+});

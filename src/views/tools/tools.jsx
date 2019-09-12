@@ -1,19 +1,19 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import RosterChecker from 'containers/rosterChecker/rosterChecker' 
+import RosterChecker from 'containers/rosterChecker/rosterChecker';
 
 class Tools extends Component {
-    constructor (props) {
-        super(props)
+    constructor(props) {
+        super(props);
 
         this.state = {
-            loading: false
-        }
+            loading: false,
+        };
     }
 
     render() {
-        document.title = "Tools - Arrange.Space";
+        document.title = 'Tools - Arrange.Space';
 
         return (
             <div>
@@ -25,19 +25,17 @@ class Tools extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     const {
-        account
-    } = state
+        account,
+    } = state;
     return {
-        account
-    }
-}
+        account,
+    };
+};
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-    }
-}
+const mapDispatchToProps = (dispatch, ownProps) => ({
+});
 
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
-) (Tools)
+    mapDispatchToProps,
+)(Tools);
