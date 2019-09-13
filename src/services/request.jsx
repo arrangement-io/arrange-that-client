@@ -8,6 +8,21 @@ axios.defaults.headers.common['Content-Type'] = 'application/json; charset=UTF-8
 const defaultOpts = {
 };
 
+const request = (opts) => {
+    const payload = {
+        ...opts,
+        url: base_url() + opts.url,
+    };
+    return axios(payload)
+        .then(response => Promise.resolve(response))
+        .catch((err) => {
+            if (err && err.response) {
+                return Promise.reject(err.response);
+            }
+            return Promise.reject(err.message);
+        });
+};
+
 export const post = opts => request({
     ...defaultOpts,
     ...opts,
@@ -45,20 +60,5 @@ export const postAuthenticated = opts => request({
     method: 'POST',
     headers: { Authorization: `Bearer ${getBearer()}` },
 });
-
-const request = (opts) => {
-    const payload = {
-        ...opts,
-        url: base_url() + opts.url,
-    };
-    return axios(payload)
-        .then(response => Promise.resolve(response))
-        .catch((err) => {
-            if (err && err.response) {
-                return Promise.reject(err.response);
-            }
-            return Promise.reject(err.message);
-        });
-};
 
 export default request;

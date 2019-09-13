@@ -120,7 +120,7 @@ export class ContainerCollection extends Component {
     }
 
     handleEditContainerSizeChange(e) {
-        let val = parseInt(e.target.value);
+        let val = Number(e.target.value);
         if (isNaN(val)) {
             val = 0;
         }
