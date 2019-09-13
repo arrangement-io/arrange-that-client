@@ -1,53 +1,24 @@
-<<<<<<< HEAD
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import router from 'config/router';
-import store from 'store/store';
-=======
-import React, { Component } from 'react'
-import { Provider } from 'react-redux'
->>>>>>> 6cf8be1f8a943529990b6cd64d19d2f9addfb661
 import { SnackbarProvider } from 'notistack';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import axios from 'axios';
-<<<<<<< HEAD
+
+import router from 'config/router';
+import store from 'store/store';
 import { logout } from 'actions/account/account';
-import 'handsontable/dist/handsontable.full.css';
+import mainTheme from 'theme/mainTheme';
 
+import 'handsontable/dist/handsontable.full.css';
 import './App.css';
-=======
-
-import router from 'config/router'
-import store from 'store/store'
-import { logout } from 'actions/account/account'
-import mainTheme from 'theme/mainTheme'
-
-import 'handsontable/dist/handsontable.full.css';
-import './App.css'
->>>>>>> 6cf8be1f8a943529990b6cd64d19d2f9addfb661
 
 class App extends Component {
     render() {
         return (
-<<<<<<< HEAD
-            <SnackbarProvider
-                maxSnack={3} preventDuplicate
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                }}
-            >
-                <Provider store={store}>
-                    <div className="App">
-                        { router }
-                    </div>
-                </Provider>
-            </SnackbarProvider>
-        );
-=======
             <MuiThemeProvider theme={mainTheme}>
-                <SnackbarProvider 
-                    maxSnack={3} preventDuplicate 
+                <SnackbarProvider
+                    maxSnack={3}
+                    preventDuplicate
                     anchorOrigin={{
                         vertical: 'bottom',
                         horizontal: 'right',
@@ -60,8 +31,7 @@ class App extends Component {
                     </Provider>
                 </SnackbarProvider>
             </MuiThemeProvider>
-        )
->>>>>>> 6cf8be1f8a943529990b6cd64d19d2f9addfb661
+        );
     }
 }
 
