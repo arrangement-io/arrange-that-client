@@ -1,6 +1,18 @@
 export function uuid(type) {
     let text;
-    if (type === 'container') { text = 'c'; } else if (type === 'item') { text = 'i'; } else if (type === 'snapshot') { text = 's'; } else if (type === 'arrangement') { text = 'a'; } else if (type === 'note') { text = 'n'; } else { return ''; }
+    if (type === 'container') {
+        text = 'c';
+    } else if (type === 'item') {
+        text = 'i';
+    } else if (type === 'snapshot') {
+        text = 's';
+    } else if (type === 'arrangement') {
+        text = 'a';
+    } else if (type === 'note') {
+        text = 'n';
+    } else {
+        return '';
+    }
 
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
