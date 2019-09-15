@@ -1,95 +1,91 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import cloneDeep from 'lodash/cloneDeep';
 
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import { withSnackbar } from 'notistack';
-import Timestamp from 'react-timestamp'
+import Timestamp from 'react-timestamp';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 
-import { updateArrangement, getAllArrangements } from 'services/arrangementService'
-import { setArrangements } from 'actions/arrangements/arrangements'
-import { uuid } from 'utils'
+import { updateArrangement, getAllArrangements } from 'services/arrangementService';
+import { setArrangements } from 'actions/arrangements/arrangements';
+import { uuid } from 'utils';
 
 class AllArrangementsTable extends Component {
-    loadArrangements = () => {
-        return getAllArrangements(this.props.account.user.googleId)
-            .then(response => {
-                this.props.setArrangements(response.data)
-                Promise.resolve()
-            })
-            .catch(err => {
-                console.log(err)
-                Promise.reject(err)
-            })
+    loadArrangements = () => getAllArrangements(this.props.account.user.googleId)
+        .then((response) => {
+            this.props.setArrangements(response.data);
+            Promise.resolve();
+        })
+        .catch((err) => {
+            console.log(err);
+            Promise.reject(err);
+        })
+
+    handleCellClick(id) {
+        return () => {
+            this.props.history.push(`/arrangement/${id}`);
+        };
     }
 
-    handleCellClick (id) {
-        return () => {
-            this.props.history.push('/arrangement/' + id)
-        }
-    }
-
-    handleDeleteArrangement = (arrangement) => {
-        return () => {
-            const deletedArrangement = {
-                ...arrangement,
-                is_deleted: true
-            }
-            updateArrangement(deletedArrangement)
-                .then(response => {
-                    this.props.enqueueSnackbar('Deleted Arrangement')
-                    this.loadArrangements()
-                    Promise.resolve()
-                })
-                .catch(err => {
-                    Promise.reject(err)
-                })
-        }
+    handleDeleteArrangement = arrangement => () => {
+        const deletedArrangement = {
+            ...arrangement,
+            is_deleted: true,
+        };
+        updateArrangement(deletedArrangement)
+            .then((response) => {
+                this.props.enqueueSnackbar('Deleted Arrangement');
+                this.loadArrangements();
+                Promise.resolve();
+            })
+            .catch((err) => {
+                Promise.reject(err);
+            });
     }
 
     handleCopyArrangement = (arrangement) => {
-        var d = new Date();
+        const d = new Date();
 
         return () => {
             const clonedArrangement = {
                 ...cloneDeep(arrangement),
-                _id: uuid("arrangement"),
+                _id: uuid('arrangement'),
                 users: [this.props.account.user.googleId],
                 owner: this.props.account.user.googleId,
-                name: arrangement.name + " copy",
+                name: `${arrangement.name} copy`,
                 timestamp: d.getTime() / 1000,
-                modified_timestamp: d.getTime() / 1000
-            }
+                modified_timestamp: d.getTime() / 1000,
+            };
             updateArrangement(clonedArrangement)
-                .then(response => {
-                    this.props.enqueueSnackbar('Copied Arrangement')
-                    this.loadArrangements()
-                    Promise.resolve()
+                .then((response) => {
+                    this.props.enqueueSnackbar('Copied Arrangement');
+                    this.loadArrangements();
+                    Promise.resolve();
                 })
-                .catch(err => {
-                    Promise.reject(err)
-                })
-        }
+                .catch((err) => {
+                    Promise.reject(err);
+                });
+        };
     }
 
     getNameFromGoogleId = (id) => {
-        const user = this.props.users.filter(u => u.googleId === id)
+        const user = this.props.users.filter(u => u.googleId === id);
         if (user.length === 1) {
-            return user[0].name
+            return user[0].name;
         }
-        return id
+        return id;
     }
 
-    componentDidMount () {
-        this.loadArrangements()
+    componentDidMount() {
+        this.loadArrangements();
     }
 
-    render () {
+    render() {
         return (
             <Table>
                 <TableHead>
@@ -127,7 +123,7 @@ class AllArrangementsTable extends Component {
                     ))}
                 </TableBody>
             </Table>
-        )
+        );
     }
 }
 
@@ -135,24 +131,22 @@ const mapStateToProps = (state, ownProps) => {
     const {
         arrangements,
         users,
-        account
-    } = state
+        account,
+    } = state;
     return {
         arrangements,
         users,
-        account
-    }
-}
-  
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-        setArrangements: (arrangements) => {
-            dispatch(setArrangements(arrangements))
-        }
-    }
-}
-  
+        account,
+    };
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    setArrangements: (arrangements) => {
+        dispatch(setArrangements(arrangements));
+    },
+});
+
 export default withSnackbar(withRouter(connect(
     mapStateToProps,
-    mapDispatchToProps
-) (AllArrangementsTable)))
+    mapDispatchToProps,
+)(AllArrangementsTable)));

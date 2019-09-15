@@ -1,59 +1,59 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { Typography, TextField } from '@material-ui/core'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Typography, TextField } from '@material-ui/core';
 
-const ESC_KEY = 27
-const ENTER = 'Enter'
+const ESC_KEY = 27;
+const ENTER = 'Enter';
 
 export class EditArrangementTitle extends Component {
-    constructor (props) {
-        super(props)
+    constructor(props) {
+        super(props);
 
-        this.handleKeyPress = this.handleKeyPress.bind(this)
+        this.handleKeyPress = this.handleKeyPress.bind(this);
         this.escFunction = this.escFunction.bind(this);
     }
-    
+
     state = {
-        name: this.props.name
+        name: this.props.name,
     };
-   
-    handleChange = name => event => {
+
+    handleChange = name => (event) => {
         this.setState({
-            name: event.target.value
+            name: event.target.value,
         });
     };
-    
+
     handleKeyPress = (event) => {
         if (event.key === ENTER) {
             this.setState({
-                name: this.state.name
+                name: this.state.name,
             });
-            this.props.handleEnter(this.state.name)
+            this.props.handleEnter(this.state.name);
         }
     }
 
     handleBlur = () => {
         this.setState({
-            name: this.state.name
+            name: this.state.name,
         });
-        this.props.handleEnter(this.state.name)
+        this.props.handleEnter(this.state.name);
     }
 
-    escFunction (event) {
-        if(event.keyCode === ESC_KEY) {
-            this.props.handleEsc()
+    escFunction(event) {
+        if (event.keyCode === ESC_KEY) {
+            this.props.handleEsc();
         }
     }
 
-    componentDidMount(){
-        document.addEventListener("keydown", this.escFunction, false);
+    componentDidMount() {
+        document.addEventListener('keydown', this.escFunction, false);
     }
 
-    componentWillUnmount(){
-        document.removeEventListener("keydown", this.escFunction, false);
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this.escFunction, false);
     }
 
-    render () {
+    render() {
         return (
             <Typography variant="h5" align="left">
                 <TextField
@@ -67,14 +67,14 @@ export class EditArrangementTitle extends Component {
                     variant="outlined"
                     autoFocus={true} />
             </Typography>
-        )
+        );
     }
 }
 
 EditArrangementTitle.propTypes = {
     name: PropTypes.string,
     handleEnter: PropTypes.func,
-    handleEsc: PropTypes.func
-}
+    handleEsc: PropTypes.func,
+};
 
-export default EditArrangementTitle
+export default EditArrangementTitle;

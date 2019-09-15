@@ -5,45 +5,45 @@ import {
     SNAPSHOT_REPOSITION,
     CONTAINER_NOTE_DELETE,
     CONTAINER_NOTE_EDIT,
-    SNAPSHOT_SET_CONTAINERS
-} from 'actions/actionTypes'
+    SNAPSHOT_SET_CONTAINERS,
+} from 'actions/actionTypes';
 
-export const snapshotAdd = (snapshot) => ({
+export const snapshotAdd = snapshot => ({
     type: SNAPSHOT_ADD,
-    snapshot
-})
+    snapshot,
+});
 
-export const snapshotDelete = (snapshotId) => ({
+export const snapshotDelete = snapshotId => ({
     type: SNAPSHOT_DELETE,
-    snapshotId
-})
+    snapshotId,
+});
 
 export const snapshotRename = (snapshotId, name) => ({
     type: SNAPSHOT_RENAME,
     snapshotId,
-    name
-})
+    name,
+});
 
 export const snapshotReposition = (a, b) => ({
     type: SNAPSHOT_REPOSITION,
     a,
-    b
-})
+    b,
+});
 
 export const deleteSnapshotContainerNote = (snapshotId, noteId) => ({
     type: CONTAINER_NOTE_DELETE,
     snapshotId,
-    noteId
-})
+    noteId,
+});
 
 export const editSnapshotContainerNote = (snapshotId, note) => ({
     type: CONTAINER_NOTE_EDIT,
     snapshotId,
-    note
-})
+    note,
+});
 
 export const snapshotSetContainers = (snapshotId, snapshotContainers) => ({
     type: SNAPSHOT_SET_CONTAINERS,
     snapshotId,
-    snapshotContainers
-})
+    snapshotContainers,
+});

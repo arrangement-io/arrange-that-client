@@ -1,16 +1,16 @@
 import {
     SET_ARRANGEMENTS,
-} from 'actions/actionTypes'
+} from 'actions/actionTypes';
 
-const initialState = []
+const initialState = [];
 
 const arrangementsReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_ARRANGEMENTS:
-            return action.arrangements
+            return action.arrangements;
         default:
-            return state
+            return state;
     }
-}
+};
 
-export default arrangementsReducer
+export default arrangementsReducer;

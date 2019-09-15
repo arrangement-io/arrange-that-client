@@ -1,39 +1,39 @@
-import Cookies from 'universal-cookie'
+import Cookies from 'universal-cookie';
 
-const ACCESS_TOKEN = 'accessToken'
-const TOKEN_ID = "tokenId"
-const USER = "user"
+const ACCESS_TOKEN = 'accessToken';
+const TOKEN_ID = 'tokenId';
+const USER = 'user';
 
 export const getAccessToken = () => {
     const cookies = new Cookies();
-    return cookies.get(ACCESS_TOKEN)
-}
+    return cookies.get(ACCESS_TOKEN);
+};
 
 export const getBearer = () => {
     const cookies = new Cookies();
     return cookies.get(TOKEN_ID);
-}
+};
 
 export const getUser = () => {
     const cookies = new Cookies();
     return cookies.get(USER);
-}
+};
 
-export const isAuthenticated = () => !!getAccessToken()
+export const isAuthenticated = () => !!getAccessToken();
 
 export const authenticate = (accessToken, tokenId, user) => {
-    const cookies = new Cookies();      
-    cookies.set(ACCESS_TOKEN, accessToken, {path: '/'})
-    cookies.set(TOKEN_ID, tokenId, {path: '/'})
-    cookies.set(USER, user, {path: '/'})
-    return true
-}
+    const cookies = new Cookies();
+    cookies.set(ACCESS_TOKEN, accessToken, { path: '/' });
+    cookies.set(TOKEN_ID, tokenId, { path: '/' });
+    cookies.set(USER, user, { path: '/' });
+    return true;
+};
 
 export const logout = () => {
     const cookies = new Cookies();
-    cookies.remove(ACCESS_TOKEN, {path: '/'})
-    cookies.remove(TOKEN_ID, {path: '/'})
-    cookies.remove(USER, {path: '/'})
-}
+    cookies.remove(ACCESS_TOKEN, { path: '/' });
+    cookies.remove(TOKEN_ID, { path: '/' });
+    cookies.remove(USER, { path: '/' });
+};
 
-export default isAuthenticated
+export default isAuthenticated;

@@ -5,30 +5,30 @@ import {
     SNAPSHOT_DND_TOGGLE_SELECTION,
     SNAPSHOT_DND_TOGGLE_SELECTION_IN_GROUP,
     SNAPSHOT_DND_MULTI_SELECT_TO,
-    SNAPSHOT_DND_UNSELECT_ITEMS
-} from 'actions/actionTypes'
-import { getSnapshotContainer } from 'utils'
+    SNAPSHOT_DND_UNSELECT_ITEMS,
+} from 'actions/actionTypes';
+import { getSnapshotContainer } from 'utils';
 
 const initialState = {
     // {itemId: _id, containerId: _id, index: index}
     selectedItems: [],
     // _id
     draggingItemId: null,
-}
+};
 
 const snapshotDndReducer = (state = initialState, action) => {
-    switch(action.type) {
+    switch (action.type) {
         case SNAPSHOT_DND_RESET: {
             return initialState;
         }
         case SNAPSHOT_DND_SET_DRAG_ITEM: {
-            return {...state, draggingItemId: action.itemId};
+            return { ...state, draggingItemId: action.itemId };
         }
         case SNAPSHOT_DND_SET_SELECTED_ITEMS: {
-            return {...state, selectedItems: action.selectedItems};
+            return { ...state, selectedItems: action.selectedItems };
         }
         case SNAPSHOT_DND_TOGGLE_SELECTION: {
-            const selectedItems = state.selectedItems;
+            const { selectedItems } = state;
             const wasSelected = selectedItems.some(x => x.itemId === action.selectedItem.itemId);
 
             const newTaskIds = (() => {
@@ -49,30 +49,30 @@ const snapshotDndReducer = (state = initialState, action) => {
                 return [];
             })();
 
-            return {...state, selectedItems: newTaskIds}
+            return { ...state, selectedItems: newTaskIds };
         }
         case SNAPSHOT_DND_TOGGLE_SELECTION_IN_GROUP: {
-            const selectedItems = state.selectedItems;
+            const { selectedItems } = state;
             const index = selectedItems.findIndex(x => x.itemId === action.selectedItem.itemId);
 
             // if not selected - add it to the selected items
             if (index === -1) {
-                return {...state, selectedItems: [...selectedItems, action.selectedItem]}
+                return { ...state, selectedItems: [...selectedItems, action.selectedItem] };
             }
 
             // it was previously selected and now needs to be removed from the group
             const shallow = [...selectedItems];
             shallow.splice(index, 1);
-            return {...state, selectedItems: shallow}
+            return { ...state, selectedItems: shallow };
         }
         case SNAPSHOT_DND_MULTI_SELECT_TO: {
-            const selectedItems = state.selectedItems;
+            const { selectedItems } = state;
             // Nothing already selected
             if (!selectedItems.length) {
-                return {...state, selectedItems: [action.selectedItem]};
+                return { ...state, selectedItems: [action.selectedItem] };
             }
 
-            const containerOfNew = (action.selectedItem.containerId === "unassigned")
+            const containerOfNew = (action.selectedItem.containerId === 'unassigned')
                 ? action.snapshot.unassigned
                 : getSnapshotContainer(action.snapshot, action.selectedItem.containerId).items;
             const indexOfNew = action.selectedItem.index;
@@ -83,7 +83,7 @@ const snapshotDndReducer = (state = initialState, action) => {
             // multi selecting to another column
             // Just add that new item
             if (action.selectedItem.containerId !== lastSelected.containerId) {
-                return {...state, selectedItems: [...selectedItems, action.selectedItem]}
+                return { ...state, selectedItems: [...selectedItems, action.selectedItem] };
             }
 
             // multi selecting in the same column
@@ -101,19 +101,18 @@ const snapshotDndReducer = (state = initialState, action) => {
             const inBetween = containerOfNew.slice(start, end + 1);
             const toAdd = inBetween
                 .filter(itemId => !selectedItems.some(item => item.itemId === itemId))
-                .map(itemId => {
-                    return {itemId: itemId, containerId: action.selectedItem.containerId, index: containerOfNew.indexOf(itemId)}})
+                .map(itemId => ({ itemId, containerId: action.selectedItem.containerId, index: containerOfNew.indexOf(itemId) }));
 
             const sorted = isSelectingForwards ? toAdd : [...toAdd].reverse();
-            return {...state, selectedItems: [...selectedItems, ...sorted]};
+            return { ...state, selectedItems: [...selectedItems, ...sorted] };
         }
         case SNAPSHOT_DND_UNSELECT_ITEMS: {
-            return {...state, selectedItems: []}
+            return { ...state, selectedItems: [] };
         }
         default: {
             return state;
         }
     }
-}
+};
 
-export default snapshotDndReducer
+export default snapshotDndReducer;

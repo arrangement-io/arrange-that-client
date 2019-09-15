@@ -1,11 +1,11 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import Header from 'containers/header/header'
+import Header from 'containers/header/header';
 import { Grid } from '@material-ui/core';
 
-const Default = props => {
-    const { children } = props
+const Default = (props) => {
+    const { children } = props;
 
     return (
         <Grid container spacing={0}>
@@ -16,11 +16,11 @@ const Default = props => {
                 {children}
             </Grid>
         </Grid>
-    )
-}
+    );
+};
 
 Default.propTypes = {
-    children: PropTypes.node.isRequired
-}
+    children: PropTypes.node.isRequired,
+};
 
-export default Default
+export default Default;

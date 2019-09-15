@@ -1,8 +1,8 @@
 import {
-    SET_DISPLAY_NOTES
-} from 'actions/actionTypes'
+    SET_DISPLAY_NOTES,
+} from 'actions/actionTypes';
 
-export const setDisplayNotes = (isDisplayNotes) => ({
+export const setDisplayNotes = isDisplayNotes => ({
     type: SET_DISPLAY_NOTES,
-    isDisplayNotes
-})
+    isDisplayNotes,
+});
