@@ -14,7 +14,10 @@ import { uuid } from 'utils';
 import config from 'config.json';
 import { withSnackbar } from 'notistack';
 import { isAuthenticated } from 'services/authService';
-import { LOGIN_FAILED_ACTION, LOGIN_SUCCEEDED_ACTION, USER_CATEGORY, LOGIN_ACTION } from '../../analytics/gaUserConstants';
+import { LOGIN_FAILED_ACTION,
+    LOGIN_SUCCEEDED_ACTION,
+    USER_CATEGORY,
+    LOGIN_ACTION } from '../../analytics/gaUserConstants';
 
 const styles = {
     root: {
@@ -184,7 +187,7 @@ NavAppBar.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     const {
         account,
     } = state;
@@ -193,7 +196,7 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
     logout: () => {
         dispatch(logout());
     },

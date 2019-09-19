@@ -18,7 +18,7 @@ import { withSnackbar } from 'notistack';
 
 const UNASSIGNED = 'unassigned';
 
-const styles = theme => ({
+const styles = () => ({
     card: {
         background: '#fafafa',
     },
@@ -158,12 +158,6 @@ export class ItemCollection extends Component {
         });
     }
 
-    handleClose = (event, reason) => {
-        this.setState({
-            ...this.state,
-        });
-    };
-
     displayEditItem() {
         if (this.state.isEdit) {
             return (
@@ -175,6 +169,7 @@ export class ItemCollection extends Component {
                 </Grid>
             );
         }
+        return null;
     }
 
     getEditItemProps() {
@@ -250,7 +245,7 @@ ItemCollection.propTypes = {
     snapshotId: PropTypes.string,
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     const {
         real,
     } = state;
@@ -259,7 +254,7 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
     addItem: (item) => {
         dispatch(addItem(item));
     },

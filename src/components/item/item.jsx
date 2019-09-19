@@ -11,7 +11,9 @@ import { Draggable } from 'react-beautiful-dnd';
 import { withStyles } from '@material-ui/core/styles';
 
 import { updateItem, deleteItem } from 'actions/item/item';
-import { snapshotDndToggleSelection, snapshotDndToggleSelectionInGroup, snapshotDndMultiSelectTo } from 'actions/snapshotDndActions';
+import { snapshotDndToggleSelection,
+    snapshotDndToggleSelectionInGroup,
+    snapshotDndMultiSelectTo } from 'actions/snapshotDndActions';
 
 import EditItem from 'components/editItem/editItem';
 
@@ -27,7 +29,7 @@ const keyCodes = {
     tab: 9,
 };
 
-const styles = theme => ({
+const styles = () => ({
     card: {
         marginBottom: 1,
     },
@@ -305,7 +307,7 @@ Item.propTypes = {
     snapshotId: PropTypes.string,
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     const {
         real,
         arrangementSettings,
@@ -318,7 +320,7 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
     updateItem: (item) => {
         dispatch(updateItem(item));
     },
