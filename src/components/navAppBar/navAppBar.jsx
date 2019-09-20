@@ -63,7 +63,7 @@ class NavAppBar extends Component {
         const real = {
             user: this.props.account.user.googleId,
             _id: arrangement_id,
-            containers: [],
+            containers: {},
             is_deleted: false,
             items: [],
             name: 'Untitled Arrangement',

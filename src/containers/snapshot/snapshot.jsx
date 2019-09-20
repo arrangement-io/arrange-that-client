@@ -179,8 +179,8 @@ class Snapshot extends Component {
 
     healSnapshotContainers = (snapshotId) => {
         const snap = this.getSnapshot(snapshotId);
-        // make sure no undefined and null containers
-        const cleanSnapshotContainers = snap.snapshotContainers.filter(n => n);
+        // make sure no undefined and null containers and exists in global;
+        const cleanSnapshotContainers = snap.snapshotContainers.filter(n => n && this.props.real.containers[n._id]);
         if (cleanSnapshotContainers.length !== snap.snapshotContainers.length) {
             snap.snapshotContainers = cleanSnapshotContainers;
         }

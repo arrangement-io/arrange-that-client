@@ -17,6 +17,7 @@ import { getArrangement } from 'services/arrangementService';
 import { setRealData, arrangementRename } from 'actions/real/real';
 import { snapshotAdd, snapshotDelete, snapshotRename, snapshotReposition } from 'actions/snapshot/snapshot';
 import { setDisplayNotes } from 'actions/arrangementSettingsActions';
+import { migrate } from 'utils/migrate';
 import { uuid } from 'utils';
 import { withStyles } from '@material-ui/core/styles';
 import ToggleButton from '@material-ui/lab/ToggleButton';
@@ -194,7 +195,9 @@ export class Arrange extends Component {
                 if (response.data === 'no arrangement found') {
                     console.log('no arrangement found');
                 } else {
-                    this.props.setRealData(response.data);
+                    const data = migrate(response.data);
+                    this.props.setRealData(data);
+                    console.log(response.data);
                 }
                 Promise.resolve();
             })
@@ -230,7 +233,7 @@ export class Arrange extends Component {
                             size="small">
                             <ToggleButton key={1} value={SHEET}>
                                 <Typography variant="button">
-                                    sheet
+                                    data
                                 </Typography>
                             </ToggleButton>
                             <ToggleButton key={2} value={ARRANGE}>

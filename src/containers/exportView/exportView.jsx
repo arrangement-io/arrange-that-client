@@ -58,7 +58,7 @@ const concatColumns = (leftSheet, rightSheet) => {
     return newSheet;
 };
 
-const getContainer = (arrangement, containerId) => arrangement.containers.find(x => x._id === containerId);
+const getContainer = (arrangement, containerId) => arrangement.containers[containerId];
 
 const getItem = (arrangement, itemId) => arrangement.items.find(x => x._id === itemId);
 

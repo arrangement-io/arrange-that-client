@@ -55,7 +55,7 @@ const SortableContainerCollection = SortableContainer(({
             <Grid container spacing={1}>
                 {
                     snapshot.snapshotContainers.map((snapshotContainer, index) => {
-                        const container = containers.find(c => c._id === snapshotContainer._id);
+                        const container = containers[snapshotContainer._id];
 
                         if (container) {
                             // Convert the itemIds into items
@@ -137,7 +137,7 @@ export class ContainerCollection extends Component {
             size: this.state.size,
         };
 
-        if (checkDuplicate(container, this.props.real.containers)) {
+        if (checkDuplicate(container, Object.values(this.props.real.containers))) {
             // Duplicates not found
             this.setState({
                 isEdit: false,
@@ -191,7 +191,7 @@ export class ContainerCollection extends Component {
                 continue;
             }
 
-            if (checkDuplicate(container, this.props.real.containers)) {
+            if (checkDuplicate(container, Object.values(this.props.real.containers))) {
                 // Duplicates not found
                 this.setState({
                     isEdit: false,
@@ -247,7 +247,7 @@ export class ContainerCollection extends Component {
         });
     };
 
-    totalAvailableSpaces = props => props.containers.reduce((total, container) => total + container.size, 0)
+    totalAvailableSpaces = props => Object.values(props.containers).reduce((total, container) => total + container.size, 0)
 
     numberUsedSpaces = props => props.items.length - props.snapshot.unassigned.length
 
@@ -268,7 +268,7 @@ export class ContainerCollection extends Component {
                     <CardContent>
                         <Grid container spacing={1}>
                             <Grid item xs>Free space: {totalAvailableSpaces - numberUsedSpaces}/{totalAvailableSpaces}</Grid>
-                            <Grid item xs>Total number of containers: {this.props.containers.length}</Grid>
+                            <Grid item xs>Total number of containers: {Object.keys(this.props.containers).length}</Grid>
                         </Grid>
                     </CardContent>
                     <CardContent className={classes.cardContent}>

@@ -96,7 +96,7 @@ class SheetView extends Component {
         {
             data: CONTAINER_FIELD,
             type: 'dropdown',
-            source: this.props.real.containers.map(container => container.name),
+            source: Object.values(this.props.real.containers).map(container => container.name),
             renderer: this.renderContainerChip,
             allowInvalid: false,
             width: 220,
@@ -114,9 +114,10 @@ class SheetView extends Component {
 
     getSnapshot = snapshotId => this.props.real.snapshots.find(x => x._id === snapshotId)
 
-    getContainerFromContainerId = containerId => this.props.real.containers.find(x => x._id === containerId)
+    getContainerFromContainerId = containerId => this.props.real.containers[containerId]
 
-    getContainerFromContainerName = containerName => this.props.real.containers.find(x => x.name === containerName)
+    getContainerFromContainerName = containerName => Object.values(this.props.real.containers)
+        .find(x => x.name === containerName);
 
     getItemFromItemName = itemName => this.props.real.items.find(x => x.name === itemName)
 

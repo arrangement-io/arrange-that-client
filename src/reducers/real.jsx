@@ -112,10 +112,10 @@ const realReducer = (state = initialState, action) => {
         // Add container to global
             const addContainerState = {
                 ...state,
-                containers: [
+                containers: {
                     ...state.containers,
-                    action.container,
-                ],
+                    [action.container._id]: action.container,
+                },
             };
             // Add container to all snapshots
             for (const snapshot of addContainerState.snapshots) {
@@ -129,7 +129,7 @@ const realReducer = (state = initialState, action) => {
         case CONTAINER_DELETE: {
             const deleteContainerState = cloneDeep(state);
             // Remove container from global
-            deleteContainerState.containers = deleteContainerState.containers.filter(ele => ele._id !== action.id);
+            delete deleteContainerState.containers[action.id];
 
             // Delete container to all snapshots
             for (const snapshot of deleteContainerState.snapshots) {
@@ -179,7 +179,7 @@ const realReducer = (state = initialState, action) => {
 
         case CONTAINER_EDIT: {
             const resultContainerRename = cloneDeep(state);
-            const container = resultContainerRename.containers.find(ele => ele && ele._id === action.container._id);
+            const container = resultContainerRename.containers[action.container._id];
             container.name = action.container.name;
             container.size = action.container.size;
 
