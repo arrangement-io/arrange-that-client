@@ -161,9 +161,9 @@ class Snapshot extends Component {
         // make sure no undefined items in unassigned
         let cleanUnassigned = snap.unassigned.filter(n => n);
         // make sure all unassigned items exist
-        cleanUnassigned = cleanUnassigned.filter(n => this.props.real.items.find(i => i._id === n));
+        cleanUnassigned = cleanUnassigned.filter(n => this.props.real.items[n]);
         // make a set of all items
-        const unassignedSet = new Set(this.props.real.items.map(item => item._id));
+        const unassignedSet = new Set(Object.keys(this.props.real.items));
         for (const container of snap.snapshotContainers) {
             // delete items from unassigned if they are assigned to container
             container.items.map(item => unassignedSet.delete(item));
@@ -186,7 +186,7 @@ class Snapshot extends Component {
         }
         // Delete items in snapshot that are no longer in items
         for (const container of snap.snapshotContainers) {
-            container.items = container.items.filter(n => this.props.real.items.find(i => i._id === n));
+            container.items = container.items.filter(n => this.props.real.items[n]);
         }
         // Saving to snapshotContainers
         this.props.snapshotSetContainers(snapshotId, snap.snapshotContainers);

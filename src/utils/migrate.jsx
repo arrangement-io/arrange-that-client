@@ -10,5 +10,15 @@ export const migrate = (real) => {
             }, {}),
         };
     }
+    // Change list of items => dictionary of items for performance
+    if (Array.isArray(real.items)) {
+        result = {
+            ...result,
+            items: real.items.reduce((obj, item) => {
+                obj[item._id] = item;
+                return obj;
+            }, {}),
+        };
+    }
     return result;
 };

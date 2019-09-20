@@ -45,44 +45,39 @@ const SortableContainerElement = SortableElement(({ container, snapshot, items }
 // Using react-sortable-hoc to create a container for the sortable containers
 const SortableContainerCollection = SortableContainer(({
     snapshot, containers, items, displayEditContainer,
-}) => {
-    const indexedItems = {};
-    items.forEach(item => indexedItems[item._id] = item);
+}) => (
+    // It needs to be wrapped in a div to prevent an error
+    <div>
+        <Grid container spacing={1}>
+            {
+                snapshot.snapshotContainers.map((snapshotContainer, index) => {
+                    const container = containers[snapshotContainer._id];
 
-    return (
-        // It needs to be wrapped in a div to prevent an error
-        <div>
-            <Grid container spacing={1}>
-                {
-                    snapshot.snapshotContainers.map((snapshotContainer, index) => {
-                        const container = containers[snapshotContainer._id];
-
-                        if (container) {
-                            // Convert the itemIds into items
-                            const itemsInContainer = [];
-                            for (const itemId of snapshotContainer.items) {
-                                const item = indexedItems[itemId];
-                                if (item) {
-                                    itemsInContainer.push(item);
-                                }
+                    if (container) {
+                        // Convert the itemIds into items
+                        const itemsInContainer = [];
+                        for (const itemId of snapshotContainer.items) {
+                            const item = items[itemId];
+                            if (item) {
+                                itemsInContainer.push(item);
                             }
-                            return (
-                                <SortableContainerElement
-                                    key={container._id}
-                                    index={index}
-                                    container={container}
-                                    snapshot={snapshot}
-                                    items={itemsInContainer}
-                                />
-                            );
                         }
-                    })
-                }
-                { displayEditContainer() }
-            </Grid>
-        </div>
-    );
-});
+                        return (
+                            <SortableContainerElement
+                                key={container._id}
+                                index={index}
+                                container={container}
+                                snapshot={snapshot}
+                                items={itemsInContainer}
+                            />
+                        );
+                    }
+                })
+            }
+            { displayEditContainer() }
+        </Grid>
+    </div>
+));
 
 export class ContainerCollection extends Component {
     constructor(props) {
@@ -249,7 +244,7 @@ export class ContainerCollection extends Component {
 
     totalAvailableSpaces = props => Object.values(props.containers).reduce((total, container) => total + container.size, 0)
 
-    numberUsedSpaces = props => props.items.length - props.snapshot.unassigned.length
+    numberUsedSpaces = props => Object.keys(props.items).length - props.snapshot.unassigned.length
 
     onSortEnd = ({ oldIndex, newIndex }) => {
         let containers = this.props.snapshot.snapshotContainers;

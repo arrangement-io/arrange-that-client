@@ -59,10 +59,10 @@ const realReducer = (state = initialState, action) => {
         // Add item to global item list
             const addItemState = {
                 ...state,
-                items: [
+                items: {
                     ...state.items,
-                    action.item,
-                ],
+                    [action.item._id]: action.item,
+                },
             };
 
             // Add item to all snapshot unassigned
@@ -80,7 +80,7 @@ const realReducer = (state = initialState, action) => {
             const deleteItemState = cloneDeep(state);
 
             // Remove item from global items list
-            deleteItemState.items = deleteItemState.items.filter(ele => ele._id !== action.id);
+            delete deleteItemState.items[action.id];
 
             // Remove item from all snapshots
             for (const snapshotItemDelete of deleteItemState.snapshots) {
@@ -99,7 +99,7 @@ const realReducer = (state = initialState, action) => {
 
         case ITEM_UPDATE: {
             const resultItemRename = cloneDeep(state);
-            const item = resultItemRename.items.find(ele => ele._id === action.item._id);
+            const item = resultItemRename.items[action.item._id];
             item.name = action.item.name;
             item.notes = action.item.notes;
             if (!action.bulk) {

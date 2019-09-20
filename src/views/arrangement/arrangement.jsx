@@ -147,16 +147,11 @@ export class Arrange extends Component {
         const numberOfCurrentSnapshots = this.props.real.snapshots.length;
         const newSnapshotSnapshot = {};
         const newSnapshotContainers = [];
-        for (const container of this.props.real.containers) {
-            newSnapshotSnapshot[container._id] = [];
-        }
-        for (const container of this.props.real.containers) {
-            newSnapshotContainers.push({ _id: container._id, items: [] });
-        }
+        Object.values(this.props.real.containers).forEach((container) => { newSnapshotContainers.push({ _id: container._id, items: [] }); });
+
         const newUnassigned = [];
-        for (const item of this.props.real.items) {
-            newUnassigned.push(item._id);
-        }
+        Object.values(this.props.real.items).forEach((item) => { newUnassigned.push(item._id); });
+
         const newSnapshot = {
             _id: uuid('snapshot'),
             name: `Snapshot ${numberOfCurrentSnapshots + 1}`,

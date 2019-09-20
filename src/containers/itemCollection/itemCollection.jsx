@@ -87,7 +87,7 @@ export class ItemCollection extends Component {
             }
 
             // Check for duplicates. In this case, duplicates are not found, so add the item.
-            if (checkDuplicate(item, this.props.real.items)) {
+            if (checkDuplicate(item, Object.values(this.props.real.items))) {
                 this.setState({
                     isEdit: false,
                     name: '',
@@ -127,7 +127,7 @@ export class ItemCollection extends Component {
         }
 
         // Check for duplicates. In this case, duplicates are not found, so add the item.
-        if (checkDuplicate(item, this.props.real.items)) {
+        if (checkDuplicate(item, Object.values(this.props.real.items))) {
             this.setState({
                 isEdit: false,
                 name: '',
@@ -185,13 +185,10 @@ export class ItemCollection extends Component {
     render() {
         const { classes } = this.props;
 
-        const indexedItems = {};
-        this.props.items.forEach(item => indexedItems[item._id] = item);
-
         return (
             <Card className={classes.card}>
                 <CardHeader className={classes.cardHeader} title="People"/>
-                <CardContent>Unassigned: {this.props.unsnapshot_items.length}/{this.props.items.length}</CardContent>
+                <CardContent>Unassigned: {this.props.unsnapshot_items.length}/{Object.keys(this.props.items).length}</CardContent>
                 <Droppable droppableId={UNASSIGNED} type={'item'}>
                     {(provided, snapshot) => (
                         <div ref={provided.innerRef}>
@@ -199,7 +196,7 @@ export class ItemCollection extends Component {
                                 <Grid container spacing={0}>
                                     {
                                         this.props.unsnapshot_items.map((id, index) => {
-                                            const item = indexedItems[id];
+                                            const item = this.props.items[id];
                                             // Check for null items
                                             if (item) {
                                                 return (

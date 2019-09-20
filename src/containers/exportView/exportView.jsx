@@ -60,7 +60,7 @@ const concatColumns = (leftSheet, rightSheet) => {
 
 const getContainer = (arrangement, containerId) => arrangement.containers[containerId];
 
-const getItem = (arrangement, itemId) => arrangement.items.find(x => x._id === itemId);
+const getItem = (arrangement, itemId) => arrangement.items[itemId];
 
 const exportItem = (arrangement, itemId) => [getItem(arrangement, itemId).name];
 

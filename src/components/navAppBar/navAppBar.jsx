@@ -65,7 +65,7 @@ class NavAppBar extends Component {
             _id: arrangement_id,
             containers: {},
             is_deleted: false,
-            items: [],
+            items: {},
             name: 'Untitled Arrangement',
             users: [this.props.account.user.googleId],
             owner: this.props.account.user.googleId,
