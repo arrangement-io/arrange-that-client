@@ -1,20 +1,20 @@
-export const migrate = (real) => {
-    let result = real;
+export const migrate = (arrangement) => {
+    let result = arrangement;
     // Change list of containers => dictionary of containers for performance
-    if (Array.isArray(real.containers)) {
+    if (Array.isArray(arrangement.containers)) {
         result = {
             ...result,
-            containers: real.containers.reduce((obj, container) => {
+            containers: arrangement.containers.reduce((obj, container) => {
                 obj[container._id] = container;
                 return obj;
             }, {}),
         };
     }
     // Change list of items => dictionary of items for performance
-    if (Array.isArray(real.items)) {
+    if (Array.isArray(arrangement.items)) {
         result = {
             ...result,
-            items: real.items.reduce((obj, item) => {
+            items: arrangement.items.reduce((obj, item) => {
                 obj[item._id] = item;
                 return obj;
             }, {}),

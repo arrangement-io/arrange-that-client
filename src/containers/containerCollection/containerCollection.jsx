@@ -297,12 +297,12 @@ ContainerCollection.propTypes = {
         name: PropTypes.string,
         snapshot: PropTypes.object,
     }),
-    containers: PropTypes.arrayOf(PropTypes.shape({
+    containers: PropTypes.objectOf(PropTypes.shape({
         _id: PropTypes.string,
         name: PropTypes.string,
         size: PropTypes.number,
     })),
-    items: PropTypes.arrayOf(PropTypes.shape({
+    items: PropTypes.objectOf(PropTypes.shape({
         _id: PropTypes.string,
         name: PropTypes.string,
         size: PropTypes.number,

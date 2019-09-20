@@ -232,7 +232,7 @@ export class ItemCollection extends Component {
 }
 
 ItemCollection.propTypes = {
-    items: PropTypes.arrayOf(PropTypes.shape({
+    items: PropTypes.objectOf(PropTypes.shape({
         _id: PropTypes.string,
         name: PropTypes.string,
         size: PropTypes.number,
