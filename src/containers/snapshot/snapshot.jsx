@@ -6,7 +6,11 @@ import { Grid } from '@material-ui/core';
 import ItemCollection from 'containers/itemCollection/itemCollection';
 import ContainerCollection from 'containers/containerCollection/containerCollection';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { saveArrangementState, setUnassignedItems, setContainerItems, bulkSetUnassignedItems, bulkSetContainerItems } from 'actions/real/real';
+import { saveArrangementState,
+    setUnassignedItems,
+    setContainerItems,
+    bulkSetUnassignedItems,
+    bulkSetContainerItems } from 'actions/real/real';
 import { snapshotDndReset, snapshotDndSetDragItem, snapshotDndUnselectItems } from 'actions/snapshotDndActions';
 import { snapshotSetContainers } from 'actions/snapshot/snapshot';
 import { getSnapshotIndex, getSnapshotContainer } from 'utils';
@@ -14,7 +18,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const UNASSIGNED = 'unassigned';
 
-const styles = theme => ({
+const styles = () => ({
     snapshotBody: {
         margin: '10px',
     },
@@ -91,7 +95,11 @@ class Snapshot extends Component {
                     return a.containerId < b.containerId ? 1 : -1;
                 });
                 itemsToMove.forEach(({ itemId, containerId }) => this.removeItemFromContainer(itemId, containerId));
-                this.addItemsToContainer(itemsToMove.map(item => item.itemId), destination.droppableId, destination.index);
+                this.addItemsToContainer(
+                    itemsToMove.map(item => item.itemId),
+                    destination.droppableId,
+                    destination.index,
+                );
                 this.props.saveArrangementState();
             }
             // Single
@@ -151,22 +159,22 @@ class Snapshot extends Component {
     healUnassignedItems = (snapshotId) => {
         const snap = this.getSnapshot(snapshotId);
         // make sure no undefined items in unassigned
-        let clean_unassigned = snap.unassigned.filter(n => n);
+        let cleanUnassigned = snap.unassigned.filter(n => n);
         // make sure all unassigned items exist
-        clean_unassigned = clean_unassigned.filter(n => this.props.real.items.find(i => i._id === n));
+        cleanUnassigned = cleanUnassigned.filter(n => this.props.real.items.find(i => i._id === n));
         // make a set of all items
-        const unassigned_set = new Set(this.props.real.items.map(item => item._id));
+        const unassignedSet = new Set(this.props.real.items.map(item => item._id));
         for (const container of snap.snapshotContainers) {
             // delete items from unassigned if they are assigned to container
-            container.items.map(item => unassigned_set.delete(item));
+            container.items.map(item => unassignedSet.delete(item));
         }
-        clean_unassigned.map(item => unassigned_set.delete(item)); // Removed the items that are already in unassigned.
+        cleanUnassigned.map(item => unassignedSet.delete(item)); // Removed the items that are already in unassigned.
         // Self healing. If there are missing unassigned items, add them back into unassigned.
-        if (unassigned_set.size > 0) {
+        if (unassignedSet.size > 0) {
             console.log('there are some missing unassigned');
-            Array.from(unassigned_set).map(item => clean_unassigned.push(item));
+            Array.from(unassignedSet).map(item => cleanUnassigned.push(item));
         }
-        this.props.setUnassignedItems(snapshotId, clean_unassigned);
+        this.props.setUnassignedItems(snapshotId, cleanUnassigned);
     }
 
     healSnapshotContainers = (snapshotId) => {
@@ -197,7 +205,7 @@ class Snapshot extends Component {
     render() {
         const { classes } = this.props;
 
-        const unassigned_items = this.getUnassignedItems(this.props.snapshotId);
+        const unassignedItems = this.getUnassignedItems(this.props.snapshotId);
         return (
             <div className={classes.snapshotBody}>
                 <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
@@ -205,7 +213,7 @@ class Snapshot extends Component {
                         <Grid item xs={5} sm={4} md={3} lg={2}>
                             <ItemCollection
                                 items={this.props.real.items}
-                                unsnapshot_items={unassigned_items}
+                                unsnapshot_items={unassignedItems}
                                 snapshotId={this.props.snapshotId} />
                         </Grid>
                         <Grid item xs={7} sm={8} md={9} lg={10}>
@@ -222,12 +230,12 @@ class Snapshot extends Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     const { real, snapshotDnd } = state;
     return { real, snapshotDnd };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
     saveArrangementState: () => {
         dispatch(saveArrangementState());
     },

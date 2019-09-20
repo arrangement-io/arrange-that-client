@@ -8,7 +8,7 @@ const KEYDOWN = 'keydown';
 const MOUSEDOWN = 'mousedown';
 const ESCAPE = 27;
 
-const styles = theme => ({
+const styles = () => ({
     sizeField: {
         width: 40,
     },

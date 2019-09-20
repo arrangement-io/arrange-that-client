@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Button, Modal, TextField, List, ListItem, ListItemText } from '@material-ui/core';
-import { get } from 'services/request';
 import { setTSVExport } from 'actions/exportData/exportData';
 import { getExportArrangement } from 'services/arrangementService';
 
@@ -101,7 +100,7 @@ SimpleModal.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     const {
         real,
         exportData,
@@ -112,7 +111,7 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
     setTSVExport: (tsvData) => {
         dispatch(setTSVExport(tsvData));
     },

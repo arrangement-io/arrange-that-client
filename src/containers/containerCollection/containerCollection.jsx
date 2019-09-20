@@ -12,10 +12,10 @@ import Container from 'components/container/container';
 import EditContainer from 'components/editContainer/editContainer';
 import { addContainer } from 'actions/container/container';
 import { snapshotSetContainers } from 'actions/snapshot/snapshot';
-import { uuid, validateName, checkDuplicate, reorder, getSnapshotContainer } from 'utils';
+import { uuid, validateName, checkDuplicate, reorder } from 'utils';
 
 
-const styles = theme => ({
+const styles = () => ({
     card: {
         background: '#fafafa',
     },

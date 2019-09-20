@@ -23,7 +23,7 @@ const EDIT = 'Edit';
 const REMOVE_ALL = 'Remove all';
 const DELETE_FROM_ALL_SNAPSHOTS = 'Delete from all snapshots';
 
-const styles = theme => ({
+const styles = () => ({
     card: {
         background: '#fcfcfc',
     },
@@ -287,7 +287,7 @@ export class Container extends Component {
                 />
                 <CardContent className={classes.cardContent}>{notes}</CardContent>
                 <Droppable droppableId={this.props.container._id} ignoreContainerClipping={true} type={'item'}>
-                    {(provided, snapshot) => (
+                    {provided => (
                         <div ref={provided.innerRef}>
                             <CardContent className={classes.cardContent}>
                                 {
@@ -353,7 +353,7 @@ Container.propTypes = {
 
 const mapStateToProps = () => ({});
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
     editContainer: (container) => {
         dispatch(editContainer(container));
     },

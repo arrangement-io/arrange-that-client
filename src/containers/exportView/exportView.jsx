@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { HotTable } from '@handsontable/react';
 
-const styles = theme => ({
+const styles = () => ({
     sheet: {
         marginLeft: 10,
         marginTop: 10,
@@ -31,21 +31,47 @@ const styles = theme => ({
     },
 });
 
-const exportArrangement = (arrangement, snapshotIds) => {
-    const arrangementHeader = [
-        [`arrange.space/arrangement/${arrangement._id}`],
-    ];
-    let arrangementSheet = [
-        [arrangement.name],
-    ];
-    for (const snapshot of arrangement.snapshots) {
-        const snapshotSheet = exportSnapshot(arrangement, snapshot);
-        arrangementSheet = arrangementSheet.concat(snapshotSheet);
-    }
 
-    // Adding buffer to render rows
-    arrangementHeader[0] = arrangementHeader[0].concat(generateBlankWidthBuffer(getWidthOfSheet(arrangementSheet)));
-    return arrangementHeader.concat(arrangementSheet);
+// Generate a list from 1 to n, starting at index starting to height.
+const generateVerticalIndex = (starting, height) => [...Array(height).keys()].map(i =>
+    (i < starting ? [''] : [(i - starting) + 1]));
+
+const getHeightOfSheet = sheet => sheet.length;
+
+const getWidthOfSheet = sheet => sheet.map(row => row.length).reduce((x, y) => Math.max(x, y));
+
+const generateBlankWidthBuffer = n => new Array(n).fill('');
+
+const concatColumns = (leftSheet, rightSheet) => {
+    const newSheet = [];
+    for (let i = 0; i < leftSheet.length || i < rightSheet.length; i++) {
+        if (i < leftSheet.length && i < rightSheet.length) {
+            newSheet.push(leftSheet[i].concat(rightSheet[i]));
+        } else if (i < leftSheet.length) {
+            // past the right sheet, keep on adding on the left sheet with blank space
+            newSheet.push(leftSheet[i].concat(generateBlankWidthBuffer(getWidthOfSheet(rightSheet))));
+        } else {
+            // Need to backfill with empty spaces
+            newSheet.push(generateBlankWidthBuffer(getWidthOfSheet(leftSheet)).concat(rightSheet[i]));
+        }
+    }
+    return newSheet;
+};
+
+const getContainer = (arrangement, containerId) => arrangement.containers.find(x => x._id === containerId);
+
+const getItem = (arrangement, itemId) => arrangement.items.find(x => x._id === itemId);
+
+const exportItem = (arrangement, itemId) => [getItem(arrangement, itemId).name];
+
+const exportContainer = (arrangement, container) => {
+    const containerSheet = [
+        [getContainer(arrangement, container._id).name],
+    ];
+    container.items.forEach((itemId) => {
+        containerSheet.push(exportItem(arrangement, itemId));
+    });
+    return containerSheet;
 };
 
 const exportSnapshot = (arrangement, snapshot) => {
@@ -63,58 +89,33 @@ const exportSnapshot = (arrangement, snapshot) => {
     let snapshotContainers = [
         [],
     ];
-    for (const snapshotContainer of snapshot.snapshotContainers) {
+    snapshot.snapshotContainers.forEach((snapshotContainer) => {
         const containerSheet = exportContainer(arrangement, snapshotContainer);
         snapshotContainers = concatColumns(snapshotContainers, containerSheet);
-    }
+    });
     const containerIndex = generateVerticalIndex(1, getHeightOfSheet(snapshotContainers));
     snapshotContainers = concatColumns(containerIndex, snapshotContainers);
     snapshotSheet = concatColumns(snapshotSheet, snapshotContainers);
     return snapshotHeader.concat(snapshotSheet).concat(snapshotFooter);
 };
 
-// Generate a list from 1 to n, starting at index starting to height.
-const generateVerticalIndex = (starting, height) => [...Array(height).keys()].map(i => (i < starting ? [''] : [i - starting + 1]));
-
-const getHeightOfSheet = sheet => sheet.length;
-
-const getWidthOfSheet = sheet => sheet.map(row => row.length).reduce((x, y) => Math.max(x, y));
-
-const generateBlankWidthBuffer = n => new Array(n).fill('');
-
-const concatColumns = (leftSheet, rightSheet) => {
-    const newSheet = [];
-    for (let i = 0; i < leftSheet.length || i < rightSheet.length; i++) {
-        if (i < leftSheet.length && i < rightSheet.length) {
-            newSheet.push(leftSheet[i].concat(rightSheet[i]));
-        }
-        // past the right sheet, keep on adding on the left sheet with blank space
-        else if (i < leftSheet.length) {
-            newSheet.push(leftSheet[i].concat(generateBlankWidthBuffer(getWidthOfSheet(rightSheet))));
-        }
-        // Need to backfill with empty spaces
-        else {
-            newSheet.push(generateBlankWidthBuffer(getWidthOfSheet(leftSheet)).concat(rightSheet[i]));
-        }
-    }
-    return newSheet;
-};
-
-const getContainer = (arrangement, containerId) => arrangement.containers.find(x => x._id === containerId);
-
-const getItem = (arrangement, itemId) => arrangement.items.find(x => x._id === itemId);
-
-const exportContainer = (arrangement, container) => {
-    const containerSheet = [
-        [getContainer(arrangement, container._id).name],
+const exportArrangement = (arrangement, snapshotIds) => {
+    const arrangementHeader = [
+        [`arrange.space/arrangement/${arrangement._id}`],
     ];
-    for (const itemId of container.items) {
-        containerSheet.push(exportItem(arrangement, itemId));
-    }
-    return containerSheet;
+    let arrangementSheet = [
+        [arrangement.name],
+    ];
+    arrangement.snapshots.forEach((snapshot) => {
+        const snapshotSheet = exportSnapshot(arrangement, snapshot);
+        arrangementSheet = arrangementSheet.concat(snapshotSheet);
+    });
+
+    // Adding buffer to render rows
+    arrangementHeader[0] = arrangementHeader[0].concat(generateBlankWidthBuffer(getWidthOfSheet(arrangementSheet)));
+    return arrangementHeader.concat(arrangementSheet);
 };
 
-const exportItem = (arrangement, itemId) => [getItem(arrangement, itemId).name];
 
 const ExportView = (props) => {
     const { classes } = props;

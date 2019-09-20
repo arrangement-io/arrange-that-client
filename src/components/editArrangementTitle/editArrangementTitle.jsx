@@ -17,7 +17,7 @@ export class EditArrangementTitle extends Component {
         name: this.props.name,
     };
 
-    handleChange = name => (event) => {
+    handleChange = (event) => {
         this.setState({
             name: event.target.value,
         });
@@ -60,7 +60,7 @@ export class EditArrangementTitle extends Component {
                     id="outlined-name"
                     label="Arrangement Name"
                     value={this.state.name}
-                    onChange={this.handleChange('name')}
+                    onChange={this.handleChange}
                     onKeyPress={this.handleKeyPress}
                     onBlur={this.handleBlur}
                     margin="normal"
