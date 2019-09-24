@@ -96,7 +96,7 @@ class SheetView extends Component {
         {
             data: CONTAINER_FIELD,
             type: 'dropdown',
-            source: this.props.real.containers.map(container => container.name),
+            source: Object.values(this.props.real.containers).map(container => container.name),
             renderer: this.renderContainerChip,
             allowInvalid: false,
             width: 220,
@@ -105,7 +105,7 @@ class SheetView extends Component {
 
     generateItemList = (snapshotId) => {
         const snapshot = this.getSnapshot(snapshotId);
-        return this.props.real.items.map((item) => {
+        return Object.values(this.props.real.items).map((item) => {
             const container = this.getContainerForItem(snapshot, item._id);
             const containerName = (container) ? container.name : null;
             return { ...item, container: containerName };
@@ -114,11 +114,14 @@ class SheetView extends Component {
 
     getSnapshot = snapshotId => this.props.real.snapshots.find(x => x._id === snapshotId)
 
-    getContainerFromContainerId = containerId => this.props.real.containers.find(x => x._id === containerId)
+    getContainerFromContainerId = containerId => this.props.real.containers[containerId]
 
-    getContainerFromContainerName = containerName => this.props.real.containers.find(x => x.name === containerName)
+    getContainerFromContainerName = containerName => Object.values(this.props.real.containers)
+        .find(x => x.name === containerName);
 
-    getItemFromItemName = itemName => this.props.real.items.find(x => x.name === itemName)
+    getItemFromItemName = itemName => Object.values(this.props.real.items).find(x => x.name === itemName)
+
+    getItemFromRow = row => this.props.real.items[this.state.data[row]._id];
 
     getContainerForItem = (snapshot, itemId) => {
         if (snapshot.unassigned.includes(itemId)) {
@@ -203,7 +206,7 @@ class SheetView extends Component {
             }
         } else {
             // Creating a new item if it didn't exist
-            const newItem = generateItem(current, this.props.real.items);
+            const newItem = generateItem(current, Object.values(this.props.real.items));
             if (newItem) {
                 this.props.bulkAddItem(newItem);
             }
@@ -211,7 +214,7 @@ class SheetView extends Component {
     }
 
     processChangeItemNotes = (row, columnTitle, previous, current) => {
-        const itemChanged = this.props.real.items[row];
+        const itemChanged = this.getItemFromRow(row);
         if (itemChanged) {
             if (current === null || !current) {
                 // Delete the note
@@ -228,7 +231,7 @@ class SheetView extends Component {
     }
 
     processChangeContainerName = (row, columnTitle, previous, current) => {
-        const itemChanged = this.props.real.items[row];
+        const itemChanged = this.getItemFromRow(row);
         if (itemChanged) {
             if (current
                 && previous

@@ -115,9 +115,7 @@ export class Container extends Component {
     }
 
     removeAllItemFromContainer = () => {
-        const snapshotContainer = this.props.snapshot.snapshotContainers.find(container => container._id === this.props.container._id);
-        const updatedItemsList = snapshotContainer.items.filter(itemId => !this.props.items.find(itemToRemove => itemToRemove._id === itemId));
-        this.props.bulkSetContainerItems(this.props.snapshot._id, this.props.container._id, updatedItemsList);
+        this.props.bulkSetContainerItems(this.props.snapshot._id, this.props.container._id, []);
     }
 
     removeAllItems = () => {
