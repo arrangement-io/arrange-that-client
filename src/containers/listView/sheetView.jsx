@@ -11,11 +11,16 @@ import { withStyles } from '@material-ui/core/styles';
 import { setRealData, bulkSetUnassignedItems, bulkSetContainerItems, saveArrangementState } from 'actions/real/real';
 import { bulkAddItem, bulkUpdateItem, bulkDeleteItem } from 'actions/item/item';
 import { generateItem } from 'utils';
+import { genders } from 'utils/genderConstants';
+import { colors } from 'utils/colorConstants';
 
 
 const NAME_FIELD = 'name';
 const CONTAINER_FIELD = 'container';
 const NOTES_FIELD = 'notes';
+const GENDER_FIELD = 'gender';
+const CLASS_FIELD = 'class';
+const COLOR_FIELD = 'color';
 
 const styles = theme => ({
     sheet: {
@@ -86,8 +91,27 @@ class SheetView extends Component {
 
     generateColumnDefs = () => [
         {
+            data: COLOR_FIELD,
+            width: 70,
+            source: Object.keys(colors),
+            allowInvalid: false,
+            type: 'dropdown',
+            renderer: this.renderColor,
+        },
+        {
             data: NAME_FIELD,
             width: 120,
+        },
+        {
+            data: GENDER_FIELD,
+            type: 'dropdown',
+            source: genders,
+            allowInvalid: false,
+            width: 70,
+        },
+        {
+            data: CLASS_FIELD,
+            width: 70,
         },
         {
             data: NOTES_FIELD,
@@ -130,6 +154,18 @@ class SheetView extends Component {
             }
         }
         return null;
+    }
+
+    renderColor = (instance, td, row, col, prop, value, cellProperties) => {
+        if (value in colors) {
+            // eslint-disable-next-line prefer-destructuring
+            td.style.background = colors[value][500];
+            td.style.color = 'white';
+            td.innerHTML = value;
+            return td;
+        }
+        td.innerHTML = '';
+        return td;
     }
 
     renderContainerChip = (instance, td, row, col, prop, value, cellProperties) => {
