@@ -6,6 +6,14 @@ const mainTheme = createMuiTheme({
             main: '#0077CD',
         },
     },
+    overrides: {
+        MuiTypography: {
+            body2: {
+                fontSize: '0.75rem',
+                fontWeight: '600',
+            },
+        },
+    },
 });
 
 export default mainTheme;
