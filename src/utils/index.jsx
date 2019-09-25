@@ -43,6 +43,9 @@ export function generateItem(name, allItems) {
             name,
             size: 1,
             notes: '',
+            color: '',
+            gender: '',
+            class: '',
         };
         if (checkDuplicate(item, allItems)) {
             return item;

@@ -5,14 +5,14 @@ import { Typography, Badge } from '@material-ui/core';
 import { colors, defaultColor } from 'utils/colorConstants';
 
 /**
- * <GenderClass gender={"M"/"F"/""} clazz={"Three letter string"} color="color" >
+ * <GenderClass gender={"M"/"F"/""} clazz={"Three letter string"} color={"color"} >
  */
 
 const styles = () => ({
-    clazzWrapper: {
+    classWrapper: {
         minWidth: '27px',
     },
-    genderClassWrapper: {
+    genderClazzWrapper: {
         marginLeft: '-6px',
         marginRight: '-10px',
     },
@@ -72,7 +72,7 @@ const GenderClass = (props) => {
     const clazz2 = clazz ? clazz.substring(0, 2) : '\x00';
 
     return (
-        <div className={classes.genderClassWrapper}>
+        <div className={classes.genderClazzWrapper}>
             <div>
                 <StyledBadge badgeContent={genderCaps} background={color} />
             </div>
@@ -90,4 +90,4 @@ GenderClass.propTypes = {
     color: PropTypes.string,
 };
 
-export default withStyles(styles)(GenderClass);
+export default withStyles(styles)(React.memo(GenderClass));

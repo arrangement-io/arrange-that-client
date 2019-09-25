@@ -9,7 +9,7 @@ const ITEM_HEIGHT = 100;
 
 const styles = () => ({
     button: {
-        marginTop: '12px',
+        marginTop: '11px',
     },
 });
 

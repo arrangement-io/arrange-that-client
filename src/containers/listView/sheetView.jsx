@@ -132,6 +132,7 @@ class SheetView extends Component {
         return Object.values(this.props.real.items).map((item) => {
             const container = this.getContainerForItem(snapshot, item._id);
             const containerName = (container) ? container.name : null;
+            console.log(item);
             return { ...item, container: containerName };
         });
     }
@@ -244,6 +245,11 @@ class SheetView extends Component {
             // Creating a new item if it didn't exist
             const newItem = generateItem(current, Object.values(this.props.real.items));
             if (newItem) {
+                const prevData = this.state.data[row];
+                newItem.color = prevData.color;
+                newItem.gender = prevData.gender;
+                newItem.class = prevData.class;
+                newItem.notes = prevData.notes;
                 this.props.bulkAddItem(newItem);
             }
         }
@@ -262,6 +268,57 @@ class SheetView extends Component {
             this.props.bulkUpdateItem({
                 ...itemChanged,
                 notes: current,
+            });
+        }
+    }
+
+    processChangeItemColor = (row, columnTitle, previous, current) => {
+        const itemChanged = this.getItemFromRow(row);
+        if (itemChanged) {
+            if (current === null || !current) {
+                // Delete the note
+                this.props.bulkUpdateItem({
+                    ...itemChanged,
+                    color: '',
+                });
+            }
+            this.props.bulkUpdateItem({
+                ...itemChanged,
+                color: current,
+            });
+        }
+    }
+
+    processChangeItemGender = (row, columnTitle, previous, current) => {
+        const itemChanged = this.getItemFromRow(row);
+        if (itemChanged) {
+            if (current === null || !current) {
+                // Delete the note
+                this.props.bulkUpdateItem({
+                    ...itemChanged,
+                    gender: '',
+                });
+            }
+            this.props.bulkUpdateItem({
+                ...itemChanged,
+                gender: current,
+            });
+        }
+    }
+
+    processChangeItemClass = (row, columnTitle, previous, current) => {
+        const itemChanged = this.getItemFromRow(row);
+        if (itemChanged) {
+            if (current === null || !current) {
+                // Delete the note
+                this.props.bulkUpdateItem({
+                    ...itemChanged,
+                    class: '',
+                });
+            }
+            this.props.bulkUpdateItem({
+                ...itemChanged,
+                class: current,
             });
         }
     }
@@ -307,6 +364,12 @@ class SheetView extends Component {
             this.processChangeContainerName(row, columnTitle, previous, current);
         } else if (columnTitle === NOTES_FIELD) {
             this.processChangeItemNotes(row, columnTitle, previous, current);
+        } else if (columnTitle === COLOR_FIELD) {
+            this.processChangeItemColor(row, columnTitle, previous, current);
+        } else if (columnTitle === GENDER_FIELD) {
+            this.processChangeItemGender(row, columnTitle, previous, current);
+        } else if (columnTitle === CLASS_FIELD) {
+            this.processChangeItemClass(row, columnTitle, previous, current);
         }
     }
 

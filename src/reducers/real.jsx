@@ -102,6 +102,9 @@ const realReducer = (state = initialState, action) => {
             const item = resultItemRename.items[action.item._id];
             item.name = action.item.name;
             item.notes = action.item.notes;
+            item.color = action.item.color;
+            item.gender = action.item.gender;
+            item.class = action.item.class;
             if (!action.bulk) {
                 exportState(resultItemRename);
             }

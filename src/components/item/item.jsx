@@ -265,9 +265,9 @@ export class Item extends Component {
                                     <CardHeader
                                         className={classes.cardHeader}
                                         avatar={<GenderClass
-                                            gender={sample(['M', 'F', ''])}
-                                            color={sample(['red', 'yellow', 'blue', ''])}
-                                            clazz={sample(['FR', 'SO', 'JR', 'SR', ''])} />}
+                                            gender={this.props.item.gender}
+                                            color={this.props.item.color}
+                                            clazz={this.props.item.class} />}
                                         title={
                                             <div>
                                                 <Typography variant="body1" align="left" className={classes.cardTitle}>
