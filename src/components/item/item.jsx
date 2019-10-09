@@ -16,6 +16,9 @@ import { snapshotDndToggleSelection,
     snapshotDndMultiSelectTo } from 'actions/snapshotDndActions';
 
 import EditItem from 'components/editItem/editItem';
+import GenderClass from 'components/item/genderClass';
+
+import sample from 'lodash/sample';
 
 const EDIT = 'Edit';
 const DELETE_FROM_ALL_SNAPSHOTS = 'Delete from all snapshots';
@@ -44,6 +47,10 @@ const styles = () => ({
         paddingTop: 0,
         paddingBottom: 0,
         paddingRight: 10,
+    },
+    cardTitle: {
+        lineHeight: '18px',
+        marginTop: '1px',
     },
     removeShrink: {
         display: 'inline-block',
@@ -257,9 +264,13 @@ export class Item extends Component {
                                 <Card className={cardClass} raised={snapshot.isDragging}>
                                     <CardHeader
                                         className={classes.cardHeader}
+                                        avatar={<GenderClass
+                                            gender={this.props.item.gender}
+                                            color={this.props.item.color}
+                                            clazz={this.props.item.class} />}
                                         title={
                                             <div>
-                                                <Typography variant="body1" align="left">
+                                                <Typography variant="body1" align="left" className={classes.cardTitle}>
                                                     { this.props.item.name }
                                                 </Typography>
                                                 <Typography variant="body2" align="left" color="textSecondary">

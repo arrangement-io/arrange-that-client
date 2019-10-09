@@ -1,10 +1,17 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const ITEM_HEIGHT = 100;
+
+const styles = () => ({
+    button: {
+        marginTop: '11px',
+    },
+});
 
 class MoreMenu extends React.Component {
     constructor(props) {
@@ -24,6 +31,7 @@ class MoreMenu extends React.Component {
     }
 
     render() {
+        const { classes } = this.props;
         const open = Boolean(this.state.anchorEl);
 
         const menu = open
@@ -47,8 +55,8 @@ class MoreMenu extends React.Component {
             : null;
 
         return (
-            <div>
-                <IconButton onClick = {this.openMenu}>
+            <div className={classes.button}>
+                <IconButton size="small" onClick = {this.openMenu}>
                     <MoreVertIcon />
                 </IconButton>
                 {menu}
@@ -57,4 +65,4 @@ class MoreMenu extends React.Component {
     }
 }
 
-export default MoreMenu;
+export default withStyles(styles)(MoreMenu);

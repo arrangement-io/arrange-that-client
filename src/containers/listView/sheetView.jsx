@@ -11,11 +11,16 @@ import { withStyles } from '@material-ui/core/styles';
 import { setRealData, bulkSetUnassignedItems, bulkSetContainerItems, saveArrangementState } from 'actions/real/real';
 import { bulkAddItem, bulkUpdateItem, bulkDeleteItem } from 'actions/item/item';
 import { generateItem } from 'utils';
+import { genders } from 'utils/genderConstants';
+import { colors } from 'utils/colorConstants';
 
 
 const NAME_FIELD = 'name';
 const CONTAINER_FIELD = 'container';
 const NOTES_FIELD = 'notes';
+const GENDER_FIELD = 'gender';
+const CLASS_FIELD = 'class';
+const COLOR_FIELD = 'color';
 
 const styles = theme => ({
     sheet: {
@@ -86,8 +91,27 @@ class SheetView extends Component {
 
     generateColumnDefs = () => [
         {
+            data: COLOR_FIELD,
+            width: 70,
+            source: Object.keys(colors),
+            allowInvalid: false,
+            type: 'dropdown',
+            renderer: this.renderColor,
+        },
+        {
             data: NAME_FIELD,
             width: 120,
+        },
+        {
+            data: GENDER_FIELD,
+            type: 'dropdown',
+            source: genders,
+            allowInvalid: false,
+            width: 70,
+        },
+        {
+            data: CLASS_FIELD,
+            width: 70,
         },
         {
             data: NOTES_FIELD,
@@ -108,6 +132,7 @@ class SheetView extends Component {
         return Object.values(this.props.real.items).map((item) => {
             const container = this.getContainerForItem(snapshot, item._id);
             const containerName = (container) ? container.name : null;
+            console.log(item);
             return { ...item, container: containerName };
         });
     }
@@ -133,6 +158,18 @@ class SheetView extends Component {
             }
         }
         return null;
+    }
+
+    renderColor = (instance, td, row, col, prop, value, cellProperties) => {
+        if (value in colors) {
+            // eslint-disable-next-line prefer-destructuring
+            td.style.background = colors[value][500];
+            td.style.color = 'white';
+            td.innerHTML = value;
+            return td;
+        }
+        td.innerHTML = '';
+        return td;
     }
 
     renderContainerChip = (instance, td, row, col, prop, value, cellProperties) => {
@@ -208,6 +245,11 @@ class SheetView extends Component {
             // Creating a new item if it didn't exist
             const newItem = generateItem(current, Object.values(this.props.real.items));
             if (newItem) {
+                const prevData = this.state.data[row];
+                newItem.color = prevData.color;
+                newItem.gender = prevData.gender;
+                newItem.class = prevData.class;
+                newItem.notes = prevData.notes;
                 this.props.bulkAddItem(newItem);
             }
         }
@@ -226,6 +268,57 @@ class SheetView extends Component {
             this.props.bulkUpdateItem({
                 ...itemChanged,
                 notes: current,
+            });
+        }
+    }
+
+    processChangeItemColor = (row, columnTitle, previous, current) => {
+        const itemChanged = this.getItemFromRow(row);
+        if (itemChanged) {
+            if (current === null || !current) {
+                // Delete the note
+                this.props.bulkUpdateItem({
+                    ...itemChanged,
+                    color: '',
+                });
+            }
+            this.props.bulkUpdateItem({
+                ...itemChanged,
+                color: current,
+            });
+        }
+    }
+
+    processChangeItemGender = (row, columnTitle, previous, current) => {
+        const itemChanged = this.getItemFromRow(row);
+        if (itemChanged) {
+            if (current === null || !current) {
+                // Delete the note
+                this.props.bulkUpdateItem({
+                    ...itemChanged,
+                    gender: '',
+                });
+            }
+            this.props.bulkUpdateItem({
+                ...itemChanged,
+                gender: current,
+            });
+        }
+    }
+
+    processChangeItemClass = (row, columnTitle, previous, current) => {
+        const itemChanged = this.getItemFromRow(row);
+        if (itemChanged) {
+            if (current === null || !current) {
+                // Delete the note
+                this.props.bulkUpdateItem({
+                    ...itemChanged,
+                    class: '',
+                });
+            }
+            this.props.bulkUpdateItem({
+                ...itemChanged,
+                class: current,
             });
         }
     }
@@ -271,6 +364,12 @@ class SheetView extends Component {
             this.processChangeContainerName(row, columnTitle, previous, current);
         } else if (columnTitle === NOTES_FIELD) {
             this.processChangeItemNotes(row, columnTitle, previous, current);
+        } else if (columnTitle === COLOR_FIELD) {
+            this.processChangeItemColor(row, columnTitle, previous, current);
+        } else if (columnTitle === GENDER_FIELD) {
+            this.processChangeItemGender(row, columnTitle, previous, current);
+        } else if (columnTitle === CLASS_FIELD) {
+            this.processChangeItemClass(row, columnTitle, previous, current);
         }
     }
 
