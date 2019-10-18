@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -34,7 +34,7 @@ const styles = () => ({
     },
 });
 
-export class ItemCollection extends Component {
+export class ItemCollection extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {

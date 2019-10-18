@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -79,7 +79,7 @@ const SortableContainerCollection = SortableContainer(({
     </div>
 ));
 
-export class ContainerCollection extends Component {
+export class ContainerCollection extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
