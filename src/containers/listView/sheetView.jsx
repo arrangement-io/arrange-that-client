@@ -132,7 +132,6 @@ class SheetView extends Component {
         return Object.values(this.props.real.items).map((item) => {
             const container = this.getContainerForItem(snapshot, item._id);
             const containerName = (container) ? container.name : null;
-            console.log(item);
             return { ...item, container: containerName };
         });
     }
@@ -250,6 +249,7 @@ class SheetView extends Component {
                 newItem.gender = prevData.gender;
                 newItem.class = prevData.class;
                 newItem.notes = prevData.notes;
+                prevData._id = newItem._id;
                 this.props.bulkAddItem(newItem);
             }
         }
