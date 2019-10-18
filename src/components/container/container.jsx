@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core';
 import MoreMenu from 'components/moremenu/moremenu';
@@ -49,7 +49,7 @@ const DragHandle = SortableHandle(({ name }) => (
         </Typography>
     </div>));
 
-export class Container extends Component {
+export class Container extends PureComponent {
     constructor(props) {
         super(props);
 

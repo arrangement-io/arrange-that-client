@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { connect } from 'react-redux';
 
@@ -17,8 +17,6 @@ import { snapshotDndToggleSelection,
 
 import EditItem from 'components/editItem/editItem';
 import GenderClass from 'components/item/genderClass';
-
-import sample from 'lodash/sample';
 
 const EDIT = 'Edit';
 const DELETE_FROM_ALL_SNAPSHOTS = 'Delete from all snapshots';
@@ -58,7 +56,7 @@ const styles = () => ({
     },
 });
 
-export class Item extends Component {
+export class Item extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {

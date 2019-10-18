@@ -13,7 +13,7 @@ const styles = () => ({
     },
 });
 
-class MoreMenu extends React.Component {
+class MoreMenu extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
