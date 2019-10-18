@@ -26,10 +26,20 @@ const styles = () => ({
         paddingRight: 10,
     },
     cardContent: {
-        height: 'calc(100vh - 291px)',
+        height: 'calc(100vh - 200px)',
         overflow: 'scroll',
     },
 });
+
+const defaultExportSettings = {
+    showNotes: true,
+    snapshotIds: [],
+    showSideIndex: true,
+    nameOfContainer: ['car'],
+    nameOfFirstItem: ['driver'],
+    nameOfSubsequentItems: ['passenger'],
+    nameOfNotes: ['notes'],
+};
 
 
 // Generate a list from 1 to n, starting at index starting to height.
@@ -60,65 +70,92 @@ const concatColumns = (leftSheet, rightSheet) => {
 
 const getContainer = (arrangement, containerId) => arrangement.containers[containerId];
 
+const getContainerNotes = (snapshot, containerId) => {
+    if (snapshot.containerNotes) {
+        const note = snapshot.containerNotes.find(x => x.containerId === containerId);
+        if (note) {
+            return note.text;
+        }
+    }
+    return undefined;
+};
+
 const getItem = (arrangement, itemId) => arrangement.items[itemId];
-
-const exportItem = (arrangement, itemId) => [getItem(arrangement, itemId).name];
-
-const exportContainer = (arrangement, container) => {
-    const containerSheet = [
-        [getContainer(arrangement, container._id).name],
-    ];
-    container.items.forEach((itemId) => {
-        containerSheet.push(exportItem(arrangement, itemId));
-    });
-    return containerSheet;
-};
-
-const exportSnapshot = (arrangement, snapshot) => {
-    const snapshotHeader = [
-        [snapshot.name],
-    ];
-    const snapshotFooter = [
-        [],
-    ];
-    let snapshotSheet = [
-        ['car'],
-        ['driver'],
-        ['passenger'],
-    ];
-    let snapshotContainers = [
-        [],
-    ];
-    snapshot.snapshotContainers.forEach((snapshotContainer) => {
-        const containerSheet = exportContainer(arrangement, snapshotContainer);
-        snapshotContainers = concatColumns(snapshotContainers, containerSheet);
-    });
-    const containerIndex = generateVerticalIndex(1, getHeightOfSheet(snapshotContainers));
-    snapshotContainers = concatColumns(containerIndex, snapshotContainers);
-    snapshotSheet = concatColumns(snapshotSheet, snapshotContainers);
-    return snapshotHeader.concat(snapshotSheet).concat(snapshotFooter);
-};
-
-const exportArrangement = (arrangement, snapshotIds) => {
-    const arrangementHeader = [
-        [`arrange.space/arrangement/${arrangement._id}`],
-    ];
-    let arrangementSheet = [
-        [arrangement.name],
-    ];
-    arrangement.snapshots.forEach((snapshot) => {
-        const snapshotSheet = exportSnapshot(arrangement, snapshot);
-        arrangementSheet = arrangementSheet.concat(snapshotSheet);
-    });
-
-    // Adding buffer to render rows
-    arrangementHeader[0] = arrangementHeader[0].concat(generateBlankWidthBuffer(getWidthOfSheet(arrangementSheet)));
-    return arrangementHeader.concat(arrangementSheet);
-};
-
 
 const ExportView = (props) => {
     const { classes } = props;
+    const exportSettings = defaultExportSettings;
+
+    const exportItem = (arrangement, itemId) => [getItem(arrangement, itemId).name];
+
+    const exportContainer = (arrangement, snapshot, container) => {
+        const containerSheet = [
+            [getContainer(arrangement, container._id).name],
+        ];
+        if (exportSettings.showNotes) {
+            containerSheet.unshift([getContainerNotes(snapshot, container._id)]);
+        }
+        container.items.forEach((itemId) => {
+            containerSheet.push(exportItem(arrangement, itemId));
+        });
+        return containerSheet;
+    };
+
+    const exportSnapshot = (arrangement, snapshot) => {
+        const snapshotHeader = [
+            [snapshot.name],
+        ];
+        const snapshotFooter = [
+            [],
+        ];
+        // Build sider
+        let snapshotSheet = [
+            exportSettings.nameOfContainer,
+            exportSettings.nameOfFirstItem,
+            exportSettings.nameOfSubsequentItems,
+        ];
+        if (exportSettings.showNotes) {
+            snapshotSheet.unshift(exportSettings.nameOfNotes);
+        }
+        // Build containers
+        let snapshotContainers = [
+            [],
+        ];
+        snapshot.snapshotContainers.forEach((snapshotContainer) => {
+            const containerSheet = exportContainer(arrangement, snapshot, snapshotContainer);
+            snapshotContainers = concatColumns(snapshotContainers, containerSheet);
+        });
+
+        // Build side index
+        if (exportSettings.showSideIndex) {
+            const indexOfContainerName = snapshotSheet.indexOf(exportSettings.nameOfContainer);
+            const containerIndex = generateVerticalIndex(
+                indexOfContainerName + 1,
+                getHeightOfSheet(snapshotContainers),
+            );
+            snapshotContainers = concatColumns(containerIndex, snapshotContainers);
+        }
+
+        snapshotSheet = concatColumns(snapshotSheet, snapshotContainers);
+        return snapshotHeader.concat(snapshotSheet).concat(snapshotFooter);
+    };
+
+    const exportArrangement = (arrangement) => {
+        const arrangementHeader = [
+            [`arrange.space/arrangement/${arrangement._id}`],
+        ];
+        let arrangementSheet = [
+            [arrangement.name],
+        ];
+        arrangement.snapshots.forEach((snapshot) => {
+            const snapshotSheet = exportSnapshot(arrangement, snapshot);
+            arrangementSheet = arrangementSheet.concat(snapshotSheet);
+        });
+
+        // Adding buffer to render rows
+        arrangementHeader[0] = arrangementHeader[0].concat(generateBlankWidthBuffer(getWidthOfSheet(arrangementSheet)));
+        return arrangementHeader.concat(arrangementSheet);
+    };
 
     const data = exportArrangement(props.real);
 
@@ -132,7 +169,7 @@ const ExportView = (props) => {
                         colHeaders={true}
                         readOnly={true}
                         minSpareRows={1}
-                        height="calc(100vh - 350px)"
+                        height="calc(100vh - 220px)"
                         licenseKey='non-commercial-and-evaluation' />
                 </div>
             </CardContent>
