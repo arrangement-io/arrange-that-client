@@ -13,6 +13,8 @@ Proverbs 16:3 English Standard Version (ESV) - Commit your work to the Lord, and
 - [Jeff Chiu](https://www.linkedin.com/in/jeffchiu1) - Full Stack
 - [Justin Nguyen](https://www.linkedin.com/in/justin-nguyen-42b1a8120/) - Full Stack
 - [Alan Kwok](https://www.linkedin.com/in/atkwok/) - Full Stack
+- [Alex Karaman](https://www.linkedin.com/in/alex-karaman-227a1145/) - Software Engineer
+- [Fred Kim](https://www.linkedin.com/in/fredjameskim/) UI Design
 - [Gabriel Koo] - Full Stack
 - [Denny Ho] - Full Stack
 
