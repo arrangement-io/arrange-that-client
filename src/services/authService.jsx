@@ -1,4 +1,6 @@
 import Cookies from 'universal-cookie';
+import { postAuthenticated, getAuthenticated } from 'services/request';
+import { USER_ROUTE } from 'services/serviceTypes';
 
 const ACCESS_TOKEN = 'accessToken';
 const TOKEN_ID = 'tokenId';
@@ -19,6 +21,8 @@ export const getUser = () => {
     return cookies.get(USER);
 };
 
+export const fetchUser = () => getAuthenticated({ url: USER_ROUTE });
+
 export const isAuthenticated = () => !!getAccessToken();
 
 export const authenticate = (accessToken, tokenId, user) => {
@@ -30,6 +34,16 @@ export const authenticate = (accessToken, tokenId, user) => {
 };
 
 export const logout = () => {
+    postAuthenticated({ url: '/logout' })
+        .then((response) => {
+            console.log(response);
+            Promise.resolve();
+        })
+        .catch((err) => {
+            console.log(err);
+            Promise.reject(err);
+        });
+
     const cookies = new Cookies();
     cookies.remove(ACCESS_TOKEN, { path: '/' });
     cookies.remove(TOKEN_ID, { path: '/' });

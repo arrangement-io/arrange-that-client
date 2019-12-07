@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { GoogleLogin } from 'react-google-login';
-import { post } from 'services/request';
+import GoogleButton from 'react-google-button';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
@@ -11,9 +10,9 @@ import Button from '@material-ui/core/Button';
 import { setAccount, logout } from 'actions/account/account';
 import { setRealData, saveArrangementState } from 'actions/real/real';
 import { uuid } from 'utils';
-import config from 'config.json';
 import { withSnackbar } from 'notistack';
-import { isAuthenticated } from 'services/authService';
+import { fetchUser, isAuthenticated } from 'services/authService';
+import { base_url } from 'services/serviceTypes';
 import { LOGIN_FAILED_ACTION,
     LOGIN_SUCCEEDED_ACTION,
     USER_CATEGORY,
@@ -37,11 +36,43 @@ class NavAppBar extends Component {
         this.props.logout();
     }
 
+    verifyIfLoggedIn = () => {
+        fetchUser()
+            .then((response) => {
+                // is logged in
+                if (!isAuthenticated() && response.data.googleId) {
+                    const account = {
+                        user: response.data,
+                        token: '1',
+                        tokenId: '1',
+                    };
+                    this.props.setAccount(account);
+                }
+            })
+            .catch((err) => {
+                // not logged in
+                if (isAuthenticated()) {
+                    this.logout();
+                }
+            });
+    }
+
+    navigateBasedOnSession =() => {
+        this.navigateAwayFromHomeIfLoggedIn();
+        this.navigateHomeIfLoggedOut();
+    }
+
     navigateHomeIfLoggedOut = () => {
         if (!isAuthenticated() && this.props.history.location.pathname !== '/') {
             // If not on root page, go to root page
             this.props.history.push('/');
             this.props.enqueueSnackbar('Logged Out');
+        }
+    }
+
+    navigateAwayFromHomeIfLoggedIn = () => {
+        if (isAuthenticated() && this.props.history.location.pathname === '/') {
+            this.goToViewAllArrangements();
         }
     }
 
@@ -88,50 +119,12 @@ class NavAppBar extends Component {
         this.props.enqueueSnackbar('Could not login');
     }
 
-    googleResponse = (response) => {
-        ReactGA.event({
-            category: USER_CATEGORY,
-            action: LOGIN_ACTION,
-        });
-        const data = {
-            access_token: response.accessToken,
-            user_data: response.profileObj,
-        };
-        post({
-            url: '/login',
-            headers: { Authorization: `Bearer ${response.tokenId}` },
-            data,
-        })
-            .then((res) => {
-                ReactGA.event({
-                    category: USER_CATEGORY,
-                    action: LOGIN_SUCCEEDED_ACTION,
-                });
-                const account = {
-                    user: response.profileObj,
-                    token: response.accessToken,
-                    tokenId: response.tokenId,
-                };
-                ReactGA.set({ userId: account.user.googleId });
-                this.props.setAccount(account);
-                this.goToViewAllArrangements();
-                Promise.resolve();
-            })
-            .catch((err) => {
-                ReactGA.event({
-                    category: 'User',
-                    action: LOGIN_FAILED_ACTION,
-                });
-                console.log(err);
-                Promise.reject(err);
-            });
-    }
-
     render() {
         const { classes } = this.props;
         let buttons = null;
 
-        this.navigateHomeIfLoggedOut();
+        this.verifyIfLoggedIn();
+        this.navigateBasedOnSession();
 
         if (isAuthenticated()) {
             buttons = (
@@ -156,14 +149,13 @@ class NavAppBar extends Component {
         } else {
             buttons = (
                 <div>
-                    <GoogleLogin
-                        clientId={config.GOOGLE_CLIENT_ID}
-                        buttonText="gpmail"
-                        onSuccess={this.googleResponse}
-                        onFailure={this.onFailure}
-                        requestTokenUrl="https://www.googleapis.com/oauth2/v1/userinfo"
-                        accessType="offline"
-                    />
+                    <a href={`${base_url()}/auth/google`}>
+                        <GoogleButton
+                            style={{ width: '150px' }}
+                            label='gpmail'
+                            type='light'
+                        />
+                    </a>
                 </div>
             );
         }

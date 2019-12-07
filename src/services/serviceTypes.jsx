@@ -9,3 +9,4 @@ export const ARRANGEMENT = '/arrangement';
 export const EXPORT_ARRANGEMENT = '/arrangement';
 export const ARRANGEMENTS = '/arrangements';
 export const USERS = '/users';
+export const USER_ROUTE = '/user';

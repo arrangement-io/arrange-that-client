@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { getBearer, logout } from 'services/authService';
 
 import { base_url } from './serviceTypes';
 
@@ -51,14 +50,14 @@ export const getAuthenticated = opts => request({
     ...defaultOpts,
     ...opts,
     method: 'GET',
-    headers: { Authorization: `Bearer ${getBearer()}` },
+    withCredentials: true,
 });
 
 export const postAuthenticated = opts => request({
     ...defaultOpts,
     ...opts,
     method: 'POST',
-    headers: { Authorization: `Bearer ${getBearer()}` },
+    withCredentials: true,
 });
 
 export default request;
