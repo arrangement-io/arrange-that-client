@@ -22,9 +22,10 @@ export const updateArrangement = (arrangement) => {
     return Promise.reject('Arrangement was not valid');
 };
 
-export const getAllArrangements = googleId => getAuthenticated({
-    url: `${USERS}/${googleId}${ARRANGEMENTS}`,
-});
+export const getAllArrangements = (googleId) => {
+    console.log('getting arrangements');
+    return getAuthenticated({ url: `${USERS}/${googleId}${ARRANGEMENTS}` });
+};
 
 export const getExportArrangement = (arrangement, type) => getAuthenticated({
     url: `${ARRANGEMENT}/${arrangement._id}/export/${type}`,

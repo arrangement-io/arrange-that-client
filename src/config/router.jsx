@@ -3,7 +3,7 @@ import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from 'config/privateRoute';
 
-import createHistory from 'history/createBrowserHistory';
+import { createBrowserHistory } from 'history';
 
 import Layout from 'layout';
 import HomePage from 'views/homePage/homePage';
@@ -12,7 +12,7 @@ import AllArrangements from 'views/allArrangements/allArrangements';
 import Feedback from 'views/feedback/feedback';
 import Tools from 'views/tools/tools';
 
-const history = createHistory();
+const history = createBrowserHistory();
 
 const router = (
     <Router history={history}>
