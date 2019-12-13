@@ -40,7 +40,7 @@ class NavAppBar extends Component {
         fetchUser()
             .then((response) => {
                 // is logged in
-                if (!isAuthenticated() && response.data.googleId) {
+                if (!isAuthenticated() && response.data && response.data.googleId) {
                     const account = {
                         user: response.data,
                         token: '1',
