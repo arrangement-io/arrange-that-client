@@ -3,6 +3,7 @@ import ReactGA from 'react-ga';
 
 import { connect } from 'react-redux';
 import cloneDeep from 'lodash/cloneDeep';
+import isEmpty from 'lodash/isEmpty';
 
 import { Grid, Typography } from '@material-ui/core';
 import Snapshot from 'containers/snapshot/snapshot';
@@ -22,6 +23,7 @@ import { uuid } from 'utils';
 import { withStyles } from '@material-ui/core/styles';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import Tabs, { Tab } from 'react-awesome-tabs';
 import { ARRANGEMENT_CATEGORY, NEW_SNAPSHOT_ACTION, CLONE_SNAPSHOT_ACTION } from '../../analytics/gaArrangementConstants';
@@ -51,6 +53,7 @@ export class Arrange extends Component {
             name: this.props.real.name,
             isListView: false,
             viewType: ARRANGE,
+            isLoading: true,
         };
     }
 
@@ -187,13 +190,17 @@ export class Arrange extends Component {
         const id = this.props.match.params.arrangement_id;
         return getArrangement(id)
             .then((response) => {
-                if (response.data === 'no arrangement found') {
+                if (response.data === 'no arrangement found' || isEmpty(response.data)) {
                     console.log('no arrangement found');
                 } else {
                     const data = migrate(response.data);
                     this.props.setRealData(data);
                     console.log(response.data);
                 }
+                this.setState({
+                    ...this.state,
+                    isLoading: false,
+                });
                 Promise.resolve();
             })
             .catch((err) => {
@@ -211,6 +218,9 @@ export class Arrange extends Component {
 
         document.title = `${this.props.real.name} - Arrange.Space`;
 
+        if (this.state.isLoading) {
+            return <LinearProgress />;
+        }
         return (
             <div>
                 <Grid container spacing={1} className={classes.header}>
