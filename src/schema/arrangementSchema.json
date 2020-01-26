@@ -27,10 +27,10 @@
                         "_id": {"type": "string"},
                         "name": {"type": "string"},
                         "size": {"type": "integer"},
-                        "notes": {"type": "string"},
-                        "gender": {"type": "string"},
-                        "class": {"type": "string"},
-                        "color": {"type": "string"}
+                        "notes": {"type": ["string","null"]},
+                        "gender": {"type": ["string","null"]},
+                        "class": {"type": ["string","null"]},
+                        "color": {"type": ["string","null"]}
                     },
                     "additionalProperties": true,
                     "required": ["_id", "name", "size"]
