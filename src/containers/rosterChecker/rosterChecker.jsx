@@ -81,7 +81,7 @@ class SheetView extends Component {
         if (!isEmpty(this.props.real)) {
             console.log('generating item list...');
 
-            this.props.real.items.forEach((item) => {
+            Object.values(this.props.real.items).forEach((item) => {
                 const validityOfItem = this.checkIfNameInRoster(item.name, this.state.newRoster) ? PRESENT : MISSING;
                 itemList.push({ name: item.name, validity: validityOfItem });
             });
@@ -90,7 +90,7 @@ class SheetView extends Component {
         return itemList;
     }
 
-    getItemFromItemName = itemName => this.props.real.items.find(x => x.name === itemName)
+    getItemFromItemName = itemName => Object.values(this.props.real.items).find(x => x.name === itemName)
 
     renderValidity = (instance, td, row, col, prop, value, cellProperties) => {
         if (value === PRESENT) {
