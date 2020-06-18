@@ -100,7 +100,6 @@ export class EditContainer extends Component {
                                 />
                             </Typography>
                         }
-
                         title={
                             <Typography variant="h5" align="center">
                                 <TextField

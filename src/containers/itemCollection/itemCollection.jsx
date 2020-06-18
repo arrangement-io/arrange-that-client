@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import PropTypes from 'prop-types';
-import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Button } from '@material-ui/core';
+import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Button, Divider } from '@material-ui/core';
 
 import Item from 'components/item/item';
+import SimpleItem from 'components/simpleItem/simpleItem';
 import EditItem from 'components/editItem/editItem';
 
 import { addItem } from 'actions/item/item';
@@ -186,7 +187,7 @@ export class ItemCollection extends PureComponent {
         const { classes } = this.props;
 
         return (
-            <Card className={classes.card}>
+            <Card className={classes.card} style={{ maxHeight: '500px', overflow: 'scroll' }}>
                 <CardHeader className={classes.cardHeader} title="People"/>
                 <CardContent>Unassigned: {this.props.unsnapshot_items.length}/{Object.keys(this.props.items).length}</CardContent>
                 <Droppable droppableId={UNASSIGNED} type={'item'}>
@@ -219,6 +220,37 @@ export class ItemCollection extends PureComponent {
                         </div>
                     )}
                 </Droppable>
+                <Grid container style={{ marginTop: '18px' }}>
+                    {
+                        Object.entries(this.props.items).map((id_item, _) => {
+                            console.log(`ID ${id}`);
+                            console.log(`ITEM ${item}`);
+
+                            let id = id_item[0];
+                            let item = id_item[1];
+
+                            const new_id = `roster${id}`;
+
+                            console.log(this.props.unsnapshot_items);
+                            const is_assigned = !this.props.unsnapshot_items.includes(id);
+                            console.log(`IS ASSIGNED: ${is_assigned}`);
+
+                            if (item) {
+                                return (
+                                    <Grid item xs = {12} key = {new_id}>
+                                        <SimpleItem
+                                            item={item}
+                                            index={new_id}
+                                            containerId={UNASSIGNED}
+                                            snapshotId={this.props.snapshotId}
+                                            assigned={is_assigned}
+                                        />
+                                    </Grid>
+                                );
+                            }
+                        })
+                    }
+                </Grid>
                 <CardActions>
                     <Button variant="text" color="default" onClick={this.addEditItem}>
                         <Typography variant="body1" align="left">
