@@ -1,0 +1,22 @@
+.roster-updates-box {
+    width: 35%;
+
+}
+
+.updates-items {
+    /* Auto Layout */
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+
+    position: relative;
+    width: 432px;
+    height: 100px;
+    left: 926px;
+    top: 300px;
+    margin: 10px 0;
+
+    background: #D6EDFF;
+    border-radius: 8px;
+
+}

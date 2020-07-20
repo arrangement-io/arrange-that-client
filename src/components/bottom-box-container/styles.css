@@ -1,0 +1,9 @@
+.bottom_box {
+    position: relative;
+    width: 1440px;
+    height: 1024px;
+    background: #FFFFFF;
+    display: grid;
+    grid-template-columns: 55% 40%;
+}
+

@@ -1,0 +1,64 @@
+
+.people-box-header{
+    position: sticky;
+    width: 100%;
+    height: 61px;
+    left: calc(50% - 742px/2);
+    top: 0px;
+    z-index: 100;
+    /* grey 1 */
+    
+    background: #F6F6F6;
+}
+.people-box-title {
+    position: relative;
+    float: left;
+    left: 30px;
+}
+.people-box-body {
+    position: absolute;
+    width: 100%;
+    top: 61px;
+}
+.people-box-table {
+    width: inherit;
+}
+
+.people-box-table-head{
+    color: grey; 
+    height: 64px;
+    width: 100%;
+    z-index: 100;
+ 
+}
+.people-box-table thead td{
+    position: sticky;
+    top: 61px;
+    z-index: 100;
+    background-color: white;  
+
+}
+.people-box-table-items{
+    height: 64px;
+    width: 100%;
+
+}
+td{
+    height: 64px;
+    border-bottom: 0.5px solid #CCCCCC;
+}
+
+.people-box{ 
+    position: absolute;
+    width: 55%;
+    height: 647px;
+    left: 80px;
+    top: 219px;
+    overflow-y: scroll;
+    
+    /* grey 3 */
+    
+    border: 0.4px solid #CCCCCC;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
