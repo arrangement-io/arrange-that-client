@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import PropTypes from 'prop-types';
-import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Button, Divider } from '@material-ui/core';
+import { Grid, Typography, Card, CardHeader, CardContent, CardActions, Button, Divider, Modal } from '@material-ui/core';
 
 import Item from 'components/item/item';
 import SimpleItem from 'components/simpleItem/simpleItem';
 import EditItem from 'components/editItem/editItem';
+
+import AddPersonModal from 'components/addPersonModal/addPersonModal';
 
 import { addItem } from 'actions/item/item';
 
@@ -33,7 +35,16 @@ const styles = () => ({
         maxHeight: 'calc(100vh - 341px)',
         overflow: 'scroll',
     },
+    addPersonModal: {
+        position: 'absolute',
+        width: "400px",
+        border: '2px solid #000',
+    },
 });
+
+function rand() {
+    return Math.round(Math.random() * 20) - 10;
+}
 
 export class ItemCollection extends PureComponent {
     constructor(props) {
@@ -47,7 +58,6 @@ export class ItemCollection extends PureComponent {
         };
 
         this.addEditItem = this.addEditItem.bind(this);
-        this.displayEditItem = this.displayEditItem.bind(this);
         this.handleEditItemChange = this.handleEditItemChange.bind(this);
         this.handleEditItemSubmit = this.handleEditItemSubmit.bind(this);
         this.handleEditItemEscKey = this.handleEditItemEscKey.bind(this);
@@ -72,6 +82,7 @@ export class ItemCollection extends PureComponent {
     // This function splits a string by tabs/newlines and individually
     // submits each item and then adds another edit item.
     handleEditItemPaste = (pasteString) => {
+        console.log("blaaaarrrrgh: ItemCollection -> handleEditItemPaste -> handleEditItemPaste")
         // TODO does this work on Windows? Does it need to check for carriage return?
         const splitStrings = pasteString.split(/[\t\n]/);
 
@@ -110,6 +121,8 @@ export class ItemCollection extends PureComponent {
     }
 
     handleEditItemSubmit(event) {
+        console.log("ItemCollection -> handleEditItemSubmit -> handleEditItemSubmit");
+        
         const item = {
             _id: this.state._id,
             name: this.state.name,
@@ -151,26 +164,13 @@ export class ItemCollection extends PureComponent {
     }
 
     handleEditItemEscKey() {
+        console.log("blaaaarrrrgh: ItemCollection -> handleEditItemEscKey -> handleEditItemEscKey")
         this.setState({
             isEdit: false,
             name: '',
             _id: '',
             size: 1,
         });
-    }
-
-    displayEditItem() {
-        if (this.state.isEdit) {
-            return (
-                <Grid item xs={12}>
-                    <EditItem
-                        name={this.state.name}
-                        {...this.getEditItemProps()}
-                    />
-                </Grid>
-            );
-        }
-        return null;
     }
 
     getEditItemProps() {
@@ -213,7 +213,12 @@ export class ItemCollection extends PureComponent {
                                             console.log('attempted to render null item');
                                         })
                                     }
-                                    { this.displayEditItem() }
+                                    <Modal open={this.state.isEdit}>
+                                        <AddPersonModal
+                                            name={this.state.name}
+                                            {...this.getEditItemProps()}
+                                        />
+                                    </Modal>
                                     {provided.placeholder}
                                 </Grid>
                             </CardContent>
@@ -223,18 +228,13 @@ export class ItemCollection extends PureComponent {
                 <Grid container style={{ marginTop: '18px' }}>
                     {
                         Object.entries(this.props.items).map((id_item, _) => {
-                            console.log(`ID ${id}`);
-                            console.log(`ITEM ${item}`);
-
                             let id = id_item[0];
                             let item = id_item[1];
 
                             const new_id = `roster${id}`;
 
-                            console.log(this.props.unsnapshot_items);
                             const is_assigned = !this.props.unsnapshot_items.includes(id);
-                            console.log(`IS ASSIGNED: ${is_assigned}`);
-
+                            
                             if (item) {
                                 return (
                                     <Grid item xs = {12} key = {new_id}>

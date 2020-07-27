@@ -13,6 +13,23 @@ const mainTheme = createMuiTheme({
                 fontWeight: '600',
             },
         },
+        MuiToggleButton: {
+            root: {
+                
+            }
+        },
+        MuiTypography: {
+            button: {
+                fontFamily: 'Montserrat',
+                fontStyle: 'normal',
+                fontWeight: 'normal',
+                lineHeight: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                color: '#222222',
+                textTransform: 'capitalize',
+            }
+        }
     },
 });
 
