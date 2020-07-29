@@ -8,17 +8,6 @@ const mainTheme = createMuiTheme({
     },
     overrides: {
         MuiTypography: {
-            body2: {
-                fontSize: '0.75rem',
-                fontWeight: '600',
-            },
-        },
-        MuiToggleButton: {
-            root: {
-                
-            }
-        },
-        MuiTypography: {
             button: {
                 fontFamily: 'Montserrat',
                 fontStyle: 'normal',
@@ -28,8 +17,8 @@ const mainTheme = createMuiTheme({
                 alignItems: 'center',
                 color: '#222222',
                 textTransform: 'capitalize',
-            }
-        }
+            },
+        },
     },
 });
 

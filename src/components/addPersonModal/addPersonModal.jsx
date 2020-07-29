@@ -18,6 +18,11 @@ import { snapshotDndToggleSelection,
 import EditItem from 'components/editItem/editItem';
 import { green } from '@material-ui/core/colors';
 
+const ENTER = 'Enter';
+const KEYDOWN = 'keydown';
+const MOUSEDOWN = 'mousedown';
+const ESCAPE = 27;
+
 const styles = () => ({
     paper: {
         position: 'absolute',
@@ -27,12 +32,12 @@ const styles = () => ({
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-      },
+    },
     card: {
         padding: '15px',
     },
     lastName: {
-        //paddingLeft: '5px',
+        // paddingLeft: '5px',
     },
 });
 
@@ -53,13 +58,56 @@ export class AddPersonModal extends PureComponent {
         this.handleMouseDown = this.handleMouseDown.bind(this);
     }
 
+    state = {
+        firstName: this.props.firstName,
+        lastName: this.props.lastName,
+    };
+
+    handleFirstChange = (event) => {
+        this.setState({
+            firstName: event.target.value,
+        });
+    };
+
+    handleLastChange = (event) => {
+        this.setState({
+            lastName: event.target.value,
+        });
+    };
+
+    handleKeyPress = (event) => {
+        if (event.key === ENTER) {
+            this.setState({
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+            });
+            this.props.handleEnter(this.state.firstName + " " + this.state.lastName);
+        }
+    };
+
     handleClick = (event) => {
-        //event.preventDefault();
+        // event.preventDefault();
     };
 
     handleMouseDown = (event) => {
-        //event.preventDefault();
+        // event.preventDefault();
     };
+
+    escFunction = (event) => {
+        if (event.keyCode === ESCAPE) {
+            this.props.handleEsc();
+        }
+    };
+
+    componentDidMount() {
+        document.addEventListener(KEYDOWN, this.escFunction, false);
+        document.addEventListener(MOUSEDOWN, this.handleClick, false);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener(KEYDOWN, this.escFunction, false);
+        document.removeEventListener(MOUSEDOWN, this.handleClick, false);
+    }
 
     render = () => {
         const { classes } = this.props;
@@ -73,9 +121,9 @@ export class AddPersonModal extends PureComponent {
                         <TextField
                             autoFocus={true}
                             onKeyPress={this.handleKeyPress}
-                            onChange={this.props.handleChange}
+                            onChange={this.handleFirstChange}
                             onPaste={this.handlePasteText}
-                            value={this.props.firstName}
+                            value={this.state.firstName}
                             placeholder="First Name"
                             variant="outlined"
                         />
@@ -84,9 +132,9 @@ export class AddPersonModal extends PureComponent {
                         <TextField
                             autoFocus={false}
                             onKeyPress={this.handleKeyPress}
-                            onChange={this.props.handleChange}
+                            onChange={this.handleLastChange}
                             onPaste={this.handlePasteText}
-                            value={this.props.lastName}
+                            value={this.state.lastName}
                             class={classes.lastName}
                             placeholder="Last Name"
                             variant="outlined"
@@ -99,14 +147,13 @@ export class AddPersonModal extends PureComponent {
 }
 
 AddPersonModal.propTypes = {
-    item: PropTypes.shape({
-        _id: PropTypes.string,
-        name: PropTypes.string,
-        size: PropTypes.number,
-    }),
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
     index: PropTypes.number,
     containerId: PropTypes.string,
     snapshotId: PropTypes.string,
+    handleEsc: PropTypes.func,
+    handleEnter: PropTypes.func,
 };
 
 export default withStyles(styles)(AddPersonModal);

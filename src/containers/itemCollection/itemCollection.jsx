@@ -37,7 +37,7 @@ const styles = () => ({
     },
     addPersonModal: {
         position: 'absolute',
-        width: "400px",
+        width: '400px',
         border: '2px solid #000',
     },
 });
@@ -51,14 +51,15 @@ export class ItemCollection extends PureComponent {
         super(props);
         this.state = {
             isEdit: false,
-            name: '',
+            firstName: '',
+            lastName: '',
             _id: '',
             size: 1,
             isAlert: false,
         };
 
         this.addEditItem = this.addEditItem.bind(this);
-        this.handleEditItemChange = this.handleEditItemChange.bind(this);
+        //this.handleEditItemChange = this.handleEditItemChange.bind(this);
         this.handleEditItemSubmit = this.handleEditItemSubmit.bind(this);
         this.handleEditItemEscKey = this.handleEditItemEscKey.bind(this);
     }
@@ -67,22 +68,23 @@ export class ItemCollection extends PureComponent {
         this.setState({
             isEdit: true,
             _id: uuid('item'),
-            name: '',
+            firstName: '',
+            lastName: '',
             size: 1,
         });
     }
 
-    handleEditItemChange(e) {
+    /*handleEditItemChange(e) {
         this.setState({
             ...this.state,
             name: e.target.value,
         });
-    }
+    }*/
 
     // This function splits a string by tabs/newlines and individually
     // submits each item and then adds another edit item.
-    handleEditItemPaste = (pasteString) => {
-        console.log("blaaaarrrrgh: ItemCollection -> handleEditItemPaste -> handleEditItemPaste")
+    /*handleEditItemPaste = (pasteString) => {
+        console.log('blaaaarrrrgh: ItemCollection -> handleEditItemPaste -> handleEditItemPaste');
         // TODO does this work on Windows? Does it need to check for carriage return?
         const splitStrings = pasteString.split(/[\t\n]/);
 
@@ -118,22 +120,25 @@ export class ItemCollection extends PureComponent {
             _id: '',
             size: 1,
         });
-    }
+    }*/
 
-    handleEditItemSubmit(event) {
-        console.log("ItemCollection -> handleEditItemSubmit -> handleEditItemSubmit");
-        
+    handleEditItemSubmit(newName) {
+        console.log('ItemCollection -> handleEditItemSubmit -> handleEditItemSubmit');
+        console.log("NAME: " + newName);
+
         const item = {
             _id: this.state._id,
-            name: this.state.name,
+            name: newName,
             size: this.state.size,
         };
 
         // Prevent the addition of an empty item, null item, or all whitespace item
         if (!validateName(item.name)) {
+            console.log("NOT valid lololololol");
             this.setState({
                 isEdit: false,
-                name: '',
+                firstName: '',
+                lastName: '',
                 _id: '',
                 size: 1,
             });
@@ -144,19 +149,22 @@ export class ItemCollection extends PureComponent {
         if (checkDuplicate(item, Object.values(this.props.real.items))) {
             this.setState({
                 isEdit: false,
-                name: '',
+                firstName: '',
+                lastName: '',
                 _id: '',
                 size: 1,
             });
 
+            console.log("ADDING ITEM: " + item);
+
             this.props.addItem(item);
-            // If user presses enter, add another item
+            /*// If user presses enter, add another item
             if (event === 'Enter') {
                 this.setState({
                     isEdit: true,
                     _id: uuid('item'),
                 });
-            }
+            }*/
         } else {
             // In this case, there is a duplicate, so we send an alert
             this.props.enqueueSnackbar(`Duplicated name: ${item.name}`);
@@ -164,10 +172,11 @@ export class ItemCollection extends PureComponent {
     }
 
     handleEditItemEscKey() {
-        console.log("blaaaarrrrgh: ItemCollection -> handleEditItemEscKey -> handleEditItemEscKey")
+        console.log('ItemCollection -> handleEditItemEscKey -> handleEditItemEscKey');
         this.setState({
             isEdit: false,
-            name: '',
+            firstName: '',
+            lastName: '',
             _id: '',
             size: 1,
         });
@@ -215,7 +224,8 @@ export class ItemCollection extends PureComponent {
                                     }
                                     <Modal open={this.state.isEdit}>
                                         <AddPersonModal
-                                            name={this.state.name}
+                                            firstName={this.state.firstName}
+                                            lastName={this.state.lastName}
                                             {...this.getEditItemProps()}
                                         />
                                     </Modal>
@@ -228,13 +238,13 @@ export class ItemCollection extends PureComponent {
                 <Grid container style={{ marginTop: '18px' }}>
                     {
                         Object.entries(this.props.items).map((id_item, _) => {
-                            let id = id_item[0];
-                            let item = id_item[1];
+                            const id = id_item[0];
+                            const item = id_item[1];
 
                             const new_id = `roster${id}`;
 
                             const is_assigned = !this.props.unsnapshot_items.includes(id);
-                            
+
                             if (item) {
                                 return (
                                     <Grid item xs = {12} key = {new_id}>
