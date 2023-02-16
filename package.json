@@ -9,7 +9,7 @@
     "@material-ui/lab": "^4.0.0-alpha.25",
     "ajv": "^6.10.2",
     "axios": "^0.21.1",
-    "handsontable": "^7.1.1",
+    "handsontable": "^10.0.0",
     "history": "^4.9.0",
     "lodash": "^4.17.21",
     "notistack": "^0.5.1",
