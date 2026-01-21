@@ -11,7 +11,7 @@
     "axios": "^1.6.0",
     "handsontable": "^13.0.0",
     "history": "^4.9.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "notistack": "^0.5.1",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
